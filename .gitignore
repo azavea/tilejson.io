@@ -1,0 +1,18 @@
+# Ansible
+deployment/ansible/roles/azavea.*
+
+*.retry
+
+# Vagrant
+.vagrant
+
+# Node and Webpack
+node_modules/
+npm-debug.log
+bundle.js
+vendor.bundle.js
+bundle.js.map
+dist/
+
+# macOS
+.DS_Store
