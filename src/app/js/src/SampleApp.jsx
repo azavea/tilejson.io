@@ -1,25 +1,128 @@
 import React, { Component } from 'react';
-import { func, number } from 'prop-types';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
-import { inc } from './actions';
+import Map from 'ol/map';
+import View from 'ol/view';
+import TileLayer from 'ol/layer/tile';
+import XYZ from 'ol/source/xyz';
+
+const url = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+function getDefaultTileJSON() {
+    return [
+        {
+            tilejson: '2.2.0',
+            name: 'base',
+            version: '1.0.0',
+            scheme: 'xyz',
+            tiles: [
+                url,
+            ],
+        },
+    ];
+}
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.inc = this.inc.bind(this);
+        this.state = {
+            name: '',
+            url: '',
+            tileJSON: getDefaultTileJSON(),
+            map: {},
+            baseLayer: {},
+            layers: [],
+            shareLink: '',
+        };
+        this.changeUrl = this.changeUrl.bind(this);
+        this.changeName = this.changeName.bind(this);
+        this.addLayer = this.addLayer.bind(this);
+        this.initBaseMap = this.initBaseMap.bind(this);
+        this.createMap = this.createMap.bind(this);
     }
 
-    inc() {
-        this.props.dispatch(inc());
+    componentDidMount() {
+        this.initBaseMap();
+    }
+
+    initBaseMap() {
+        const baseLayer = new TileLayer({
+            source: new XYZ({
+                url,
+            }),
+        });
+        this.setState({
+            baseLayer,
+            layers: [
+                baseLayer,
+            ],
+        }, this.createMap);
+    }
+
+    createMap() {
+        this.setState({
+            map: new Map({
+                target: 'map',
+                layers: [
+                    this.state.baseLayer,
+                ],
+                view: new View({
+                    center: [0, 0],
+                    zoom: 2,
+                }),
+            }),
+        });
+    }
+
+    changeName(e) {
+        this.setState({
+            name: e.target.value,
+        });
+    }
+
+    changeUrl(e) {
+        this.setState({
+            url: e.target.value,
+        });
+    }
+
+    addLayer() {
+        const newLayer = new TileLayer({
+            source: new XYZ({
+                url: this.state.url,
+            }),
+        });
+        this.state.map.addLayer(newLayer);
+        this.state.layers.push(newLayer);
+        const layerName = (this.state.name === '' ? `Layer ${this.state.layers.length}` : this.state.name);
+        const newTileJSON = {
+            tilejson: '2.2.0',
+            name: layerName,
+            version: '1.0.0',
+            scheme: 'xyz',
+            tiles: [
+                this.state.url,
+            ],
+        };
+        const tileJSONList = this.state.tileJSON;
+        tileJSONList.push(newTileJSON);
+        this.setState({
+            tileJSON: tileJSONList,
+        });
     }
 
     render() {
         return (
-            <div className="flex-expand-row height-100vh">
-                <p>Hello world</p>
-                <p><button onClick={() => this.inc()}>Click Me</button></p>
-                <p>{ this.props.n }</p>
+            <div>
+                <div id="menu">
+                    <h1>TileJSON.io</h1>
+                    <input type="text" name="layerName" placeholder="Layer Name" id="layerNameInput" onChange={this.changeName} value={this.state.name} />
+                    <input type="text" name="tileUrl" placeholder="Tile URL" id="tileUrlInput" onChange={this.changeUrl} value={this.state.url} />
+                    <button onClick={this.addLayer} id="addLayerButton">Add</button>
+                    <br /><br />
+                </div>
+                <div id="map" className="map" />
             </div>
         );
     }
@@ -27,7 +130,6 @@ class App extends Component {
 
 App.propTypes = {
     dispatch: func.isRequired,
-    n: number.isRequired,
 };
 
 function mapStateToProps(state) {
