@@ -131,6 +131,7 @@ class App extends Component {
     }
 
     render() {
+        const textareaValue = JSON.stringify(this.state.tileJSON, null, '\t');
         return (
             <div>
                 <div id="menu">
@@ -141,6 +142,7 @@ class App extends Component {
                     <br /><br />
                     <button onClick={this.clearLayers} id="clearButton">Clear</button>
                     <br /><br />
+                    <textarea id="jsonTextarea" value={textareaValue} />
                 </div>
                 <div id="map" className="map" />
             </div>
