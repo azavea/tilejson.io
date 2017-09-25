@@ -40,6 +40,7 @@ class App extends Component {
         this.addLayer = this.addLayer.bind(this);
         this.initBaseMap = this.initBaseMap.bind(this);
         this.createMap = this.createMap.bind(this);
+        this.clearLayers = this.clearLayers.bind(this);
     }
 
     componentDidMount() {
@@ -112,6 +113,23 @@ class App extends Component {
         });
     }
 
+    clearLayers() {
+        for (let i = 0; i < this.state.layers.length; i += 1) {
+            if (this.state.layers[i] !== this.state.baseLayer) {
+                this.state.map.removeLayer(this.state.layers[i]);
+            }
+        }
+        this.setState({
+            tileJSON: getDefaultTileJSON(),
+            shareLink: '',
+            url: '',
+            name: '',
+        });
+        this.state.layers = [
+            this.state.baseLayer,
+        ];
+    }
+
     render() {
         return (
             <div>
@@ -120,6 +138,8 @@ class App extends Component {
                     <input type="text" name="layerName" placeholder="Layer Name" id="layerNameInput" onChange={this.changeName} value={this.state.name} />
                     <input type="text" name="tileUrl" placeholder="Tile URL" id="tileUrlInput" onChange={this.changeUrl} value={this.state.url} />
                     <button onClick={this.addLayer} id="addLayerButton">Add</button>
+                    <br /><br />
+                    <button onClick={this.clearLayers} id="clearButton">Clear</button>
                     <br /><br />
                 </div>
                 <div id="map" className="map" />
