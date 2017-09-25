@@ -1,0 +1,12 @@
+{
+    "description": "TileJSON.io",
+    "public": true,
+    "files": {
+        "index.html": {
+            "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>TileJSON</title>\n    <link rel=\"stylesheet\" href=\"https://openlayers.org/en/v4.3.3/css/ol.css\" type=\"text/css\">\n    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->\n    <script src=\"https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL\"></script>\n    <script src=\"https://openlayers.org/en/v4.3.3/build/ol.js\"></script>\n    <script type=\"text/javascript\" src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js\"></script>\n</head>\n<body>\n    <div id=\"map\" class=\"map\"></div>\n    <script>\n        var map = new ol.Map({\n            target: 'map',\n            view: new ol.View({\n                center: [0, 0],\n                zoom: 2\n            })\n        });\n        $.getJSON('tile.json', function(data) {\n            data.forEach(function (tileJson) {\n                var layer = new ol.layer.Tile({\n                    source: new ol.source.TileJSON({\n                        tileJSON: tileJson,\n                    })\n                });\n                map.addLayer(layer);\n            });\n        });\n    </script>\n</body>\n</html>"
+        },
+        "tile.json": {
+            "content": ""
+        }
+    }
+}

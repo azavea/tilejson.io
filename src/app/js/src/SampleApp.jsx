@@ -7,6 +7,10 @@ import View from 'ol/view';
 import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/xyz';
 
+import axios from 'axios';
+
+import gistRequest from '../data/request.json';
+
 const url = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 function getDefaultTileJSON() {
@@ -41,6 +45,7 @@ class App extends Component {
         this.initBaseMap = this.initBaseMap.bind(this);
         this.createMap = this.createMap.bind(this);
         this.clearLayers = this.clearLayers.bind(this);
+        this.share = this.share.bind(this);
     }
 
     componentDidMount() {
@@ -130,6 +135,19 @@ class App extends Component {
         ];
     }
 
+    share() {
+        gistRequest.files['tile.json'].content = JSON.stringify(this.state.tileJSON, null, '\t');
+        axios.post('https://api.github.com/gists', gistRequest)
+            .then((response) => {
+                this.setState({
+                    shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
     render() {
         const textareaValue = JSON.stringify(this.state.tileJSON, null, '\t');
         return (
@@ -139,6 +157,9 @@ class App extends Component {
                     <input type="text" name="layerName" placeholder="Layer Name" id="layerNameInput" onChange={this.changeName} value={this.state.name} />
                     <input type="text" name="tileUrl" placeholder="Tile URL" id="tileUrlInput" onChange={this.changeUrl} value={this.state.url} />
                     <button onClick={this.addLayer} id="addLayerButton">Add</button>
+                    <br /><br />
+                    <button onClick={this.share} id="shareButton">Share</button>
+                    <a href={this.state.shareLink} id="shareLink">{this.state.shareLink}</a>
                     <br /><br />
                     <button onClick={this.clearLayers} id="clearButton">Clear</button>
                     <br /><br />
