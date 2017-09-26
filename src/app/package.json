@@ -23,6 +23,7 @@
     "axios": "0.16.2",
     "isomorphic-fetch": "2.2.1",
     "leaflet": "1.2.0",
+    "material-ui": "0.19.2",
     "ol": "4.3.3",
     "prop-types": "15.5.10",
     "react": "15.6.1",

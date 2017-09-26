@@ -8,6 +8,8 @@ import {
     CHANGE_SHARE_LINK,
     TOGGLE_TILE_JSON_EDIT_MODE,
     CHANGE_TILE_JSON_PARSE_ERROR,
+    TOGGLE_SHARE_SNACKBAR_OPEN,
+    TOGGLE_ERROR_SNACKBAR_OPEN,
 } from './actions';
 
 import {
@@ -22,6 +24,8 @@ const initialState = {
     tileJSONEditMode: false,
     tileJSONParseError: '',
     shareLink: '',
+    shareSnackbarOpen: false,
+    errorSnackbarOpen: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -60,6 +64,14 @@ function mainReducer(state = initialState, action) {
         case CHANGE_TILE_JSON_PARSE_ERROR:
             return Object.assign({}, state, {
                 tileJSONParseError: action.payload.tileJSONParseError,
+            });
+        case TOGGLE_SHARE_SNACKBAR_OPEN:
+            return Object.assign({}, state, {
+                shareSnackbarOpen: action.payload.shareSnackbarOpen,
+            });
+        case TOGGLE_ERROR_SNACKBAR_OPEN:
+            return Object.assign({}, state, {
+                errorSnackbarOpen: action.payload.errorSnackbarOpen,
             });
         default:
             return state;

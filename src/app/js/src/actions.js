@@ -7,6 +7,8 @@ export const CLEAR_SCREEN = 'CLEAR_SCREEN';
 
 export const TOGGLE_TILE_JSON_EDIT_MODE = 'TOGGLE_TILE_JSON_EDIT_MODE';
 export const CHANGE_TILE_JSON_PARSE_ERROR = 'CHANGE_TILE_JSON_PARSE_ERROR';
+export const TOGGLE_SHARE_SNACKBAR_OPEN = 'TOGGLE_SHARE_SNACKBAR_OPEN';
+export const TOGGLE_ERROR_SNACKBAR_OPEN = 'TOGGLE_ERROR_SNACKBAR_OPEN';
 
 export function changeLayerName(payload) {
     return {
@@ -52,6 +54,20 @@ export function toggleTileJSONEditMode(payload) {
 export function changeTileJSONParseError(payload) {
     return {
         type: CHANGE_TILE_JSON_PARSE_ERROR,
+        payload,
+    };
+}
+
+export function toggleShareSnackbarOpen(payload) {
+    return {
+        type: TOGGLE_SHARE_SNACKBAR_OPEN,
+        payload,
+    };
+}
+
+export function toggleErrorSnackbarOpen(payload) {
+    return {
+        type: TOGGLE_ERROR_SNACKBAR_OPEN,
         payload,
     };
 }

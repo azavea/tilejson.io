@@ -7,6 +7,14 @@ import XYZ from 'ol/source/xyz';
 
 import axios from 'axios';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
+
 import gistRequest from '../data/request.json';
 import {
     changeLayerName,
@@ -16,6 +24,8 @@ import {
     changeShareLink,
     toggleTileJSONEditMode,
     changeTileJSONParseError,
+    toggleShareSnackbarOpen,
+    toggleErrorSnackbarOpen,
 } from './actions';
 import {
     baseLayer,
@@ -37,6 +47,8 @@ class App extends Component {
         this.share = this.share.bind(this);
         this.editTileJSON = this.editTileJSON.bind(this);
         this.renderTileJSON = this.renderTileJSON.bind(this);
+        this.handleShareSbRequestClose = this.handleShareSbRequestClose.bind(this);
+        this.handleErrorSbRequestClose = this.handleErrorSbRequestClose.bind(this);
     }
 
     componentDidMount() {
@@ -104,12 +116,27 @@ class App extends Component {
                 this.props.dispatch(changeShareLink({
                     shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
                 }));
+                this.props.dispatch(toggleShareSnackbarOpen({
+                    shareSnackbarOpen: true,
+                }));
             });
     }
 
     editTileJSON() {
         this.props.dispatch(toggleTileJSONEditMode({
             tileJSONEditMode: true,
+        }));
+    }
+
+    handleShareSbRequestClose() {
+        this.props.dispatch(toggleShareSnackbarOpen({
+            shareSnackbarOpen: false,
+        }));
+    }
+
+    handleErrorSbRequestClose() {
+        this.props.dispatch(toggleErrorSnackbarOpen({
+            errorSnackbarOpen: false,
         }));
     }
 
@@ -122,11 +149,17 @@ class App extends Component {
             this.props.dispatch(changeTileJSONParseError({
                 tileJSONParseError: e.toString(),
             }));
+            this.props.dispatch(toggleErrorSnackbarOpen({
+                errorSnackbarOpen: true,
+            }));
             return;
         }
         if (tileJSON.constructor !== Array) {
             this.props.dispatch(changeTileJSONParseError({
                 tileJSONParseError: 'Input must be formatted as an array of TileJSON.',
+            }));
+            this.props.dispatch(toggleErrorSnackbarOpen({
+                errorSnackbarOpen: true,
             }));
             return;
         }
@@ -160,26 +193,53 @@ class App extends Component {
     }
 
     render() {
+        const shareSnackbarMessage = (
+            <a className="snackbarLink" href={this.props.shareLink}>{this.props.shareLink}</a>
+        );
         return (
-            <div>
-                <div id="menu">
-                    <h1>TileJSON.io</h1>
-                    <input type="text" name="layerName" placeholder="Layer Name" id="layerNameInput" onChange={this.changeName} value={this.props.name} />
-                    <input type="text" name="tileUrl" placeholder="Tile URL" id="tileUrlInput" onChange={this.changeUrl} value={this.props.url} />
-                    <button onClick={this.addLayer} id="addLayerButton">Add</button>
-                    <br /><br />
-                    <button onClick={this.share} id="shareButton">Share</button>
-                    <a href={this.props.shareLink} id="shareLink">{this.props.shareLink}</a>
-                    <br /><br />
-                    <button onClick={this.clearLayers} id="clearButton">Clear</button>
-                    <br /><br />
-                    <textarea id="jsonTextarea" defaultValue={this.props.tileJSONString} disabled={!this.props.tileJSONEditMode} />
-                    <br /><br />
-                    <button onClick={this.props.tileJSONEditMode ? this.renderTileJSON : this.editTileJSON} id="editButton">{this.props.tileJSONEditMode ? 'Render' : 'Edit'}</button>
-                    <span href={this.props.tileJSONParseError} id="shareLink">{this.props.tileJSONParseError}</span>
+            <MuiThemeProvider>
+                <div>
+                    <div id="menu">
+                        <AppBar title="TileJSON.io" iconElementLeft={<IconButton><ExpandLess /></IconButton>} />
+                        <TextField hintText="Layer Name" fullWidth onChange={this.changeName} value={this.props.name} />
+                        <TextField hintText="Tile URL" fullWidth onChange={this.changeUrl} value={this.props.url} />
+                        <RaisedButton onClick={this.addLayer} label="Add Layer" fullWidth />
+                        <br /><br />
+                        <RaisedButton onClick={this.share} label="Share" fullWidth />
+                        <br /><br />
+                        <RaisedButton onClick={this.clearLayers} label="Clear" fullWidth />
+                        <br /><br />
+                        <TextField
+                            id="jsonTextarea"
+                            multiLine
+                            rows={6}
+                            rowsMax={6}
+                            defaultValue={this.props.tileJSONString}
+                            disabled={!this.props.tileJSONEditMode}
+                            fullWidth
+                        />
+                        <RaisedButton
+                            onClick={
+                                this.props.tileJSONEditMode ?
+                                this.renderTileJSON : this.editTileJSON
+                            }
+                            label={this.props.tileJSONEditMode ? 'Render' : 'Edit'}
+                            fullWidth
+                        />
+                    </div>
+                    <div id="map" className="map" />
+                    <Snackbar
+                        open={this.props.shareSnackbarOpen}
+                        message={shareSnackbarMessage}
+                        onRequestClose={this.handleShareSbRequestClose}
+                    />
+                    <Snackbar
+                        open={this.props.errorSnackbarOpen}
+                        message={this.props.tileJSONParseError}
+                        onRequestClose={this.handleErrorSbRequestClose}
+                    />
                 </div>
-                <div id="map" className="map" />
-            </div>
+            </MuiThemeProvider>
         );
     }
 }
@@ -193,6 +253,8 @@ App.propTypes = {
     shareLink: string.isRequired,
     tileJSONEditMode: bool.isRequired,
     tileJSONParseError: string.isRequired,
+    shareSnackbarOpen: bool.isRequired,
+    errorSnackbarOpen: bool.isRequired,
 };
 
 function mapStateToProps(state) {

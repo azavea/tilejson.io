@@ -1,4 +1,4 @@
-export const url = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
+export const baseLayerUrl = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 export function getDefaultTileJSON() {
     return [
