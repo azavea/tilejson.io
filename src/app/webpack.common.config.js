@@ -80,6 +80,11 @@ module.exports = {
                 ],
             },
             {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader?modules',
+                include: /flexboxgrid/
+            },
+            {
                 test: /fonts.*\.(woff|woff2|ttf|eot|svg)($|\?)/,
                 loader: 'url-loader?limit=25000&name=font/[name].[ext]',
             },

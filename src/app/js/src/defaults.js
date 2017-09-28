@@ -8,7 +8,7 @@ export function getDefaultTileJSON() {
             version: '1.0.0',
             scheme: 'xyz',
             tiles: [
-                url,
+                baseLayerUrl,
             ],
         },
     ];

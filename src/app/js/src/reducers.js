@@ -10,6 +10,7 @@ import {
     CHANGE_TILE_JSON_PARSE_ERROR,
     TOGGLE_SHARE_SNACKBAR_OPEN,
     TOGGLE_ERROR_SNACKBAR_OPEN,
+    TOGGLE_COLLAPSE,
 } from './actions';
 
 import {
@@ -26,6 +27,7 @@ const initialState = {
     shareLink: '',
     shareSnackbarOpen: false,
     errorSnackbarOpen: false,
+    isCollapsed: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -72,6 +74,10 @@ function mainReducer(state = initialState, action) {
         case TOGGLE_ERROR_SNACKBAR_OPEN:
             return Object.assign({}, state, {
                 errorSnackbarOpen: action.payload.errorSnackbarOpen,
+            });
+        case TOGGLE_COLLAPSE:
+            return Object.assign({}, state, {
+                isCollapsed: action.payload.isCollapsed,
             });
         default:
             return state;

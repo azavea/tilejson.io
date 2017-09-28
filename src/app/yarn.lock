@@ -2621,6 +2621,10 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+flexboxgrid@^6.3.0:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/flexboxgrid/-/flexboxgrid-6.3.1.tgz#e99898afc07b7047722bb81a958a5fba4d4e20fd"
+
 follow-redirects@^1.2.3:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.2.4.tgz#355e8f4d16876b43f577b0d5ce2668b9723214ea"
@@ -5094,7 +5098,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.5.10, prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7:
+prop-types@15.5.10, prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
@@ -5230,6 +5234,13 @@ react-event-listener@^0.4.5:
     fbjs "^0.8.4"
     prop-types "^15.5.4"
     warning "^3.0.0"
+
+react-flexbox-grid@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-flexbox-grid/-/react-flexbox-grid-1.1.5.tgz#405fea87eb735d54d161be9bb09c7930910bf8cc"
+  dependencies:
+    flexboxgrid "^6.3.0"
+    prop-types "^15.5.8"
 
 react-leaflet-control@1.4.0:
   version "1.4.0"

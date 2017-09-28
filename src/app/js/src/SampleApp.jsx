@@ -11,9 +11,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
+import ExpandMore from 'material-ui/svg-icons/navigation/expand-more';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import gistRequest from '../data/request.json';
 import {
@@ -26,6 +28,7 @@ import {
     changeTileJSONParseError,
     toggleShareSnackbarOpen,
     toggleErrorSnackbarOpen,
+    toggleCollapse,
 } from './actions';
 import {
     baseLayer,
@@ -49,6 +52,8 @@ class App extends Component {
         this.renderTileJSON = this.renderTileJSON.bind(this);
         this.handleShareSbRequestClose = this.handleShareSbRequestClose.bind(this);
         this.handleErrorSbRequestClose = this.handleErrorSbRequestClose.bind(this);
+        this.collapse = this.collapse.bind(this);
+        this.expand = this.expand.bind(this);
     }
 
     componentDidMount() {
@@ -140,6 +145,24 @@ class App extends Component {
         }));
     }
 
+    collapse() {
+        this.props.dispatch(toggleCollapse({
+            isCollapsed: true,
+        }));
+        setTimeout(() => {
+            this.props.map.updateSize();
+        }, 100);
+    }
+
+    expand() {
+        this.props.dispatch(toggleCollapse({
+            isCollapsed: false,
+        }));
+        setTimeout(() => {
+            this.props.map.updateSize();
+        }, 100);
+    }
+
     renderTileJSON() {
         const tileJSONString = document.getElementById('jsonTextarea').value;
         let tileJSON;
@@ -196,11 +219,18 @@ class App extends Component {
         const shareSnackbarMessage = (
             <a className="snackbarLink" href={this.props.shareLink}>{this.props.shareLink}</a>
         );
-        return (
-            <MuiThemeProvider>
-                <div>
-                    <div id="menu">
-                        <AppBar title="TileJSON.io" iconElementLeft={<IconButton><ExpandLess /></IconButton>} />
+        let sideBar;
+        if (this.props.isCollapsed) {
+            sideBar = (
+                <Col xs={12} id="header">
+                    <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.expand}><ExpandMore /></IconButton>} />
+                </Col>
+            );
+        } else {
+            sideBar = (
+                <Col xs={4} id="menu">
+                    <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
+                    <Grid fluid>
                         <TextField hintText="Layer Name" fullWidth onChange={this.changeName} value={this.props.name} />
                         <TextField hintText="Tile URL" fullWidth onChange={this.changeUrl} value={this.props.url} />
                         <RaisedButton onClick={this.addLayer} label="Add Layer" fullWidth />
@@ -212,8 +242,8 @@ class App extends Component {
                         <TextField
                             id="jsonTextarea"
                             multiLine
-                            rows={6}
-                            rowsMax={6}
+                            rows={10}
+                            rowsMax={10}
                             defaultValue={this.props.tileJSONString}
                             disabled={!this.props.tileJSONEditMode}
                             fullWidth
@@ -226,8 +256,17 @@ class App extends Component {
                             label={this.props.tileJSONEditMode ? 'Render' : 'Edit'}
                             fullWidth
                         />
-                    </div>
-                    <div id="map" className="map" />
+                    </Grid>
+                </Col>
+            );
+        }
+        return (
+            <MuiThemeProvider>
+                <div>
+                    <Row>
+                        {sideBar}
+                        <Col xs={this.props.isCollapsed ? 12 : 8} id="map" className="map" />
+                    </Row>
                     <Snackbar
                         open={this.props.shareSnackbarOpen}
                         message={shareSnackbarMessage}
@@ -255,6 +294,7 @@ App.propTypes = {
     tileJSONParseError: string.isRequired,
     shareSnackbarOpen: bool.isRequired,
     errorSnackbarOpen: bool.isRequired,
+    isCollapsed: bool.isRequired,
 };
 
 function mapStateToProps(state) {
