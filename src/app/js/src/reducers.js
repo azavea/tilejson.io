@@ -42,7 +42,6 @@ function mainReducer(state = initialState, action) {
             });
         case CHANGE_TILE_JSON:
             return Object.assign({}, state, {
-                layers: action.payload.layers,
                 tileJSON: action.payload.tileJSON,
                 tileJSONString: JSON.stringify(action.payload.tileJSON, null, '\t'),
                 tileJSONEditMode: false,
@@ -54,6 +53,10 @@ function mainReducer(state = initialState, action) {
                 shareLink: '',
                 url: '',
                 name: '',
+                tileJSONParseError: '',
+                tileJSONEditMode: false,
+                shareSnackbarOpen: false,
+                errorSnackbarOpen: false,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {

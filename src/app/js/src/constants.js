@@ -11,7 +11,6 @@ export const baseLayer = new TileLayer({
     }),
 });
 
-
 export const map = new Map({
     layers: [
         baseLayer,

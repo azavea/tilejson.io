@@ -16,6 +16,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import FlatButton from 'material-ui/FlatButton';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 
 import gistRequest from '../data/request.json';
 import {
@@ -95,7 +97,9 @@ class App extends Component {
         this.props.dispatch(changeTileJson({
             tileJSON: tileJSONList,
         }));
-        document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
+        if (document.getElementById('jsonTextarea')) {
+            document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
+        }
     }
 
     clearLayers() {
@@ -109,7 +113,9 @@ class App extends Component {
         ];
         this.props.dispatch(clearScreen());
         const tileJSONList = getDefaultTileJSON();
-        document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
+        if (document.getElementById('jsonTextarea')) {
+            document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
+        }
     }
 
     share() {
@@ -150,7 +156,7 @@ class App extends Component {
             isCollapsed: true,
         }));
         setTimeout(() => {
-            this.props.map.updateSize();
+            map.updateSize();
         }, 100);
     }
 
@@ -159,7 +165,7 @@ class App extends Component {
             isCollapsed: false,
         }));
         setTimeout(() => {
-            this.props.map.updateSize();
+            map.updateSize();
         }, 100);
     }
 
@@ -221,9 +227,24 @@ class App extends Component {
         );
         let sideBar;
         if (this.props.isCollapsed) {
+            const styleWhiteText = {
+                color: '#fff',
+            };
+            const styleBlueBackground = {
+                backgroundColor: '#00bcd6',
+            };
             sideBar = (
                 <Col xs={12} id="header">
-                    <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.expand}><ExpandMore /></IconButton>} />
+                    <Toolbar style={styleBlueBackground}>
+                        <ToolbarGroup firstChild>
+                            <IconButton onClick={this.expand}><ExpandMore color="white" /></IconButton>
+                            <ToolbarTitle text="TileJSON.io" style={styleWhiteText} />
+                        </ToolbarGroup>
+                        <ToolbarGroup lastChild>
+                            <FlatButton onClick={this.share} label="Share" style={styleWhiteText} />
+                            <FlatButton onClick={this.clearLayers} label="Clear" style={styleWhiteText} />
+                        </ToolbarGroup>
+                    </Toolbar>
                 </Col>
             );
         } else {
@@ -266,17 +287,17 @@ class App extends Component {
                     <Row>
                         {sideBar}
                         <Col xs={this.props.isCollapsed ? 12 : 8} id="map" className="map" />
+                        <Snackbar
+                            open={this.props.shareSnackbarOpen}
+                            message={shareSnackbarMessage}
+                            onRequestClose={this.handleShareSbRequestClose}
+                        />
+                        <Snackbar
+                            open={this.props.errorSnackbarOpen}
+                            message={this.props.tileJSONParseError}
+                            onRequestClose={this.handleErrorSbRequestClose}
+                        />
                     </Row>
-                    <Snackbar
-                        open={this.props.shareSnackbarOpen}
-                        message={shareSnackbarMessage}
-                        onRequestClose={this.handleShareSbRequestClose}
-                    />
-                    <Snackbar
-                        open={this.props.errorSnackbarOpen}
-                        message={this.props.tileJSONParseError}
-                        onRequestClose={this.handleErrorSbRequestClose}
-                    />
                 </div>
             </MuiThemeProvider>
         );
