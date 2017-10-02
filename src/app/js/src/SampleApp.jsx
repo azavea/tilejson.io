@@ -1,169 +1,123 @@
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { arrayOf, func, object, string } from 'prop-types';
 import { connect } from 'react-redux';
 
-import Map from 'ol/map';
-import View from 'ol/view';
 import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/xyz';
 
 import axios from 'axios';
 
 import gistRequest from '../data/request.json';
-
-const url = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-function getDefaultTileJSON() {
-    return [
-        {
-            tilejson: '2.2.0',
-            name: 'base',
-            version: '1.0.0',
-            scheme: 'xyz',
-            tiles: [
-                url,
-            ],
-        },
-    ];
-}
+import {
+    changeLayerName,
+    changeLayerUrl,
+    changeTileJson,
+    clearScreen,
+    changeShareLink,
+} from './actions';
+import {
+    baseLayer,
+    map,
+} from './constants';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            name: '',
-            url: '',
-            tileJSON: getDefaultTileJSON(),
-            map: {},
-            baseLayer: {},
-            layers: [],
-            shareLink: '',
-        };
+        this.layers = [
+            baseLayer,
+        ];
         this.changeUrl = this.changeUrl.bind(this);
         this.changeName = this.changeName.bind(this);
         this.addLayer = this.addLayer.bind(this);
-        this.initBaseMap = this.initBaseMap.bind(this);
-        this.createMap = this.createMap.bind(this);
         this.clearLayers = this.clearLayers.bind(this);
         this.share = this.share.bind(this);
+        this.changeTileJSON = this.changeTileJSON.bind(this);
     }
 
     componentDidMount() {
-        this.initBaseMap();
-    }
-
-    initBaseMap() {
-        const baseLayer = new TileLayer({
-            source: new XYZ({
-                url,
-            }),
-        });
-        this.setState({
-            baseLayer,
-            layers: [
-                baseLayer,
-            ],
-        }, this.createMap);
-    }
-
-    createMap() {
-        this.setState({
-            map: new Map({
-                target: 'map',
-                layers: [
-                    this.state.baseLayer,
-                ],
-                view: new View({
-                    center: [0, 0],
-                    zoom: 2,
-                }),
-            }),
-        });
+        map.setTarget('map');
     }
 
     changeName(e) {
-        this.setState({
+        this.props.dispatch(changeLayerName({
             name: e.target.value,
-        });
+        }));
     }
 
     changeUrl(e) {
-        this.setState({
+        this.props.dispatch(changeLayerUrl({
             url: e.target.value,
-        });
+        }));
     }
 
     addLayer() {
         const newLayer = new TileLayer({
             source: new XYZ({
-                url: this.state.url,
+                url: this.props.url,
             }),
         });
-        this.state.map.addLayer(newLayer);
-        this.state.layers.push(newLayer);
-        const layerName = (this.state.name === '' ? `Layer ${this.state.layers.length}` : this.state.name);
+        map.addLayer(newLayer);
+        this.layers.push(newLayer);
+        const layerName = (this.props.name === '' ? `Layer ${this.layers.length}` : this.props.name);
         const newTileJSON = {
             tilejson: '2.2.0',
             name: layerName,
             version: '1.0.0',
             scheme: 'xyz',
             tiles: [
-                this.state.url,
+                this.props.url,
             ],
         };
-        const tileJSONList = this.state.tileJSON;
+        const tileJSONList = this.props.tileJSON;
         tileJSONList.push(newTileJSON);
-        this.setState({
+        this.props.dispatch(changeTileJson({
             tileJSON: tileJSONList,
-        });
+        }));
     }
 
     clearLayers() {
-        for (let i = 0; i < this.state.layers.length; i += 1) {
-            if (this.state.layers[i] !== this.state.baseLayer) {
-                this.state.map.removeLayer(this.state.layers[i]);
+        for (let i = 0; i < this.layers.length; i += 1) {
+            if (this.layers[i] !== baseLayer) {
+                map.removeLayer(this.layers[i]);
             }
         }
-        this.setState({
-            tileJSON: getDefaultTileJSON(),
-            shareLink: '',
-            url: '',
-            name: '',
-        });
-        this.state.layers = [
-            this.state.baseLayer,
+        this.layers = [
+            baseLayer,
         ];
+        this.props.dispatch(clearScreen());
     }
 
     share() {
-        gistRequest.files['tile.json'].content = JSON.stringify(this.state.tileJSON, null, '\t');
+        gistRequest.files['tile.json'].content = JSON.stringify(this.props.tileJSON, null, '\t');
         axios.post('https://api.github.com/gists', gistRequest)
             .then((response) => {
-                this.setState({
+                this.props.dispatch(changeShareLink({
                     shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
-                });
-            })
-            .catch((err) => {
-                console.log(err);
+                }));
             });
     }
 
+    changeTileJSON(e) {
+        console.log(this.props.tileJSON);
+        console.log(e.target.value);
+        // TODO: validate the string, convert to array, dispatch
+    }
+
     render() {
-        const textareaValue = JSON.stringify(this.state.tileJSON, null, '\t');
         return (
             <div>
                 <div id="menu">
                     <h1>TileJSON.io</h1>
-                    <input type="text" name="layerName" placeholder="Layer Name" id="layerNameInput" onChange={this.changeName} value={this.state.name} />
-                    <input type="text" name="tileUrl" placeholder="Tile URL" id="tileUrlInput" onChange={this.changeUrl} value={this.state.url} />
+                    <input type="text" name="layerName" placeholder="Layer Name" id="layerNameInput" onChange={this.changeName} value={this.props.name} />
+                    <input type="text" name="tileUrl" placeholder="Tile URL" id="tileUrlInput" onChange={this.changeUrl} value={this.props.url} />
                     <button onClick={this.addLayer} id="addLayerButton">Add</button>
                     <br /><br />
                     <button onClick={this.share} id="shareButton">Share</button>
-                    <a href={this.state.shareLink} id="shareLink">{this.state.shareLink}</a>
+                    <a href={this.props.shareLink} id="shareLink">{this.props.shareLink}</a>
                     <br /><br />
                     <button onClick={this.clearLayers} id="clearButton">Clear</button>
                     <br /><br />
-                    <textarea id="jsonTextarea" value={textareaValue} />
+                    <textarea id="jsonTextarea" onChange={this.changeTileJSON} value={this.props.tileJSONString} />
                 </div>
                 <div id="map" className="map" />
             </div>
@@ -173,6 +127,11 @@ class App extends Component {
 
 App.propTypes = {
     dispatch: func.isRequired,
+    name: string.isRequired,
+    url: string.isRequired,
+    tileJSON: arrayOf(object).isRequired,
+    tileJSONString: string.isRequired,
+    shareLink: string.isRequired,
 };
 
 function mapStateToProps(state) {
