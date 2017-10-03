@@ -23,15 +23,17 @@ export const map = new Map({
 });
 
 export function getDefaultTileJSON() {
-    return [
-        {
-            tilejson: '2.2.0',
-            name: 'base',
-            version: '1.0.0',
-            scheme: 'xyz',
-            tiles: [
-                baseLayerUrl,
-            ],
-        },
-    ];
+    return [];
+}
+
+export function getBaseLayerTileJSON() {
+    return {
+        tilejson: '2.2.0',
+        name: 'base',
+        version: '1.0.0',
+        scheme: 'xyz',
+        tiles: [
+            baseLayerUrl,
+        ],
+    };
 }

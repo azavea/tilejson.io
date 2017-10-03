@@ -6,6 +6,8 @@ import {
     CHANGE_TILE_JSON,
     CLEAR_SCREEN,
     CHANGE_SHARE_LINK,
+    TOGGLE_TILE_JSON_EDIT_MODE,
+    CHANGE_TILE_JSON_PARSE_ERROR,
 } from './actions';
 
 import {
@@ -17,6 +19,8 @@ const initialState = {
     url: '',
     tileJSON: getDefaultTileJSON(),
     tileJSONString: JSON.stringify(getDefaultTileJSON(), null, '\t'),
+    tileJSONEditMode: false,
+    tileJSONParseError: '',
     shareLink: '',
 };
 
@@ -32,8 +36,10 @@ function mainReducer(state = initialState, action) {
             });
         case CHANGE_TILE_JSON:
             return Object.assign({}, state, {
+                layers: action.payload.layers,
                 tileJSON: action.payload.tileJSON,
                 tileJSONString: JSON.stringify(action.payload.tileJSON, null, '\t'),
+                tileJSONEditMode: false,
             });
         case CLEAR_SCREEN:
             return Object.assign({}, state, {
@@ -46,6 +52,14 @@ function mainReducer(state = initialState, action) {
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
                 shareLink: action.payload.shareLink,
+            });
+        case TOGGLE_TILE_JSON_EDIT_MODE:
+            return Object.assign({}, state, {
+                tileJSONEditMode: action.payload.tileJSONEditMode,
+            });
+        case CHANGE_TILE_JSON_PARSE_ERROR:
+            return Object.assign({}, state, {
+                tileJSONParseError: action.payload.tileJSONParseError,
             });
         default:
             return state;
