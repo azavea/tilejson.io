@@ -13,7 +13,6 @@ import IconButton from 'material-ui/IconButton';
 import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
 import ExpandMore from 'material-ui/svg-icons/navigation/expand-more';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import FlatButton from 'material-ui/FlatButton';
@@ -21,8 +20,6 @@ import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 
 import gistRequest from '../data/request.json';
 import {
-    changeLayerName,
-    changeLayerUrl,
     changeTileJson,
     clearScreen,
     changeShareLink,
@@ -31,6 +28,7 @@ import {
     toggleShareSnackbarOpen,
     toggleErrorSnackbarOpen,
     toggleCollapse,
+    toggleAddLayerDialog,
 } from './actions';
 import {
     baseLayer,
@@ -38,6 +36,7 @@ import {
     getDefaultTileJSON,
     getBaseLayerTileJSON,
 } from './constants';
+import AddLayerDialog from './AddLayerDialog';
 
 class App extends Component {
     constructor(props) {
@@ -45,9 +44,6 @@ class App extends Component {
         this.layers = [
             baseLayer,
         ];
-        this.changeUrl = this.changeUrl.bind(this);
-        this.changeName = this.changeName.bind(this);
-        this.addLayer = this.addLayer.bind(this);
         this.clearLayers = this.clearLayers.bind(this);
         this.share = this.share.bind(this);
         this.editTileJSON = this.editTileJSON.bind(this);
@@ -56,50 +52,17 @@ class App extends Component {
         this.handleErrorSbRequestClose = this.handleErrorSbRequestClose.bind(this);
         this.collapse = this.collapse.bind(this);
         this.expand = this.expand.bind(this);
+        this.openAddLayerDialog = this.openAddLayerDialog.bind(this);
+        this.addLayer = this.addLayer.bind(this);
     }
 
     componentDidMount() {
         map.setTarget('map');
     }
 
-    changeName(e) {
-        this.props.dispatch(changeLayerName({
-            name: e.target.value,
-        }));
-    }
-
-    changeUrl(e) {
-        this.props.dispatch(changeLayerUrl({
-            url: e.target.value,
-        }));
-    }
-
-    addLayer() {
-        const newLayer = new TileLayer({
-            source: new XYZ({
-                url: this.props.url,
-            }),
-        });
-        map.addLayer(newLayer);
-        this.layers.push(newLayer);
-        const layerName = (this.props.name === '' ? `Layer ${this.layers.length - 1}` : this.props.name);
-        const newTileJSON = {
-            tilejson: '2.2.0',
-            name: layerName,
-            version: '1.0.0',
-            scheme: 'xyz',
-            tiles: [
-                this.props.url,
-            ],
-        };
-        const tileJSONList = this.props.tileJSON;
-        tileJSONList.push(newTileJSON);
-        this.props.dispatch(changeTileJson({
-            tileJSON: tileJSONList,
-        }));
-        if (document.getElementById('jsonTextarea')) {
-            document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
-        }
+    addLayer(layer) {
+        this.layers.push(layer);
+        return this.layers.length;
     }
 
     clearLayers() {
@@ -167,6 +130,12 @@ class App extends Component {
         setTimeout(() => {
             map.updateSize();
         }, 100);
+    }
+
+    openAddLayerDialog() {
+        this.props.dispatch(toggleAddLayerDialog({
+            showAddLayerDialog: true,
+        }));
     }
 
     renderTileJSON() {
@@ -241,6 +210,7 @@ class App extends Component {
                             <ToolbarTitle text="TileJSON.io" style={styleWhiteText} />
                         </ToolbarGroup>
                         <ToolbarGroup lastChild>
+                            <FlatButton onClick={this.openAddLayerDialog} label="Add Layer" style={styleWhiteText} />
                             <FlatButton onClick={this.share} label="Share" style={styleWhiteText} />
                             <FlatButton onClick={this.clearLayers} label="Clear" style={styleWhiteText} />
                         </ToolbarGroup>
@@ -252,14 +222,19 @@ class App extends Component {
                 <Col xs={4} id="menu">
                     <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
                     <Grid fluid>
-                        <TextField hintText="Layer Name" fullWidth onChange={this.changeName} value={this.props.name} />
-                        <TextField hintText="Tile URL" fullWidth onChange={this.changeUrl} value={this.props.url} />
-                        <RaisedButton onClick={this.addLayer} label="Add Layer" fullWidth />
-                        <br /><br />
-                        <RaisedButton onClick={this.share} label="Share" fullWidth />
-                        <br /><br />
-                        <RaisedButton onClick={this.clearLayers} label="Clear" fullWidth />
-                        <br /><br />
+                        <br />
+                        <Row>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.openAddLayerDialog} label="Add" primary fullWidth />
+                            </Col>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.share} label="Share" primary fullWidth />
+                            </Col>
+                            <Col xs={4}>
+                                <FlatButton onClick={this.clearLayers} label="Clear" primary fullWidth />
+                            </Col>
+                        </Row>
+                        <br />
                         <TextField
                             id="jsonTextarea"
                             multiLine
@@ -269,13 +244,14 @@ class App extends Component {
                             disabled={!this.props.tileJSONEditMode}
                             fullWidth
                         />
-                        <RaisedButton
+                        <FlatButton
                             onClick={
                                 this.props.tileJSONEditMode ?
                                 this.renderTileJSON : this.editTileJSON
                             }
                             label={this.props.tileJSONEditMode ? 'Render' : 'Edit'}
                             fullWidth
+                            primary
                         />
                     </Grid>
                 </Col>
@@ -297,6 +273,9 @@ class App extends Component {
                             message={this.props.tileJSONParseError}
                             onRequestClose={this.handleErrorSbRequestClose}
                         />
+                        <AddLayerDialog
+                            addLayer={this.addLayer}
+                        />
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -306,8 +285,6 @@ class App extends Component {
 
 App.propTypes = {
     dispatch: func.isRequired,
-    name: string.isRequired,
-    url: string.isRequired,
     tileJSON: arrayOf(object).isRequired,
     tileJSONString: string.isRequired,
     shareLink: string.isRequired,
