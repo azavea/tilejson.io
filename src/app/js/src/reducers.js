@@ -11,6 +11,7 @@ import {
     TOGGLE_SHARE_SNACKBAR_OPEN,
     TOGGLE_ERROR_SNACKBAR_OPEN,
     TOGGLE_COLLAPSE,
+    TOGGLE_ADD_LAYER_DIALOG,
 } from './actions';
 
 import {
@@ -28,6 +29,7 @@ const initialState = {
     shareSnackbarOpen: false,
     errorSnackbarOpen: false,
     isCollapsed: false,
+    showAddLayerDialog: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -81,6 +83,10 @@ function mainReducer(state = initialState, action) {
         case TOGGLE_COLLAPSE:
             return Object.assign({}, state, {
                 isCollapsed: action.payload.isCollapsed,
+            });
+        case TOGGLE_ADD_LAYER_DIALOG:
+            return Object.assign({}, state, {
+                showAddLayerDialog: action.payload.showAddLayerDialog,
             });
         default:
             return state;
