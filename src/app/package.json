@@ -37,7 +37,8 @@
     "redux": "3.5.2",
     "redux-devtools": "3.3.1",
     "redux-logger": "2.6.1",
-    "redux-thunk": "2.1.0"
+    "redux-thunk": "2.1.0",
+    "tilejson-validator": "0.1.5"
   },
   "devDependencies": {
     "autoprefixer": "6.7.4",

@@ -18,6 +18,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import FlatButton from 'material-ui/FlatButton';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 
+import { validate } from 'tilejson-validator';
+
 import gistRequest from '../data/request.json';
 import {
     changeTileJson,
@@ -161,8 +163,19 @@ class App extends Component {
             }));
             return;
         }
+        for (let i = 0; i < tileJSON.length; i += 1) {
+            if (!validate(tileJSON[i])) {
+                const objectName = tileJSON[i].name ? tileJSON[i].name : i + 1;
+                this.props.dispatch(changeTileJSONParseError({
+                    tileJSONParseError: `Input object ${objectName} is not a valid TileJSON.`,
+                }));
+                this.props.dispatch(toggleErrorSnackbarOpen({
+                    errorSnackbarOpen: true,
+                }));
+                return;
+            }
+        }
         for (let i = 0; i < this.layers.length; i += 1) {
-            // TODO: Validate tileJSON[i] using tilejson-validator
             if (this.layers[i] !== baseLayer) {
                 map.removeLayer(this.layers[i]);
             }
@@ -194,6 +207,9 @@ class App extends Component {
         const shareSnackbarMessage = (
             <a className="snackbarLink" href={this.props.shareLink}>{this.props.shareLink}</a>
         );
+        const errorSnackbarStyle = {
+            backgroundColor: '#fd4582',
+        };
         let sideBar;
         if (this.props.isCollapsed) {
             const styleWhiteText = {
@@ -272,6 +288,7 @@ class App extends Component {
                             open={this.props.errorSnackbarOpen}
                             message={this.props.tileJSONParseError}
                             onRequestClose={this.handleErrorSbRequestClose}
+                            bodyStyle={errorSnackbarStyle}
                         />
                         <AddLayerDialog
                             addLayer={this.addLayer}
