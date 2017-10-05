@@ -8,6 +8,9 @@ import {
     CHANGE_SHARE_LINK,
     TOGGLE_TILE_JSON_EDIT_MODE,
     CHANGE_TILE_JSON_PARSE_ERROR,
+    TOGGLE_SHARE_SNACKBAR_OPEN,
+    TOGGLE_ERROR_SNACKBAR_OPEN,
+    TOGGLE_COLLAPSE,
 } from './actions';
 
 import {
@@ -22,6 +25,9 @@ const initialState = {
     tileJSONEditMode: false,
     tileJSONParseError: '',
     shareLink: '',
+    shareSnackbarOpen: false,
+    errorSnackbarOpen: false,
+    isCollapsed: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -36,7 +42,6 @@ function mainReducer(state = initialState, action) {
             });
         case CHANGE_TILE_JSON:
             return Object.assign({}, state, {
-                layers: action.payload.layers,
                 tileJSON: action.payload.tileJSON,
                 tileJSONString: JSON.stringify(action.payload.tileJSON, null, '\t'),
                 tileJSONEditMode: false,
@@ -48,6 +53,10 @@ function mainReducer(state = initialState, action) {
                 shareLink: '',
                 url: '',
                 name: '',
+                tileJSONParseError: '',
+                tileJSONEditMode: false,
+                shareSnackbarOpen: false,
+                errorSnackbarOpen: false,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -60,6 +69,18 @@ function mainReducer(state = initialState, action) {
         case CHANGE_TILE_JSON_PARSE_ERROR:
             return Object.assign({}, state, {
                 tileJSONParseError: action.payload.tileJSONParseError,
+            });
+        case TOGGLE_SHARE_SNACKBAR_OPEN:
+            return Object.assign({}, state, {
+                shareSnackbarOpen: action.payload.shareSnackbarOpen,
+            });
+        case TOGGLE_ERROR_SNACKBAR_OPEN:
+            return Object.assign({}, state, {
+                errorSnackbarOpen: action.payload.errorSnackbarOpen,
+            });
+        case TOGGLE_COLLAPSE:
+            return Object.assign({}, state, {
+                isCollapsed: action.payload.isCollapsed,
             });
         default:
             return state;
