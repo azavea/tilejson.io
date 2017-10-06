@@ -5,7 +5,7 @@ import { Router, Route, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 
 import '../../sass/main.scss';
-import App from './SampleApp';
+import App from './App';
 
 import createStoreWithMiddleware from './store';
 import reducers from './reducers';
