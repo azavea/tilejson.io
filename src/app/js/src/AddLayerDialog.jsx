@@ -15,9 +15,6 @@ import {
     changeTileJson,
     toggleAddLayerDialog,
 } from './actions';
-import {
-    map,
-} from './constants';
 
 class AddLayerDialog extends Component {
     constructor(props) {
@@ -55,7 +52,6 @@ class AddLayerDialog extends Component {
                 url: this.props.url,
             }),
         });
-        map.addLayer(newLayer);
         const layerNum = this.props.addLayer(newLayer);
         const layerName = (this.props.name === '' ? `Layer ${layerNum - 1}` : this.props.name);
         const newTileJSON = {
