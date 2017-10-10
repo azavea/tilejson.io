@@ -7,7 +7,7 @@
   "scripts": {
     "bundle": "rm -rf /usr/dist/* && webpack --config webpack.prod.config.js --colors && echo $VERSION > /usr/dist/version.txt",
     "dev-server": "node_modules/.bin/webpack-dev-server --config webpack.dev.config.js --inline --hot --progress --colors --host 0.0.0.0 --port 4567 --history-api-fallback",
-    "test": "echo 'Error: no test specified' && exit 1",
+    "test": "jest --colors",
     "postinstall": "npm rebuild node-sass"
   },
   "repository": {
@@ -19,6 +19,24 @@
     "url": "https://github.com/azavea/tilejson.io/issues"
   },
   "homepage": "https://github.com/azavea/tilejson.io",
+  "jest": {
+    "modulePaths": [],
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "lib",
+      "common",
+      "img",
+      "js"
+    ],
+    "moduleNameMapper": {},
+    "testPathIgnorePatterns": [
+      "<rootDir>/js/__tests__/utils/"
+    ]
+  },
   "dependencies": {
     "axios": "0.16.2",
     "isomorphic-fetch": "2.2.1",
@@ -45,6 +63,7 @@
     "babel": "6.5.2",
     "babel-core": "6.14.0",
     "babel-eslint": "6.1.2",
+    "babel-jest": "19.0.0",
     "babel-loader": "7.1.2",
     "babel-polyfill": "6.13.0",
     "babel-preset-es2015": "6.14.0",
@@ -66,10 +85,12 @@
     "file-loader": "0.9.0",
     "html-loader": "0.4.3",
     "html-webpack-plugin": "2.22.0",
+    "jest": "19.0.2",
     "json-loader": "0.5.4",
     "mocha": "2.5.3",
     "node-sass": "4.5.3",
     "postcss-loader": "1.3.1",
+    "react-test-renderer": "15.6.1",
     "resolve-url-loader": "2.0.2",
     "sass-loader": "6.0.6",
     "style-loader": "0.18.2",

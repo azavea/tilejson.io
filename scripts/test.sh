@@ -19,7 +19,7 @@ Options:
 
 function app_tests() {
     # TODO: Run tests
-    true;
+    docker-compose -f docker-compose.test.yml up
 }
 
 function git_tests() {
