@@ -118,6 +118,7 @@ module.exports = {
         fs: 'empty',
     },
     devServer: {
+        disableHostCheck: true,
         historyApiFallback: {
             index: '/',
         }
