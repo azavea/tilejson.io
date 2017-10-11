@@ -20,21 +20,14 @@
   },
   "homepage": "https://github.com/azavea/tilejson.io",
   "jest": {
-    "modulePaths": [],
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules",
-      "lib",
-      "common",
-      "img",
-      "js"
-    ],
-    "moduleNameMapper": {},
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/reactTests/__mocks__/fileMock.js",
+      "\\.(css|sass|less)$": "<rootDir>/reactTests/__mocks__/styleMock.js",
+    },
     "testPathIgnorePatterns": [
-      "<rootDir>/js/__tests__/utils/"
+      "<rootDir>/node_modules/",
+      "<rootDir>/legacy_notes_and_workbook/",
     ]
   },
   "dependencies": {
@@ -61,14 +54,16 @@
   "devDependencies": {
     "autoprefixer": "6.7.4",
     "babel": "6.5.2",
-    "babel-core": "6.14.0",
+    "babel-core": "6.26.0",
     "babel-eslint": "6.1.2",
-    "babel-jest": "19.0.0",
+    "babel-jest": "21.2.0",
     "babel-loader": "7.1.2",
     "babel-polyfill": "6.13.0",
+    "babel-preset-env": "1.6.0",
     "babel-preset-es2015": "6.14.0",
     "babel-preset-react": "6.11.1",
     "babel-preset-react-hmre": "1.1.1",
+    "babel-preset-stage-2": "6.24.1",
     "bootstrap-loader": "1.0.10",
     "babel-plugin-transform-object-assign": "6.22.0",
     "chai": "3.5.0",
@@ -85,7 +80,7 @@
     "file-loader": "0.9.0",
     "html-loader": "0.4.3",
     "html-webpack-plugin": "2.22.0",
-    "jest": "19.0.2",
+    "jest": "21.2.0",
     "json-loader": "0.5.4",
     "mocha": "2.5.3",
     "node-sass": "4.5.3",
