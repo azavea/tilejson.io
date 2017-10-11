@@ -1,5 +1,6 @@
 import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/xyz';
+import OSM from 'ol/source/osm';
 import Map from 'ol/map';
 import View from 'ol/view';
 
@@ -7,6 +8,9 @@ export const baseLayerUrl = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 export const baseLayer = new TileLayer({
     source: new XYZ({
+        attributions: [
+            OSM.ATTRIBUTION,
+        ],
         url: baseLayerUrl,
     }),
 });
