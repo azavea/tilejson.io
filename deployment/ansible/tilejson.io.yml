@@ -8,6 +8,8 @@
 
   roles:
     - { role: "azavea.ntp" }
+    - { role: "azavea.aws-cli" }
     - { role: "azavea.python-security" }
     - { role: "tilejson.io.docker" }
     - { role: "tilejson.io.shellcheck" }
+    - { role: "azavea.terraform" }
