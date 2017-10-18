@@ -143,7 +143,12 @@ class App extends Component {
                 <div>
                     <Row>
                         {bar}
-                        <Col xs={this.props.isCollapsed ? 12 : 8} id="map" className="map" />
+                        <Col
+                            xs={this.props.isCollapsed ? 12 : 8}
+                            id="map"
+                            className={this.props.isCollapsed ?
+                                'map mapExpanded' : 'map mapCollapsed'}
+                        />
                         <Snackbar
                             open={this.props.shareSnackbarOpen}
                             message={shareSnackbarMessage}

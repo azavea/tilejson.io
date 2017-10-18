@@ -23,8 +23,15 @@ html, body, #root, [data-reactroot], [data-reactroot] > div {
 }
 
 #map {
-    max-height: 100%;
     padding: 0 !important;
+}
+
+.mapCollapsed {
+    max-height: 100%;
+}
+
+.mapExpanded {
+    max-height: calc(100% - 56px);
 }
 
 #jsonTextarea {
