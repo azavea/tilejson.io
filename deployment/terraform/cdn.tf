@@ -42,7 +42,7 @@ resource "aws_cloudfront_distribution" "app" {
     }
 
     compress               = true
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
 
     # Only applies if the origin adds Cache-Control headers. The
     # CloudFront default is also 0.
@@ -57,20 +57,6 @@ resource "aws_cloudfront_distribution" "app" {
     max_ttl = 86400
   }
 
-  custom_error_response {
-    error_caching_min_ttl = "0"
-    error_code            = "403"
-    response_code         = "200"
-    response_page_path    = "/index.html"
-  }
-
-  custom_error_response {
-    error_caching_min_ttl = "0"
-    error_code            = "404"
-    response_code         = "200"
-    response_page_path    = "/index.html"
-  }
-
   logging_config {
     include_cookies = false
     bucket          = "${module.origin.logs_bucket}.s3.amazonaws.com"
@@ -83,6 +69,8 @@ resource "aws_cloudfront_distribution" "app" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = "${var.aws_certificate_arn}"
+    minimum_protocol_version = "TLSv1"
+    ssl_support_method       = "sni-only"
   }
 }
