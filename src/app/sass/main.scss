@@ -42,3 +42,7 @@ html, body, #root, [data-reactroot], [data-reactroot] > div {
 .snackbarLink, .snackbarLink:hover, .snackbarLink:active {
     color: #fff;
 }
+
+.detailValue {
+    word-break: break-all;
+}

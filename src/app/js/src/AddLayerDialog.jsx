@@ -14,6 +14,7 @@ import {
     changeLayerUrl,
     changeTileJson,
     toggleAddLayerDialog,
+    addLayer,
 } from './actions';
 
 class AddLayerDialog extends Component {
@@ -63,6 +64,12 @@ class AddLayerDialog extends Component {
                 this.props.url,
             ],
         };
+        this.props.dispatch(addLayer({
+            newLayer: {
+                name: layerName,
+                url: this.props.url,
+            },
+        }));
         const tileJSONList = this.props.tileJSON;
         tileJSONList.push(newTileJSON);
         this.props.dispatch(changeTileJson({

@@ -12,6 +12,8 @@ import {
     TOGGLE_ERROR_SNACKBAR_OPEN,
     TOGGLE_COLLAPSE,
     TOGGLE_ADD_LAYER_DIALOG,
+    ADD_LAYER,
+    TOGGLE_LAYER_BOX_DETAILS,
 } from './actions';
 
 import {
@@ -30,6 +32,8 @@ const initialState = {
     errorSnackbarOpen: false,
     isCollapsed: false,
     showAddLayerDialog: false,
+    layers: [],
+    layerDetail: -1,
 };
 
 function mainReducer(state = initialState, action) {
@@ -88,6 +92,26 @@ function mainReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 showAddLayerDialog: action.payload.showAddLayerDialog,
             });
+        case ADD_LAYER: {
+            const layers = state.layers;
+            const newLayer = {
+                name: action.payload.newLayer.name,
+                url: action.payload.newLayer.url,
+                detailView: false,
+            };
+            layers.push(newLayer);
+            return Object.assign({}, state, {
+                layers,
+            });
+        }
+        case TOGGLE_LAYER_BOX_DETAILS: {
+            const layers = state.layers;
+            layers[action.payload.i].detailView = action.payload.detailView;
+            return Object.assign({}, state, {
+                layers,
+                layerDetail: action.payload.detailView ? action.payload.i : -1,
+            });
+        }
         default:
             return state;
     }

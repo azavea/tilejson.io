@@ -15,6 +15,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import { validate } from 'tilejson-validator';
 
+import LayerBoxes from './LayerBoxes';
+
 import {
     changeTileJson,
     changeTileJSONParseError,
@@ -154,6 +156,9 @@ class SideBar extends Component {
                         fullWidth
                         primary
                     />
+                    <br />
+                    <br />
+                    <LayerBoxes />
                 </Grid>
             </Col>
         );
