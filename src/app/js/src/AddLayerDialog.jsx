@@ -68,6 +68,7 @@ class AddLayerDialog extends Component {
             newLayer: {
                 name: layerName,
                 url: this.props.url,
+                tileJSON: newTileJSON,
             },
         }));
         const tileJSONList = this.props.tileJSON;

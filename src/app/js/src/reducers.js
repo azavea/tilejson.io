@@ -13,7 +13,7 @@ import {
     TOGGLE_COLLAPSE,
     TOGGLE_ADD_LAYER_DIALOG,
     ADD_LAYER,
-    TOGGLE_LAYER_BOX_DETAILS,
+    TOGGLE_LAYER_BOX_INFO,
 } from './actions';
 
 import {
@@ -33,7 +33,6 @@ const initialState = {
     isCollapsed: false,
     showAddLayerDialog: false,
     layers: [],
-    layerDetail: -1,
 };
 
 function mainReducer(state = initialState, action) {
@@ -97,19 +96,30 @@ function mainReducer(state = initialState, action) {
             const newLayer = {
                 name: action.payload.newLayer.name,
                 url: action.payload.newLayer.url,
+                tileJSON: action.payload.newLayer.tileJSON,
                 detailView: false,
+                sourceView: false,
             };
             layers.push(newLayer);
             return Object.assign({}, state, {
                 layers,
             });
         }
-        case TOGGLE_LAYER_BOX_DETAILS: {
-            const layers = state.layers;
-            layers[action.payload.i].detailView = action.payload.detailView;
+        case TOGGLE_LAYER_BOX_INFO: {
+            const layers = state.layers.map((layer, i) => {
+                const newLayer = Object.assign({}, layer);
+                if (i === action.payload.i) {
+                    if (Object.hasOwnProperty.call(action.payload, 'detailView')) {
+                        newLayer.detailView = action.payload.detailView;
+                    }
+                    if (Object.hasOwnProperty.call(action.payload, 'sourceView')) {
+                        newLayer.sourceView = action.payload.sourceView;
+                    }
+                }
+                return newLayer;
+            });
             return Object.assign({}, state, {
                 layers,
-                layerDetail: action.payload.detailView ? action.payload.i : -1,
             });
         }
         default:

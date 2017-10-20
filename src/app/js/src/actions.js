@@ -13,7 +13,7 @@ export const TOGGLE_COLLAPSE = 'TOGGLE_COLLAPSE';
 export const TOGGLE_ADD_LAYER_DIALOG = 'TOGGLE_ADD_LAYER_DIALOG';
 
 export const ADD_LAYER = 'ADD_LAYER';
-export const TOGGLE_LAYER_BOX_DETAILS = 'TOGGLE_LAYER_BOX_DETAILS';
+export const TOGGLE_LAYER_BOX_INFO = 'TOGGLE_LAYER_BOX_INFO';
 
 export function changeLayerName(payload) {
     return {
@@ -98,9 +98,9 @@ export function addLayer(payload) {
     };
 }
 
-export function toggleLayerBoxDetails(payload) {
+export function toggleLayerBoxInfo(payload) {
     return {
-        type: TOGGLE_LAYER_BOX_DETAILS,
+        type: TOGGLE_LAYER_BOX_INFO,
         payload,
     };
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bool, func, number, string } from 'prop-types';
+import { bool, func, number, shape, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import IconButton from 'material-ui/IconButton';
@@ -11,10 +11,12 @@ import EditorModeEditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 
+import ReactJson from 'react-json-view';
+
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import {
-    toggleLayerBoxDetails,
+    toggleLayerBoxInfo,
 } from './actions';
 
 class LayerBox extends Component {
@@ -22,19 +24,35 @@ class LayerBox extends Component {
         super(props);
         this.collapseDetails = this.collapseDetails.bind(this);
         this.expandDetails = this.expandDetails.bind(this);
+        this.collapseSource = this.collapseSource.bind(this);
+        this.expandSource = this.expandSource.bind(this);
     }
 
     collapseDetails() {
-        this.props.dispatch(toggleLayerBoxDetails({
+        this.props.dispatch(toggleLayerBoxInfo({
             i: this.props.i,
             detailView: false,
         }));
     }
 
     expandDetails() {
-        this.props.dispatch(toggleLayerBoxDetails({
+        this.props.dispatch(toggleLayerBoxInfo({
             i: this.props.i,
             detailView: true,
+        }));
+    }
+
+    collapseSource() {
+        this.props.dispatch(toggleLayerBoxInfo({
+            i: this.props.i,
+            sourceView: false,
+        }));
+    }
+
+    expandSource() {
+        this.props.dispatch(toggleLayerBoxInfo({
+            i: this.props.i,
+            sourceView: true,
         }));
     }
 
@@ -43,6 +61,16 @@ class LayerBox extends Component {
             width: 18,
             height: 18,
             color: '#8b8b8b',
+        };
+        const fontSize11 = {
+            fontSize: '11pt',
+        };
+        const fontSize9 = {
+            fontSize: '9pt',
+        };
+        const sourceStyle = {
+            fontSize: '9pt',
+            backgroundColor: '#f7f7f7',
         };
         let details;
         let expandOrCollapseButton = (
@@ -56,7 +84,7 @@ class LayerBox extends Component {
         );
         if (this.props.viewDetail) {
             details = (
-                <Grid fluid>
+                <Grid style={fontSize9} fluid>
                     <br />
                     <Row>
                         <Col xs={3}>
@@ -92,26 +120,47 @@ class LayerBox extends Component {
                 </IconButton>
             );
         }
+        let source;
+        if (this.props.viewSource) {
+            source = (
+                <Grid style={sourceStyle} className="detailValue" fluid>
+                    <br />
+                    <ReactJson
+                        name={false}
+                        src={this.props.layerTileJSON}
+                        displayObjectSize={false}
+                        indentWidth={2}
+                    />
+                    <br />
+                </Grid>
+            );
+        }
         return (
-            <Paper zDepth={1}>
+            <Paper zDepth={1} style={{ overflow: 'hidden' }}>
                 <Toolbar>
                     <ToolbarGroup>
-                        <ToolbarTitle style={{ fontSize: '11pt' }} text={this.props.layerName} />
+                        <ToolbarTitle style={fontSize11} text={this.props.layerName} />
                     </ToolbarGroup>
                     <ToolbarGroup>
-                        <IconButton iconStyle={smallIcon} touch disabled>
-                            <ActionCodeIcon />
-                        </IconButton>
                         <IconButton iconStyle={smallIcon} touch disabled>
                             <EditorModeEditIcon />
                         </IconButton>
                         <IconButton iconStyle={smallIcon} touch disabled>
                             <ActionDeleteIcon />
                         </IconButton>
+                        <IconButton
+                            onClick={this.props.viewSource ?
+                                this.collapseSource : this.expandSource}
+                            iconStyle={smallIcon}
+                            touch
+                        >
+                            <ActionCodeIcon />
+                        </IconButton>
                         {expandOrCollapseButton}
                     </ToolbarGroup>
                 </Toolbar>
                 {details}
+                {source}
             </Paper>
         );
     }
@@ -122,12 +171,9 @@ LayerBox.propTypes = {
     layerName: string.isRequired,
     layerUrl: string.isRequired,
     i: number.isRequired,
-    // layers: arrayOf(shape({
-    //     name: string.isRequired,
-    //     url: string.isRequired,
-    //     detailView: bool.isRequired,
-    // })).isRequired,
     viewDetail: bool.isRequired,
+    viewSource: bool.isRequired,
+    layerTileJSON: shape({}).isRequired,
 };
 
 function mapStateToProps(state) {

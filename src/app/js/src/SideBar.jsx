@@ -121,23 +121,11 @@ class SideBar extends Component {
     }
 
     render() {
-        return (
-            <Col xs={4} id="menu">
-                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
-                <Grid fluid>
-                    <br />
-                    <Row>
-                        <Col xs={4}>
-                            <FlatButton onClick={this.props.openAddLayerDialog} label="Add" primary fullWidth />
-                        </Col>
-                        <Col xs={4}>
-                            <FlatButton onClick={this.props.share} label="Share" primary fullWidth />
-                        </Col>
-                        <Col xs={4}>
-                            <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
-                        </Col>
-                    </Row>
-                    <br />
+        const sideBarFunction = 1;
+        let sideBarItems;
+        if (sideBarFunction === 0) {
+            sideBarItems = (
+                <div>
                     <TextField
                         id="jsonTextarea"
                         multiLine
@@ -156,9 +144,34 @@ class SideBar extends Component {
                         fullWidth
                         primary
                     />
-                    <br />
+                </div>
+            );
+        } else if (sideBarFunction === 1) {
+            sideBarItems = (
+                <div>
                     <br />
                     <LayerBoxes />
+                </div>
+            );
+        }
+        return (
+            <Col xs={4} id="menu">
+                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
+                <Grid fluid>
+                    <br />
+                    <Row>
+                        <Col xs={4}>
+                            <FlatButton onClick={this.props.openAddLayerDialog} label="Add" primary fullWidth />
+                        </Col>
+                        <Col xs={4}>
+                            <FlatButton onClick={this.props.share} label="Share" primary fullWidth />
+                        </Col>
+                        <Col xs={4}>
+                            <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
+                        </Col>
+                    </Row>
+                    <br />
+                    {sideBarItems}
                 </Grid>
             </Col>
         );

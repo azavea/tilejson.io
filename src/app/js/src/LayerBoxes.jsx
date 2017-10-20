@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { arrayOf, number, object } from 'prop-types';
+import { arrayOf, object } from 'prop-types';
 import { connect } from 'react-redux';
 
 import LayerBox from './LayerBox';
@@ -17,7 +17,9 @@ class LayerBoxes extends Component {
                     i={i}
                     layerName={layer.name}
                     layerUrl={layer.url}
-                    viewDetail={i === this.props.layerDetail}
+                    viewDetail={layer.detailView}
+                    viewSource={layer.sourceView}
+                    layerTileJSON={layer.tileJSON}
                 />
                 <br />
             </div>,
@@ -32,7 +34,6 @@ class LayerBoxes extends Component {
 
 LayerBoxes.propTypes = {
     layers: arrayOf(object).isRequired,
-    layerDetail: number.isRequired,
 };
 
 function mapStateToProps(state) {
