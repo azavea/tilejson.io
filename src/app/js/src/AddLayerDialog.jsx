@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, object, string } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 import { connect } from 'react-redux';
-
-import TileLayer from 'ol/layer/tile';
-import XYZ from 'ol/source/xyz';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -12,9 +9,7 @@ import TextField from 'material-ui/TextField';
 import {
     changeLayerName,
     changeLayerUrl,
-    changeTileJson,
     toggleAddLayerDialog,
-    addLayer,
 } from './actions';
 
 class AddLayerDialog extends Component {
@@ -22,8 +17,8 @@ class AddLayerDialog extends Component {
         super(props);
         this.changeName = this.changeName.bind(this);
         this.changeUrl = this.changeUrl.bind(this);
-        this.addLayer = this.addLayer.bind(this);
         this.closeAddLayerDialog = this.closeAddLayerDialog.bind(this);
+        this.addOnKeyDown = this.addOnKeyDown.bind(this);
     }
 
     changeName(e) {
@@ -44,50 +39,10 @@ class AddLayerDialog extends Component {
         }));
     }
 
-    addLayer() {
-        if (this.props.url === '') {
-            return;
+    addOnKeyDown(e) {
+        if (e.keyCode === 13) {
+            this.props.addLayer();
         }
-        const newLayer = new TileLayer({
-            source: new XYZ({
-                url: this.props.url,
-            }),
-        });
-        const layerNum = this.props.addLayer(newLayer);
-        const layerName = (this.props.name === '' ? `Layer ${layerNum - 1}` : this.props.name);
-        const newTileJSON = {
-            tilejson: '2.2.0',
-            name: layerName,
-            version: '1.0.0',
-            scheme: 'xyz',
-            tiles: [
-                this.props.url,
-            ],
-        };
-        this.props.dispatch(addLayer({
-            newLayer: {
-                name: layerName,
-                url: this.props.url,
-                tileJSON: newTileJSON,
-            },
-        }));
-        const tileJSONList = this.props.tileJSON;
-        tileJSONList.push(newTileJSON);
-        this.props.dispatch(changeTileJson({
-            tileJSON: tileJSONList,
-        }));
-        if (document.getElementById('jsonTextarea')) {
-            document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
-        }
-        this.props.dispatch(toggleAddLayerDialog({
-            showAddLayerDialog: false,
-        }));
-        this.props.dispatch(changeLayerName({
-            name: '',
-        }));
-        this.props.dispatch(changeLayerUrl({
-            url: '',
-        }));
     }
 
     render() {
@@ -99,7 +54,7 @@ class AddLayerDialog extends Component {
             <FlatButton
                 label="Add"
                 primary
-                onClick={this.addLayer}
+                onClick={this.props.addLayer}
             />,
         ];
         return (
@@ -111,8 +66,20 @@ class AddLayerDialog extends Component {
                     open={this.props.showAddLayerDialog}
                     onRequestClose={this.closeAddLayerDialog}
                 >
-                    <TextField hintText="Layer Name" fullWidth onChange={this.changeName} value={this.props.name} />
-                    <TextField hintText="Tile URL" fullWidth onChange={this.changeUrl} value={this.props.url} />
+                    <TextField
+                        hintText="Layer Name"
+                        fullWidth
+                        onChange={this.changeName}
+                        value={this.props.name}
+                        onKeyDown={this.addOnKeyDown}
+                    />
+                    <TextField
+                        hintText="Tile URL"
+                        fullWidth
+                        onChange={this.changeUrl}
+                        value={this.props.url}
+                        onKeyDown={this.addOnKeyDown}
+                    />
                 </Dialog>
             </div>
         );
@@ -124,7 +91,6 @@ AddLayerDialog.propTypes = {
     addLayer: func.isRequired,
     name: string.isRequired,
     url: string.isRequired,
-    tileJSON: arrayOf(object).isRequired,
     showAddLayerDialog: bool.isRequired,
 };
 
