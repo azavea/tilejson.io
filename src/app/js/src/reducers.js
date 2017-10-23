@@ -14,6 +14,7 @@ import {
     TOGGLE_ADD_LAYER_DIALOG,
     ADD_LAYER,
     TOGGLE_LAYER_BOX_INFO,
+    REMOVE_LAYER,
 } from './actions';
 
 import {
@@ -62,6 +63,7 @@ function mainReducer(state = initialState, action) {
                 tileJSONEditMode: false,
                 shareSnackbarOpen: false,
                 errorSnackbarOpen: false,
+                layers: [],
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -119,6 +121,16 @@ function mainReducer(state = initialState, action) {
                 return newLayer;
             });
             return Object.assign({}, state, {
+                layers,
+            });
+        }
+        case REMOVE_LAYER: {
+            const tileJSON = [...state.tileJSON.slice(0, action.payload.i),
+                ...state.tileJSON.slice(action.payload.i + 1)];
+            const layers = [...state.layers.slice(0, action.payload.i),
+                ...state.layers.slice(action.payload.i + 1)];
+            return Object.assign({}, state, {
+                tileJSON,
                 layers,
             });
         }

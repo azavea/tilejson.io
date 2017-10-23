@@ -150,7 +150,10 @@ class SideBar extends Component {
             sideBarItems = (
                 <div>
                     <br />
-                    <LayerBoxes />
+                    <LayerBoxes
+                        addLayer={this.props.addLayer}
+                        removeLayer={this.props.removeLayer}
+                    />
                 </div>
             );
         }
@@ -182,6 +185,7 @@ SideBar.propTypes = {
     dispatch: func.isRequired,
     addLayer: func.isRequired,
     removeLayers: func.isRequired,
+    removeLayer: func.isRequired,
     openAddLayerDialog: func.isRequired,
     share: func.isRequired,
     clearLayers: func.isRequired,

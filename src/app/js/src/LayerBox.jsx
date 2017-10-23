@@ -26,6 +26,7 @@ class LayerBox extends Component {
         this.expandDetails = this.expandDetails.bind(this);
         this.collapseSource = this.collapseSource.bind(this);
         this.expandSource = this.expandSource.bind(this);
+        this.removeLayer = this.removeLayer.bind(this);
     }
 
     collapseDetails() {
@@ -54,6 +55,10 @@ class LayerBox extends Component {
             i: this.props.i,
             sourceView: true,
         }));
+    }
+
+    removeLayer() {
+        this.props.removeLayer(this.props.i);
     }
 
     render() {
@@ -145,7 +150,11 @@ class LayerBox extends Component {
                         <IconButton iconStyle={smallIcon} touch disabled>
                             <EditorModeEditIcon />
                         </IconButton>
-                        <IconButton iconStyle={smallIcon} touch disabled>
+                        <IconButton
+                            iconStyle={smallIcon}
+                            onClick={this.removeLayer}
+                            touch
+                        >
                             <ActionDeleteIcon />
                         </IconButton>
                         <IconButton
@@ -174,6 +183,7 @@ LayerBox.propTypes = {
     viewDetail: bool.isRequired,
     viewSource: bool.isRequired,
     layerTileJSON: shape({}).isRequired,
+    removeLayer: func.isRequired,
 };
 
 function mapStateToProps(state) {

@@ -14,6 +14,7 @@ export const TOGGLE_ADD_LAYER_DIALOG = 'TOGGLE_ADD_LAYER_DIALOG';
 
 export const ADD_LAYER = 'ADD_LAYER';
 export const TOGGLE_LAYER_BOX_INFO = 'TOGGLE_LAYER_BOX_INFO';
+export const REMOVE_LAYER = 'REMOVE_LAYER';
 
 export function changeLayerName(payload) {
     return {
@@ -101,6 +102,13 @@ export function addLayer(payload) {
 export function toggleLayerBoxInfo(payload) {
     return {
         type: TOGGLE_LAYER_BOX_INFO,
+        payload,
+    };
+}
+
+export function removeLayer(payload) {
+    return {
+        type: REMOVE_LAYER,
         payload,
     };
 }

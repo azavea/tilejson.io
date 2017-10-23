@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, func, object } from 'prop-types';
 import { connect } from 'react-redux';
 
 import LayerBox from './LayerBox';
+import QuickAddLayerBox from './QuickAddLayerBox';
 
 class LayerBoxes extends Component {
     constructor(props) {
@@ -20,12 +21,17 @@ class LayerBoxes extends Component {
                     viewDetail={layer.detailView}
                     viewSource={layer.sourceView}
                     layerTileJSON={layer.tileJSON}
+                    removeLayer={this.props.removeLayer}
                 />
                 <br />
             </div>,
         );
         return (
             <div>
+                <QuickAddLayerBox
+                    addLayer={this.props.addLayer}
+                />
+                <br />
                 {layerBoxes}
             </div>
         );
@@ -33,6 +39,8 @@ class LayerBoxes extends Component {
 }
 
 LayerBoxes.propTypes = {
+    addLayer: func.isRequired,
+    removeLayer: func.isRequired,
     layers: arrayOf(object).isRequired,
 };
 

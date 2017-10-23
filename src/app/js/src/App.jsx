@@ -15,6 +15,7 @@ import {
     toggleShareSnackbarOpen,
     toggleErrorSnackbarOpen,
     toggleAddLayerDialog,
+    removeLayer,
 } from './actions';
 import {
     baseLayer,
@@ -39,6 +40,7 @@ class App extends Component {
         this.openAddLayerDialog = this.openAddLayerDialog.bind(this);
         this.addLayer = this.addLayer.bind(this);
         this.removeLayers = this.removeLayers.bind(this);
+        this.removeLayer = this.removeLayer.bind(this);
     }
 
     componentDidMount() {
@@ -60,6 +62,14 @@ class App extends Component {
         this.layers = [
             baseLayer,
         ];
+    }
+
+    removeLayer(i) {
+        map.removeLayer(this.layers[i + 1]);
+        this.layers.splice(i + 1, 1);
+        this.props.dispatch(removeLayer({
+            i,
+        }));
     }
 
     clearLayers() {
@@ -135,6 +145,7 @@ class App extends Component {
                     clearLayers={this.clearLayers}
                     addLayer={this.addLayer}
                     removeLayers={this.removeLayers}
+                    removeLayer={this.removeLayer}
                 />
             );
         }
