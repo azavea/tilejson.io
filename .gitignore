@@ -16,3 +16,10 @@ dist/
 
 # macOS
 .DS_Store
+
+# Terraform
+.terraform
+*.tfplan
+*.tfvars
+*.tfstate
+*.tfstate.backup

@@ -47,7 +47,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /(node_modules|lib)/,
+                exclude: /(node_modules|lib)\/(?!tilejson-validator)/,
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015', 'react'],

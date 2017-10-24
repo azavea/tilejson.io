@@ -1,0 +1,15 @@
+version: '3'
+services:
+  terraform:
+    image: "quay.io/azavea/terraform:0.9.1"
+    volumes:
+      - ./:/usr/local/src
+      - ~/.aws:/root/.aws
+    environment:
+      - TILEJSON_IO_DEBUG=1
+      - AWS_PROFILE=${AWS_PROFILE:-tilejson-io}
+      - TILEJSON_IO_SETTINGS_BUCKET=${TILEJSON_IO_SETTINGS_BUCKET:-tilejson-io-staging-config-us-east-1}
+      - TILEJSON_IO_SITE_BUCKET=${TILEJSON_IO_SITE_BUCKET:-tilejson-io-staging-site-us-east-1}
+      - GIT_COMMIT=${GIT_COMMIT:-latest}
+    working_dir: /usr/local/src
+    entrypoint: bash

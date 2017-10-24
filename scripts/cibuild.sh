@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -n "${project_name_DEBUG}" ]]; then
+if [[ -n "${TILEJSON_IO_DEBUG}" ]]; then
     set -x
 fi
 
@@ -32,14 +32,5 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
                        -e INSTALL_ENV="${INSTALL_ENV:-internal}" \
                        -e VERSION="${GIT_COMMIT}" app \
                        yarn run bundle
-
-        # If the cibuild.d directory exists, source each script it
-        # contains. This allows the core cibuild.sh to be extended with
-        # project specific scripts.
-        if [ -d "./scripts/cibuild.d" ]; then
-            for file in ./scripts/cibuild.d/*.sh; do
-                source "${file}"
-            done
-        fi
     fi
 fi
