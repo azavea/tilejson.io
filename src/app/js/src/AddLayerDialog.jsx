@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bool, func, string } from 'prop-types';
+import { bool, func, number, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Dialog from 'material-ui/Dialog';
@@ -10,6 +10,7 @@ import {
     changeLayerName,
     changeLayerUrl,
     toggleAddLayerDialog,
+    toggleEditLayerDialog,
 } from './actions';
 
 class AddLayerDialog extends Component {
@@ -18,7 +19,9 @@ class AddLayerDialog extends Component {
         this.changeName = this.changeName.bind(this);
         this.changeUrl = this.changeUrl.bind(this);
         this.closeAddLayerDialog = this.closeAddLayerDialog.bind(this);
+        this.closeEditLayerDialog = this.closeEditLayerDialog.bind(this);
         this.addOnKeyDown = this.addOnKeyDown.bind(this);
+        this.editLayer = this.editLayer.bind(this);
     }
 
     changeName(e) {
@@ -39,31 +42,50 @@ class AddLayerDialog extends Component {
         }));
     }
 
+    closeEditLayerDialog() {
+        this.props.dispatch(toggleEditLayerDialog({
+            showEditLayerDialog: false,
+        }));
+    }
+
     addOnKeyDown(e) {
         if (e.keyCode === 13) {
-            this.props.addLayer();
+            if (this.props.editMode) {
+                this.props.editLayer(this.props.editLayerId);
+            } else {
+                this.props.addLayer();
+            }
         }
+    }
+
+    editLayer() {
+        this.props.editLayer(this.props.editLayerId);
     }
 
     render() {
         const actions = [
             <FlatButton
                 label="Cancel"
-                onClick={this.closeAddLayerDialog}
+                onClick={this.props.editMode ?
+                    this.closeEditLayerDialog :
+                    this.closeAddLayerDialog}
             />,
             <FlatButton
-                label="Add"
+                label={this.props.editMode ? 'Save' : 'Add'}
                 primary
-                onClick={this.props.addLayer}
+                onClick={this.props.editMode ? this.editLayer : this.props.addLayer}
             />,
         ];
+        const title = this.props.editMode ? 'Edit Layer' : 'Add Layer';
         return (
             <div>
                 <Dialog
-                    title="Add Layer"
+                    title={title}
                     actions={actions}
                     modal={false}
-                    open={this.props.showAddLayerDialog}
+                    open={this.props.editMode ?
+                        this.props.showEditLayerDialog :
+                        this.props.showAddLayerDialog}
                     onRequestClose={this.closeAddLayerDialog}
                 >
                     <TextField
@@ -88,10 +110,14 @@ class AddLayerDialog extends Component {
 
 AddLayerDialog.propTypes = {
     dispatch: func.isRequired,
-    addLayer: func.isRequired,
     name: string.isRequired,
     url: string.isRequired,
     showAddLayerDialog: bool.isRequired,
+    showEditLayerDialog: bool.isRequired,
+    editMode: bool.isRequired,
+    editLayerId: number.isRequired,
+    addLayer: func,
+    editLayer: func,
 };
 
 function mapStateToProps(state) {

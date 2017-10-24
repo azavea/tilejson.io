@@ -17,6 +17,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import {
     toggleLayerBoxInfo,
+    toggleEditLayerDialog,
 } from './actions';
 
 class LayerBox extends Component {
@@ -27,6 +28,7 @@ class LayerBox extends Component {
         this.collapseSource = this.collapseSource.bind(this);
         this.expandSource = this.expandSource.bind(this);
         this.removeLayer = this.removeLayer.bind(this);
+        this.openEditLayerDialog = this.openEditLayerDialog.bind(this);
     }
 
     collapseDetails() {
@@ -59,6 +61,13 @@ class LayerBox extends Component {
 
     removeLayer() {
         this.props.removeLayer(this.props.i);
+    }
+
+    openEditLayerDialog() {
+        this.props.dispatch(toggleEditLayerDialog({
+            showEditLayerDialog: true,
+            i: this.props.i,
+        }));
     }
 
     render() {
@@ -147,7 +156,11 @@ class LayerBox extends Component {
                         <ToolbarTitle style={fontSize11} text={this.props.layerName} />
                     </ToolbarGroup>
                     <ToolbarGroup>
-                        <IconButton iconStyle={smallIcon} touch disabled>
+                        <IconButton
+                            iconStyle={smallIcon}
+                            onClick={this.openEditLayerDialog}
+                            touch
+                        >
                             <EditorModeEditIcon />
                         </IconButton>
                         <IconButton

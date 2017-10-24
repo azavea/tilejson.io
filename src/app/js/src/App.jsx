@@ -13,8 +13,6 @@ import XYZ from 'ol/source/xyz';
 
 import gistRequest from '../data/request.json';
 import {
-    changeLayerName,
-    changeLayerUrl,
     changeTileJson,
     clearScreen,
     changeShareLink,
@@ -23,6 +21,8 @@ import {
     toggleAddLayerDialog,
     addLayer,
     removeLayer,
+    editLayer,
+    postAddEditClear,
 } from './actions';
 import {
     baseLayer,
@@ -49,10 +49,34 @@ class App extends Component {
         this.addLayer = this.addLayer.bind(this);
         this.removeLayers = this.removeLayers.bind(this);
         this.removeLayer = this.removeLayer.bind(this);
+        this.editLayer = this.editLayer.bind(this);
+        this.getLayerName = this.getLayerName.bind(this);
+        this.getLayerTileJSON = this.getLayerTileJSON.bind(this);
     }
 
     componentDidMount() {
         map.setTarget('map');
+    }
+
+    getLayerName() {
+        let layerName = this.props.name;
+        if (layerName === '') {
+            layerName = `Layer ${this.layersCounter}`;
+            this.layersCounter += 1;
+        }
+        return layerName;
+    }
+
+    getLayerTileJSON() {
+        return {
+            tilejson: '2.2.0',
+            name: this.getLayerName(),
+            version: '1.0.0',
+            scheme: 'xyz',
+            tiles: [
+                this.props.url,
+            ],
+        };
     }
 
     addLayer() {
@@ -64,25 +88,12 @@ class App extends Component {
                 url: this.props.url,
             }),
         });
-        let layerName = this.props.name;
-        if (layerName === '') {
-            layerName = `Layer ${this.layersCounter}`;
-            this.layersCounter += 1;
-        }
-        const newTileJSON = {
-            tilejson: '2.2.0',
-            name: layerName,
-            version: '1.0.0',
-            scheme: 'xyz',
-            tiles: [
-                this.props.url,
-            ],
-        };
+        const newTileJSON = this.getLayerTileJSON();
         const tileJSONList = this.props.tileJSON;
         tileJSONList.push(newTileJSON);
         this.props.dispatch(addLayer({
             newLayer: {
-                name: layerName,
+                name: newTileJSON.name,
                 url: this.props.url,
                 tileJSON: newTileJSON,
             },
@@ -96,15 +107,7 @@ class App extends Component {
         // Add layer to list of layers maintained
         this.layers.push(newLayer);
         // Clear artifacts of add
-        this.props.dispatch(toggleAddLayerDialog({
-            showAddLayerDialog: false,
-        }));
-        this.props.dispatch(changeLayerName({
-            name: '',
-        }));
-        this.props.dispatch(changeLayerUrl({
-            url: '',
-        }));
+        this.props.dispatch(postAddEditClear());
     }
 
     removeLayers() {
@@ -127,6 +130,36 @@ class App extends Component {
         this.props.dispatch(removeLayer({
             i,
         }));
+    }
+
+    editLayer(i) {
+        if (this.props.url === '') {
+            return;
+        }
+        const newTileJSON = this.getLayerTileJSON();
+        const tileJSONList = this.props.tileJSON;
+        tileJSONList[i] = newTileJSON;
+        this.props.dispatch(editLayer({
+            newLayer: {
+                name: newTileJSON.name,
+                url: this.props.url,
+                tileJSON: newTileJSON,
+            },
+            i,
+        }));
+        this.props.dispatch(changeTileJson({
+            tileJSON: tileJSONList,
+        }));
+
+        // Set source of changed layer on the ol map
+        const layers = map.getLayers().getArray();
+        layers[i + 1].setSource(new XYZ({
+            url: this.props.url,
+        }));
+        // Change the layer on list of layers maintained
+        this.layers[i + 1] = map.getLayers().getArray()[i + 1];
+        // Clear artifacts of change
+        this.props.dispatch(postAddEditClear());
     }
 
     clearLayers() {
@@ -229,7 +262,12 @@ class App extends Component {
                             bodyStyle={errorSnackbarStyle}
                         />
                         <AddLayerDialog
+                            editMode={false}
                             addLayer={this.addLayer}
+                        />
+                        <AddLayerDialog
+                            editMode
+                            editLayer={this.editLayer}
                         />
                     </Row>
                 </div>
