@@ -11,6 +11,14 @@ export const TOGGLE_SHARE_SNACKBAR_OPEN = 'TOGGLE_SHARE_SNACKBAR_OPEN';
 export const TOGGLE_ERROR_SNACKBAR_OPEN = 'TOGGLE_ERROR_SNACKBAR_OPEN';
 export const TOGGLE_COLLAPSE = 'TOGGLE_COLLAPSE';
 export const TOGGLE_ADD_LAYER_DIALOG = 'TOGGLE_ADD_LAYER_DIALOG';
+export const TOGGLE_EDIT_LAYER_DIALOG = 'TOGGLE_EDIT_LAYER_DIALOG';
+
+export const ADD_LAYER = 'ADD_LAYER';
+export const TOGGLE_LAYER_BOX_INFO = 'TOGGLE_LAYER_BOX_INFO';
+export const REMOVE_LAYER = 'REMOVE_LAYER';
+export const EDIT_LAYER = 'EDIT_LAYER';
+
+export const POST_ADD_EDIT_CLEAR = 'POST_ADD_EDIT_CLEAR';
 
 export function changeLayerName(payload) {
     return {
@@ -84,6 +92,49 @@ export function toggleCollapse(payload) {
 export function toggleAddLayerDialog(payload) {
     return {
         type: TOGGLE_ADD_LAYER_DIALOG,
+        payload,
+    };
+}
+
+export function toggleEditLayerDialog(payload) {
+    return {
+        type: TOGGLE_EDIT_LAYER_DIALOG,
+        payload,
+    };
+}
+
+export function addLayer(payload) {
+    return {
+        type: ADD_LAYER,
+        payload,
+    };
+}
+
+export function toggleLayerBoxInfo(payload) {
+    return {
+        type: TOGGLE_LAYER_BOX_INFO,
+        payload,
+    };
+}
+
+export function removeLayer(payload) {
+    return {
+        type: REMOVE_LAYER,
+        payload,
+    };
+}
+
+export function editLayer(payload) {
+    return {
+        type: EDIT_LAYER,
+        payload,
+    };
+}
+
+
+export function postAddEditClear(payload) {
+    return {
+        type: POST_ADD_EDIT_CLEAR,
         payload,
     };
 }

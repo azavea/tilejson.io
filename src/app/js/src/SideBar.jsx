@@ -15,6 +15,8 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import { validate } from 'tilejson-validator';
 
+import LayerBoxes from './LayerBoxes';
+
 import {
     changeTileJson,
     changeTileJSONParseError,
@@ -119,23 +121,11 @@ class SideBar extends Component {
     }
 
     render() {
-        return (
-            <Col xs={4} id="menu">
-                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
-                <Grid fluid>
-                    <br />
-                    <Row>
-                        <Col xs={4}>
-                            <FlatButton onClick={this.props.openAddLayerDialog} label="Add" primary fullWidth />
-                        </Col>
-                        <Col xs={4}>
-                            <FlatButton onClick={this.props.share} label="Share" primary fullWidth />
-                        </Col>
-                        <Col xs={4}>
-                            <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
-                        </Col>
-                    </Row>
-                    <br />
+        const sideBarFunction = 1;
+        let sideBarItems;
+        if (sideBarFunction === 0) {
+            sideBarItems = (
+                <div>
                     <TextField
                         id="jsonTextarea"
                         multiLine
@@ -154,6 +144,37 @@ class SideBar extends Component {
                         fullWidth
                         primary
                     />
+                </div>
+            );
+        } else if (sideBarFunction === 1) {
+            sideBarItems = (
+                <div>
+                    <br />
+                    <LayerBoxes
+                        addLayer={this.props.addLayer}
+                        removeLayer={this.props.removeLayer}
+                    />
+                </div>
+            );
+        }
+        return (
+            <Col xs={4} id="menu">
+                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
+                <Grid fluid>
+                    <br />
+                    <Row>
+                        <Col xs={4}>
+                            <FlatButton onClick={this.props.openAddLayerDialog} label="Add" primary fullWidth />
+                        </Col>
+                        <Col xs={4}>
+                            <FlatButton onClick={this.props.share} label="Share" primary fullWidth />
+                        </Col>
+                        <Col xs={4}>
+                            <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
+                        </Col>
+                    </Row>
+                    <br />
+                    {sideBarItems}
                 </Grid>
             </Col>
         );
@@ -164,6 +185,7 @@ SideBar.propTypes = {
     dispatch: func.isRequired,
     addLayer: func.isRequired,
     removeLayers: func.isRequired,
+    removeLayer: func.isRequired,
     openAddLayerDialog: func.isRequired,
     share: func.isRequired,
     clearLayers: func.isRequired,

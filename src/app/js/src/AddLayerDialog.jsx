@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, object, string } from 'prop-types';
+import { bool, func, number, string } from 'prop-types';
 import { connect } from 'react-redux';
-
-import TileLayer from 'ol/layer/tile';
-import XYZ from 'ol/source/xyz';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -12,8 +9,8 @@ import TextField from 'material-ui/TextField';
 import {
     changeLayerName,
     changeLayerUrl,
-    changeTileJson,
     toggleAddLayerDialog,
+    toggleEditLayerDialog,
 } from './actions';
 
 class AddLayerDialog extends Component {
@@ -21,8 +18,10 @@ class AddLayerDialog extends Component {
         super(props);
         this.changeName = this.changeName.bind(this);
         this.changeUrl = this.changeUrl.bind(this);
-        this.addLayer = this.addLayer.bind(this);
         this.closeAddLayerDialog = this.closeAddLayerDialog.bind(this);
+        this.closeEditLayerDialog = this.closeEditLayerDialog.bind(this);
+        this.addOnKeyDown = this.addOnKeyDown.bind(this);
+        this.editLayer = this.editLayer.bind(this);
     }
 
     changeName(e) {
@@ -43,68 +42,66 @@ class AddLayerDialog extends Component {
         }));
     }
 
-    addLayer() {
-        if (this.props.url === '') {
-            return;
+    closeEditLayerDialog() {
+        this.props.dispatch(toggleEditLayerDialog({
+            showEditLayerDialog: false,
+        }));
+    }
+
+    addOnKeyDown(e) {
+        if (e.keyCode === 13) {
+            if (this.props.editMode) {
+                this.props.editLayer(this.props.editLayerId);
+            } else {
+                this.props.addLayer();
+            }
         }
-        const newLayer = new TileLayer({
-            source: new XYZ({
-                url: this.props.url,
-            }),
-        });
-        const layerNum = this.props.addLayer(newLayer);
-        const layerName = (this.props.name === '' ? `Layer ${layerNum - 1}` : this.props.name);
-        const newTileJSON = {
-            tilejson: '2.2.0',
-            name: layerName,
-            version: '1.0.0',
-            scheme: 'xyz',
-            tiles: [
-                this.props.url,
-            ],
-        };
-        const tileJSONList = this.props.tileJSON;
-        tileJSONList.push(newTileJSON);
-        this.props.dispatch(changeTileJson({
-            tileJSON: tileJSONList,
-        }));
-        if (document.getElementById('jsonTextarea')) {
-            document.getElementById('jsonTextarea').value = JSON.stringify(tileJSONList, null, '\t');
-        }
-        this.props.dispatch(toggleAddLayerDialog({
-            showAddLayerDialog: false,
-        }));
-        this.props.dispatch(changeLayerName({
-            name: '',
-        }));
-        this.props.dispatch(changeLayerUrl({
-            url: '',
-        }));
+    }
+
+    editLayer() {
+        this.props.editLayer(this.props.editLayerId);
     }
 
     render() {
         const actions = [
             <FlatButton
                 label="Cancel"
-                onClick={this.closeAddLayerDialog}
+                onClick={this.props.editMode ?
+                    this.closeEditLayerDialog :
+                    this.closeAddLayerDialog}
             />,
             <FlatButton
-                label="Add"
+                label={this.props.editMode ? 'Save' : 'Add'}
                 primary
-                onClick={this.addLayer}
+                onClick={this.props.editMode ? this.editLayer : this.props.addLayer}
             />,
         ];
+        const title = this.props.editMode ? 'Edit Layer' : 'Add Layer';
         return (
             <div>
                 <Dialog
-                    title="Add Layer"
+                    title={title}
                     actions={actions}
                     modal={false}
-                    open={this.props.showAddLayerDialog}
+                    open={this.props.editMode ?
+                        this.props.showEditLayerDialog :
+                        this.props.showAddLayerDialog}
                     onRequestClose={this.closeAddLayerDialog}
                 >
-                    <TextField hintText="Layer Name" fullWidth onChange={this.changeName} value={this.props.name} />
-                    <TextField hintText="Tile URL" fullWidth onChange={this.changeUrl} value={this.props.url} />
+                    <TextField
+                        hintText="Layer Name"
+                        fullWidth
+                        onChange={this.changeName}
+                        value={this.props.name}
+                        onKeyDown={this.addOnKeyDown}
+                    />
+                    <TextField
+                        hintText="Tile URL"
+                        fullWidth
+                        onChange={this.changeUrl}
+                        value={this.props.url}
+                        onKeyDown={this.addOnKeyDown}
+                    />
                 </Dialog>
             </div>
         );
@@ -113,11 +110,14 @@ class AddLayerDialog extends Component {
 
 AddLayerDialog.propTypes = {
     dispatch: func.isRequired,
-    addLayer: func.isRequired,
     name: string.isRequired,
     url: string.isRequired,
-    tileJSON: arrayOf(object).isRequired,
     showAddLayerDialog: bool.isRequired,
+    showEditLayerDialog: bool.isRequired,
+    editMode: bool.isRequired,
+    editLayerId: number.isRequired,
+    addLayer: func,
+    editLayer: func,
 };
 
 function mapStateToProps(state) {

@@ -29,6 +29,7 @@
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "react-flexbox-grid": "1.1.5",
+    "react-json-view": "1.13.1",
     "react-leaflet": "1.6.6",
     "react-leaflet-control": "1.4.0",
     "react-redux": "5.0.4",
