@@ -7,7 +7,9 @@ services:
       - ~/.aws:/root/.aws
     environment:
       - TILEJSON_IO_DEBUG=1
-      - AWS_PROFILE=${AWS_PROFILE:-tilejson-io}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
       - TILEJSON_IO_SETTINGS_BUCKET=${TILEJSON_IO_SETTINGS_BUCKET:-tilejson-io-staging-config-us-east-1}
       - TILEJSON_IO_SITE_BUCKET=${TILEJSON_IO_SITE_BUCKET:-tilejson-io-staging-site-us-east-1}
       - GIT_COMMIT=${GIT_COMMIT:-latest}

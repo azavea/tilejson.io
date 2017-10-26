@@ -3,6 +3,9 @@ language: node_js
 node_js:
   - 6.0.0
 
+services:
+  - docker
+
 # establish environment variables
 env:
   global:
@@ -15,30 +18,17 @@ install:
 script:
   - ./scripts/cibuild.sh
 
-# install terraform
-before_deploy:
-  - provider: script
-    script: "docker-compose -f docker-compose.ci.staging.yml run --rm terraform ./scripts/infra.sh plan"
-    on:
-      repo: azavea/tilejson.io
-      branch: develop
-  - provider: script
-    script: "docker-compose -f docker-compose.ci.production.yml run --rm terraform ./scripts/infra.sh plan"
-    on:
-      repo: azavea/tilejson.io
-      branch: master
-
-# terraform apply
+# terraform deploy
 deploy:
   - provider: script
     skip_cleanup: true
-    script: "docker-compose -f docker-compose.ci.staging.yml run --rm terraform ./scripts/infra.sh apply"
+    script: "docker-compose -f docker-compose.ci.staging.yml run --rm terraform ./scripts/infra.sh plan && docker-compose -f docker-compose.ci.staging.yml run --rm terraform ./scripts/infra.sh apply"
     on:
       repo: azavea/tilejson.io
       branch: develop
   - provider: script
     skip_cleanup: true
-    script: "docker-compose -f docker-compose.ci.production.yml run --rm terraform ./scripts/infra.sh apply"
+    script: "docker-compose -f docker-compose.ci.production.yml run --rm terraform ./scripts/infra.sh plan && docker-compose -f docker-compose.ci.production.yml run --rm terraform ./scripts/infra.sh apply"
     on:
       repo: azavea/tilejson.io
       branch: master
