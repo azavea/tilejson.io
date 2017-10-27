@@ -1,15 +1,32 @@
 import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/xyz';
-import OSM from 'ol/source/osm';
+import Attribution from 'ol/attribution';
 import Map from 'ol/map';
 import View from 'ol/view';
 
-export const baseLayerUrl = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
+export const baseLayers = [
+    {
+        name: 'OpenStreetMap.Mapnik',
+        url: 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.',
+    },
+    {
+        name: 'Esri.WorldImagery',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    },
+];
+
+export const defaultBaseLayer = 0;
+
+export const baseLayerUrl = baseLayers[defaultBaseLayer].url;
 
 export const baseLayer = new TileLayer({
     source: new XYZ({
         attributions: [
-            OSM.ATTRIBUTION,
+            new Attribution({
+                html: baseLayers[defaultBaseLayer].attribution,
+            }),
         ],
         url: baseLayerUrl,
     }),
@@ -29,14 +46,14 @@ export function getDefaultTileJSON() {
     return [];
 }
 
-export function getBaseLayerTileJSON() {
+export function getBaseLayerTileJSON(i) {
     return {
         tilejson: '2.2.0',
         name: 'base',
         version: '1.0.0',
         scheme: 'xyz',
         tiles: [
-            baseLayerUrl,
+            baseLayers[i].url,
         ],
     };
 }
