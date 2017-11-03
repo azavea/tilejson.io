@@ -18,10 +18,13 @@ import {
     REMOVE_LAYER,
     EDIT_LAYER,
     POST_ADD_EDIT_CLEAR,
+    TOGGLE_BASE_LAYER_DETAILS,
+    CHANGE_CURRENT_BASE_LAYER,
 } from './actions';
 
 import {
     getDefaultTileJSON,
+    defaultBaseLayer,
 } from './constants';
 
 const initialState = {
@@ -39,6 +42,8 @@ const initialState = {
     layers: [],
     showEditLayerDialog: false,
     editLayerId: -1,
+    currentBaseLayer: defaultBaseLayer,
+    baseLayerDetails: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -71,6 +76,7 @@ function mainReducer(state = initialState, action) {
                 layers: [],
                 showEditLayerDialog: false,
                 editLayerId: -1,
+                baseLayerDetails: false,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -171,6 +177,14 @@ function mainReducer(state = initialState, action) {
                 showAddLayerDialog: false,
                 showEditLayerDialog: false,
                 editLayerId: -1,
+            });
+        case TOGGLE_BASE_LAYER_DETAILS:
+            return Object.assign({}, state, {
+                baseLayerDetails: action.payload.baseLayerDetails,
+            });
+        case CHANGE_CURRENT_BASE_LAYER:
+            return Object.assign({}, state, {
+                currentBaseLayer: action.payload.currentBaseLayer,
             });
         default:
             return state;

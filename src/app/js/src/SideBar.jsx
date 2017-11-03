@@ -153,6 +153,7 @@ class SideBar extends Component {
                     <LayerBoxes
                         addLayer={this.props.addLayer}
                         removeLayer={this.props.removeLayer}
+                        changeBaseLayer={this.props.changeBaseLayer}
                     />
                 </div>
             );
@@ -191,6 +192,7 @@ SideBar.propTypes = {
     clearLayers: func.isRequired,
     tileJSONEditMode: bool.isRequired,
     tileJSONString: string.isRequired,
+    changeBaseLayer: func.isRequired,
 };
 
 function mapStateToProps(state) {

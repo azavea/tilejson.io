@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, object, string } from 'prop-types';
+import { arrayOf, bool, func, number, object, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import axios from 'axios';
@@ -9,6 +9,7 @@ import Snackbar from 'material-ui/Snackbar';
 import { Row, Col } from 'react-flexbox-grid';
 
 import TileLayer from 'ol/layer/tile';
+import Attribution from 'ol/attribution';
 import XYZ from 'ol/source/xyz';
 
 import gistRequest from '../data/request.json';
@@ -23,12 +24,14 @@ import {
     removeLayer,
     editLayer,
     postAddEditClear,
+    changeCurrentBaseLayer,
 } from './actions';
 import {
     baseLayer,
     map,
     getDefaultTileJSON,
     getBaseLayerTileJSON,
+    baseLayers,
 } from './constants';
 import AddLayerDialog from './AddLayerDialog';
 import NavBar from './NavBar';
@@ -52,6 +55,7 @@ class App extends Component {
         this.editLayer = this.editLayer.bind(this);
         this.getLayerName = this.getLayerName.bind(this);
         this.getLayerTileJSON = this.getLayerTileJSON.bind(this);
+        this.changeBaseLayer = this.changeBaseLayer.bind(this);
     }
 
     componentDidMount() {
@@ -111,13 +115,11 @@ class App extends Component {
     }
 
     removeLayers() {
-        for (let i = 0; i < this.layers.length; i += 1) {
-            if (this.layers[i] !== baseLayer) {
-                map.removeLayer(this.layers[i]);
-            }
+        for (let i = 1; i < this.layers.length; i += 1) {
+            map.removeLayer(this.layers[i]);
         }
         this.layers = [
-            baseLayer,
+            this.layers[0],
         ];
     }
 
@@ -162,14 +164,31 @@ class App extends Component {
         this.props.dispatch(postAddEditClear());
     }
 
+    changeBaseLayer(i) {
+        // Set source of changed layer on the ol map
+        const layers = map.getLayers().getArray();
+        layers[0].setSource(new XYZ({
+            attributions: [
+                new Attribution({
+                    html: baseLayers[i].attribution,
+                }),
+            ],
+            url: baseLayers[i].url,
+        }));
+        // Change the layer on list of layers maintained
+        this.layers[0] = map.getLayers().getArray()[0];
+        // Change currentBaseLayer in redux state
+        this.props.dispatch(changeCurrentBaseLayer({
+            currentBaseLayer: i,
+        }));
+    }
+
     clearLayers() {
-        for (let i = 0; i < this.layers.length; i += 1) {
-            if (this.layers[i] !== baseLayer) {
-                map.removeLayer(this.layers[i]);
-            }
+        for (let i = 1; i < this.layers.length; i += 1) {
+            map.removeLayer(this.layers[i]);
         }
         this.layers = [
-            baseLayer,
+            this.layers[0],
         ];
         this.props.dispatch(clearScreen());
         const tileJSONList = getDefaultTileJSON();
@@ -179,8 +198,8 @@ class App extends Component {
     }
 
     share() {
-        const tileJSON = this.props.tileJSON;
-        tileJSON.unshift(getBaseLayerTileJSON());
+        const tileJSON = this.props.tileJSON.slice(0);
+        tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
         axios.post('https://api.github.com/gists', gistRequest)
             .then((response) => {
@@ -236,6 +255,7 @@ class App extends Component {
                     addLayer={this.addLayer}
                     removeLayers={this.removeLayers}
                     removeLayer={this.removeLayer}
+                    changeBaseLayer={this.changeBaseLayer}
                 />
             );
         }
@@ -286,6 +306,7 @@ App.propTypes = {
     shareSnackbarOpen: bool.isRequired,
     errorSnackbarOpen: bool.isRequired,
     isCollapsed: bool.isRequired,
+    currentBaseLayer: number.isRequired,
 };
 
 function mapStateToProps(state) {

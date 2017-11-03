@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import LayerBox from './LayerBox';
 import QuickAddLayerBox from './QuickAddLayerBox';
+import BaseLayerBox from './BaseLayerBox';
 
 class LayerBoxes extends Component {
     constructor(props) {
@@ -32,6 +33,10 @@ class LayerBoxes extends Component {
                     addLayer={this.props.addLayer}
                 />
                 <br />
+                <BaseLayerBox
+                    changeBaseLayer={this.props.changeBaseLayer}
+                />
+                <br />
                 {layerBoxes}
             </div>
         );
@@ -42,6 +47,7 @@ LayerBoxes.propTypes = {
     addLayer: func.isRequired,
     removeLayer: func.isRequired,
     layers: arrayOf(object).isRequired,
+    changeBaseLayer: func.isRequired,
 };
 
 function mapStateToProps(state) {

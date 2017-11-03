@@ -20,6 +20,10 @@ export const EDIT_LAYER = 'EDIT_LAYER';
 
 export const POST_ADD_EDIT_CLEAR = 'POST_ADD_EDIT_CLEAR';
 
+export const TOGGLE_BASE_LAYER_DETAILS = 'TOGGLE_BASE_LAYER_DETAILS';
+
+export const CHANGE_CURRENT_BASE_LAYER = 'CHANGE_CURRENT_BASE_LAYER';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -135,6 +139,20 @@ export function editLayer(payload) {
 export function postAddEditClear(payload) {
     return {
         type: POST_ADD_EDIT_CLEAR,
+        payload,
+    };
+}
+
+export function toggleBaseLayerDetails(payload) {
+    return {
+        type: TOGGLE_BASE_LAYER_DETAILS,
+        payload,
+    };
+}
+
+export function changeCurrentBaseLayer(payload) {
+    return {
+        type: CHANGE_CURRENT_BASE_LAYER,
         payload,
     };
 }
