@@ -36,6 +36,7 @@ import {
 import AddLayerDialog from './AddLayerDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
+import DiffToolbar from './DiffToolbar';
 
 class App extends Component {
     constructor(props) {
@@ -238,7 +239,8 @@ class App extends Component {
             backgroundColor: '#fd4582',
         };
         let bar;
-        if (this.props.isCollapsed) {
+        let diffToolbar;
+        if (this.props.isCollapsed || this.props.diffMode) {
             bar = (
                 <NavBar
                     openAddLayerDialog={this.openAddLayerDialog}
@@ -246,6 +248,9 @@ class App extends Component {
                     clearLayers={this.clearLayers}
                 />
             );
+            if (this.props.diffMode) {
+                diffToolbar = (<DiffToolbar />);
+            }
         } else {
             bar = (
                 <SideBar
@@ -256,19 +261,26 @@ class App extends Component {
                     removeLayers={this.removeLayers}
                     removeLayer={this.removeLayer}
                     changeBaseLayer={this.changeBaseLayer}
+                    openDiffMode={this.openDiffMode}
                 />
             );
+        }
+        let mapClassName = 'map mapCollapsed';
+        if (this.props.diffMode) {
+            mapClassName = 'map mapDiff';
+        } else if (this.props.isCollapsed) {
+            mapClassName = 'map mapExpanded';
         }
         return (
             <MuiThemeProvider>
                 <div>
                     <Row>
                         {bar}
+                        {diffToolbar}
                         <Col
-                            xs={this.props.isCollapsed ? 12 : 8}
+                            xs={this.props.isCollapsed || this.props.diffMode ? 12 : 8}
                             id="map"
-                            className={this.props.isCollapsed ?
-                                'map mapExpanded' : 'map mapCollapsed'}
+                            className={mapClassName}
                         />
                         <Snackbar
                             open={this.props.shareSnackbarOpen}
@@ -307,6 +319,7 @@ App.propTypes = {
     errorSnackbarOpen: bool.isRequired,
     isCollapsed: bool.isRequired,
     currentBaseLayer: number.isRequired,
+    diffMode: bool.isRequired,
 };
 
 function mapStateToProps(state) {

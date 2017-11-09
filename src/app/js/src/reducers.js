@@ -20,6 +20,9 @@ import {
     POST_ADD_EDIT_CLEAR,
     TOGGLE_BASE_LAYER_DETAILS,
     CHANGE_CURRENT_BASE_LAYER,
+    TOGGLE_DIFF_MODE,
+    CHANGE_DIFF_LEFT_LAYER_ID,
+    CHANGE_DIFF_RIGHT_LAYER_ID,
 } from './actions';
 
 import {
@@ -44,6 +47,10 @@ const initialState = {
     editLayerId: -1,
     currentBaseLayer: defaultBaseLayer,
     baseLayerDetails: false,
+    diffMode: false,
+    diffLayerLeftId: -1,
+    diffLayerRightId: -1,
+    swipeValue: 0.5,
 };
 
 function mainReducer(state = initialState, action) {
@@ -77,6 +84,10 @@ function mainReducer(state = initialState, action) {
                 showEditLayerDialog: false,
                 editLayerId: -1,
                 baseLayerDetails: false,
+                diffMode: false,
+                diffLayerLeftId: -1,
+                diffLayerRightId: -1,
+                swipeValue: 0.5,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -185,6 +196,31 @@ function mainReducer(state = initialState, action) {
         case CHANGE_CURRENT_BASE_LAYER:
             return Object.assign({}, state, {
                 currentBaseLayer: action.payload.currentBaseLayer,
+            });
+        case TOGGLE_DIFF_MODE: {
+            if (action.payload.diffMode) {
+                if (state.layers.length < 2) {
+                    return state;
+                }
+                return Object.assign({}, state, {
+                    diffMode: true,
+                    diffLayerLeftId: 0,
+                    diffLayerRightId: 1,
+                });
+            }
+            return Object.assign({}, state, {
+                diffMode: false,
+                diffLayerLeftId: -1,
+                diffLayerRightId: -1,
+            });
+        }
+        case CHANGE_DIFF_LEFT_LAYER_ID:
+            return Object.assign({}, state, {
+                diffLayerLeftId: action.payload.id,
+            });
+        case CHANGE_DIFF_RIGHT_LAYER_ID:
+            return Object.assign({}, state, {
+                diffLayerRightId: action.payload.id,
             });
         default:
             return state;

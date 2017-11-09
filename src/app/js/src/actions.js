@@ -24,6 +24,10 @@ export const TOGGLE_BASE_LAYER_DETAILS = 'TOGGLE_BASE_LAYER_DETAILS';
 
 export const CHANGE_CURRENT_BASE_LAYER = 'CHANGE_CURRENT_BASE_LAYER';
 
+export const TOGGLE_DIFF_MODE = 'TOGGLE_DIFF_MODE';
+export const CHANGE_DIFF_LEFT_LAYER_ID = 'CHANGE_DIFF_LEFT_LAYER_ID';
+export const CHANGE_DIFF_RIGHT_LAYER_ID = 'CHANGE_DIFF_RIGHT_LAYER_ID';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -153,6 +157,27 @@ export function toggleBaseLayerDetails(payload) {
 export function changeCurrentBaseLayer(payload) {
     return {
         type: CHANGE_CURRENT_BASE_LAYER,
+        payload,
+    };
+}
+
+export function toggleDiffMode(payload) {
+    return {
+        type: TOGGLE_DIFF_MODE,
+        payload,
+    };
+}
+
+export function changeDiffLeftLayerId(payload) {
+    return {
+        type: CHANGE_DIFF_LEFT_LAYER_ID,
+        payload,
+    };
+}
+
+export function changeDiffRightLayerId(payload) {
+    return {
+        type: CHANGE_DIFF_RIGHT_LAYER_ID,
         payload,
     };
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bool, func, string } from 'prop-types';
+import { arrayOf, bool, func, object, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import TileLayer from 'ol/layer/tile';
@@ -23,6 +23,7 @@ import {
     toggleCollapse,
     toggleErrorSnackbarOpen,
     toggleTileJSONEditMode,
+    toggleDiffMode,
 } from './actions';
 import {
     map,
@@ -35,6 +36,7 @@ class SideBar extends Component {
         this.collapse = this.collapse.bind(this);
         this.editTileJSON = this.editTileJSON.bind(this);
         this.renderTileJSON = this.renderTileJSON.bind(this);
+        this.openDiffMode = this.openDiffMode.bind(this);
     }
 
     collapse() {
@@ -50,6 +52,15 @@ class SideBar extends Component {
         this.props.dispatch(toggleTileJSONEditMode({
             tileJSONEditMode: true,
         }));
+    }
+
+    openDiffMode() {
+        this.props.dispatch(toggleDiffMode({
+            diffMode: true,
+        }));
+        setTimeout(() => {
+            map.updateSize();
+        }, 100);
     }
 
     renderTileJSON() {
@@ -164,13 +175,22 @@ class SideBar extends Component {
                 <Grid fluid>
                     <br />
                     <Row>
-                        <Col xs={4}>
+                        <Col xs={3}>
                             <FlatButton onClick={this.props.openAddLayerDialog} label="Add" primary fullWidth />
                         </Col>
-                        <Col xs={4}>
+                        <Col xs={3}>
+                            <FlatButton
+                                onClick={this.openDiffMode}
+                                label="Diff"
+                                disabled={this.props.layers.length < 2}
+                                primary
+                                fullWidth
+                            />
+                        </Col>
+                        <Col xs={3}>
                             <FlatButton onClick={this.props.share} label="Share" primary fullWidth />
                         </Col>
-                        <Col xs={4}>
+                        <Col xs={3}>
                             <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
                         </Col>
                     </Row>
@@ -193,6 +213,7 @@ SideBar.propTypes = {
     tileJSONEditMode: bool.isRequired,
     tileJSONString: string.isRequired,
     changeBaseLayer: func.isRequired,
+    layers: arrayOf(object).isRequired,
 };
 
 function mapStateToProps(state) {
