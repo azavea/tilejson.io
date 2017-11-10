@@ -34,6 +34,7 @@ import {
     baseLayers,
 } from './constants';
 import AddLayerDialog from './AddLayerDialog';
+import ShareDialog from './ShareDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
@@ -47,7 +48,6 @@ class App extends Component {
         this.layersCounter = 1;
         this.clearLayers = this.clearLayers.bind(this);
         this.share = this.share.bind(this);
-        this.handleShareSbRequestClose = this.handleShareSbRequestClose.bind(this);
         this.handleErrorSbRequestClose = this.handleErrorSbRequestClose.bind(this);
         this.openAddLayerDialog = this.openAddLayerDialog.bind(this);
         this.addLayer = this.addLayer.bind(this);
@@ -213,12 +213,6 @@ class App extends Component {
             });
     }
 
-    handleShareSbRequestClose() {
-        this.props.dispatch(toggleShareSnackbarOpen({
-            shareSnackbarOpen: false,
-        }));
-    }
-
     handleErrorSbRequestClose() {
         this.props.dispatch(toggleErrorSnackbarOpen({
             errorSnackbarOpen: false,
@@ -232,9 +226,6 @@ class App extends Component {
     }
 
     render() {
-        const shareSnackbarMessage = (
-            <a className="snackbarLink" href={this.props.shareLink}>{this.props.shareLink}</a>
-        );
         const errorSnackbarStyle = {
             backgroundColor: '#fd4582',
         };
@@ -283,11 +274,6 @@ class App extends Component {
                             className={mapClassName}
                         />
                         <Snackbar
-                            open={this.props.shareSnackbarOpen}
-                            message={shareSnackbarMessage}
-                            onRequestClose={this.handleShareSbRequestClose}
-                        />
-                        <Snackbar
                             open={this.props.errorSnackbarOpen}
                             message={this.props.tileJSONParseError}
                             onRequestClose={this.handleErrorSbRequestClose}
@@ -301,6 +287,7 @@ class App extends Component {
                             editMode
                             editLayer={this.editLayer}
                         />
+                        <ShareDialog />
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -313,9 +300,7 @@ App.propTypes = {
     name: string.isRequired,
     url: string.isRequired,
     tileJSON: arrayOf(object).isRequired,
-    shareLink: string.isRequired,
     tileJSONParseError: string.isRequired,
-    shareSnackbarOpen: bool.isRequired,
     errorSnackbarOpen: bool.isRequired,
     isCollapsed: bool.isRequired,
     currentBaseLayer: number.isRequired,
