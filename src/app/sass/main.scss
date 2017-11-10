@@ -1,6 +1,6 @@
 @import "../node_modules/ol/ol.css";
 
-html, body, #root, [data-reactroot], [data-reactroot] > div { 
+html, body, #root, #root > div , #root > div > div { 
     margin:0; 
     padding:0; 
     height:100%;
