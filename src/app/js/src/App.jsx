@@ -32,6 +32,7 @@ import {
     getDefaultTileJSON,
     getBaseLayerTileJSON,
     baseLayers,
+    muiTheme,
 } from './constants';
 import AddLayerDialog from './AddLayerDialog';
 import NavBar from './NavBar';
@@ -272,7 +273,7 @@ class App extends Component {
             mapClassName = 'map mapExpanded';
         }
         return (
-            <MuiThemeProvider>
+            <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
                     <Row>
                         {bar}

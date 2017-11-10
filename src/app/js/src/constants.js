@@ -3,6 +3,7 @@ import XYZ from 'ol/source/xyz';
 import Attribution from 'ol/attribution';
 import Map from 'ol/map';
 import View from 'ol/view';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 export const baseLayers = [
     {
@@ -57,3 +58,12 @@ export function getBaseLayerTileJSON(i) {
         ],
     };
 }
+
+export const muiTheme = getMuiTheme({
+    slider: {
+        handleSize: 36,
+        handleSizeDisabled: 32,
+        handleSizeActive: 48,
+        trackSize: 0,
+    },
+});

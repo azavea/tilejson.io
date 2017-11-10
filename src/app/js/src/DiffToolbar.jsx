@@ -80,16 +80,22 @@ class DiffToolbar extends Component {
         });
         diffMapLayers[2].on('postcompose', (event) => {
             const ctx = event.context;
+            const width = ctx.canvas.width * this.state.swipeValue;
+
+            ctx.restore();
+
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.fillRect(width - 6, 0, 12, ctx.canvas.height);
             ctx.restore();
         });
 
-        map.setTarget(null);
-        this.diffMap.setTarget('map');
+        this.diffMap.setTarget('diffMap');
     }
 
     componentWillUnmount() {
         this.diffMap.setTarget(null);
-        map.setTarget('map');
     }
 
     leftLayerChange(event, index, value) {
@@ -153,7 +159,10 @@ class DiffToolbar extends Component {
                         <ToolbarTitle text="Right Layer" />
                     </ToolbarGroup>
                 </Toolbar>
-                <Slider value={this.state.swipeValue} onChange={this.changeSwipeValue} />
+                <div id="diffMap" className="diffMap" />
+                <div id="overDiffMap" className="overDiffMap">
+                    <Slider className="slider" value={this.state.swipeValue} onChange={this.changeSwipeValue} sliderStyle={{ marginBottom: 0, marginTop: 0 }} />
+                </div>
             </Col>
         );
     }
