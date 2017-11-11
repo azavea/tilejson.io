@@ -203,6 +203,8 @@ class App extends Component {
         const tileJSON = this.props.tileJSON.slice(0);
         tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
+        const info = {};
+        gistRequest.files['info.json'].content = JSON.stringify(info, null, '\t');
         axios.post('https://api.github.com/gists', gistRequest)
             .then((response) => {
                 this.props.dispatch(changeShareLink({
