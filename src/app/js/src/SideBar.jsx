@@ -24,6 +24,7 @@ import {
     toggleErrorSnackbarOpen,
     toggleTileJSONEditMode,
     toggleDiffMode,
+    toggleShareDescriptionDialogOpen,
 } from './actions';
 import {
     map,
@@ -37,6 +38,7 @@ class SideBar extends Component {
         this.editTileJSON = this.editTileJSON.bind(this);
         this.renderTileJSON = this.renderTileJSON.bind(this);
         this.openDiffMode = this.openDiffMode.bind(this);
+        this.share = this.share.bind(this);
     }
 
     collapse() {
@@ -61,6 +63,12 @@ class SideBar extends Component {
         setTimeout(() => {
             map.updateSize();
         }, 100);
+    }
+
+    share() {
+        this.props.dispatch(toggleShareDescriptionDialogOpen({
+            shareDescriptionDialogOpen: true,
+        }));
     }
 
     renderTileJSON() {
@@ -188,7 +196,7 @@ class SideBar extends Component {
                             />
                         </Col>
                         <Col xs={3}>
-                            <FlatButton onClick={this.props.share} label="Share" primary fullWidth />
+                            <FlatButton onClick={this.share} label="Share" primary fullWidth />
                         </Col>
                         <Col xs={3}>
                             <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
@@ -208,7 +216,6 @@ SideBar.propTypes = {
     removeLayers: func.isRequired,
     removeLayer: func.isRequired,
     openAddLayerDialog: func.isRequired,
-    share: func.isRequired,
     clearLayers: func.isRequired,
     tileJSONEditMode: bool.isRequired,
     tileJSONString: string.isRequired,
