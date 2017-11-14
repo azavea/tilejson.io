@@ -9,6 +9,7 @@ import TextField from 'material-ui/TextField';
 import {
     toggleShareDescriptionDialogOpen,
     changeShareDescription,
+    changeShareTitle,
 } from './actions';
 
 class ShareDescriptionDialog extends Component {
@@ -17,6 +18,7 @@ class ShareDescriptionDialog extends Component {
         this.handleCancel = this.handleCancel.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.changeShareDescription = this.changeShareDescription.bind(this);
+        this.changeShareTitle = this.changeShareTitle.bind(this);
     }
 
     handleCancel() {
@@ -35,6 +37,12 @@ class ShareDescriptionDialog extends Component {
     changeShareDescription(e) {
         this.props.dispatch(changeShareDescription({
             shareDescription: e.target.value,
+        }));
+    }
+
+    changeShareTitle(e) {
+        this.props.dispatch(changeShareTitle({
+            shareTitle: e.target.value,
         }));
     }
 
@@ -60,8 +68,15 @@ class ShareDescriptionDialog extends Component {
                     onRequestClose={this.handleCancel}
                 >
                     <TextField
+                        name="shareTitle"
+                        hintText="Map Title"
+                        value={this.props.shareTitle}
+                        onChange={this.changeShareTitle}
+                        fullWidth
+                    />
+                    <TextField
                         name="shareDescription"
-                        hintText="Share Description"
+                        hintText="Map Description"
                         value={this.props.shareDescription}
                         onChange={this.changeShareDescription}
                         fullWidth
@@ -75,6 +90,7 @@ class ShareDescriptionDialog extends Component {
 ShareDescriptionDialog.propTypes = {
     dispatch: func.isRequired,
     shareDescriptionDialogOpen: bool.isRequired,
+    shareTitle: string.isRequired,
     shareDescription: string.isRequired,
     share: func.isRequired,
 };

@@ -25,6 +25,7 @@ import {
     editLayer,
     postAddEditClear,
     changeCurrentBaseLayer,
+    changeShareTitle,
     changeShareDescription,
 } from './actions';
 import {
@@ -206,6 +207,11 @@ class App extends Component {
         tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
         const info = {};
+        if (this.props.shareTitle !== '') {
+            info.title = this.props.shareTitle;
+        } else {
+            info.title = 'Shared Map';
+        }
         if (this.props.shareDescription !== '') {
             info.description = this.props.shareDescription;
         }
@@ -221,6 +227,9 @@ class App extends Component {
             });
         this.props.dispatch(changeShareDescription({
             shareDescription: '',
+        }));
+        this.props.dispatch(changeShareTitle({
+            shareTitle: '',
         }));
     }
 
@@ -315,6 +324,7 @@ App.propTypes = {
     isCollapsed: bool.isRequired,
     currentBaseLayer: number.isRequired,
     diffMode: bool.isRequired,
+    shareTitle: string.isRequired,
     shareDescription: string.isRequired,
 };
 

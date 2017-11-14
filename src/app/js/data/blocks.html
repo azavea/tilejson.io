@@ -50,7 +50,7 @@
             <a class="btn-floating halfway-fab waves-effect waves-light red" id="card-show" hidden><i class="material-icons">expand_more</i></a>
             <a class="btn-floating halfway-fab waves-effect waves-light red" id="card-hide"><i class="material-icons">expand_less</i></a>
             <div id="card-content" class="card-content">
-                <span class="card-title">Map Description</span>
+                <span class="card-title" id="map-title">Shared Map</span>
                 <p><span id="map-description"></p></p>
             </div>
         </div>
@@ -61,8 +61,11 @@
             $('#gist-link').attr('href', 'https://gist.github.com/anonymous/' + urlPath[urlPath.length - 2])
             $.getJSON('info.json', function(data) {
                 console.log(data);
-                if (data.description) {
-                    $('#map-description').text(data.description);
+                if (data.title) {
+                    $('#map-title').text(data.title);
+                    if (data.description) {
+                        $('#map-description').text(data.description);
+                    }
                     $('#card').show();
                 }
             });

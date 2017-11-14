@@ -23,6 +23,7 @@ import {
     TOGGLE_DIFF_MODE,
     CHANGE_DIFF_LEFT_LAYER_ID,
     CHANGE_DIFF_RIGHT_LAYER_ID,
+    CHANGE_SHARE_TITLE,
     CHANGE_SHARE_DESCRIPTION,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
 } from './actions';
@@ -53,6 +54,7 @@ const initialState = {
     diffLayerLeftId: -1,
     diffLayerRightId: -1,
     swipeValue: 0.5,
+    shareTitle: '',
     shareDescription: '',
     shareDescriptionDialogOpen: false,
 };
@@ -92,6 +94,7 @@ function mainReducer(state = initialState, action) {
                 diffLayerLeftId: -1,
                 diffLayerRightId: -1,
                 swipeValue: 0.5,
+                shareTitle: '',
                 shareDescription: '',
                 shareDescriptionDialogOpen: false,
             });
@@ -227,6 +230,10 @@ function mainReducer(state = initialState, action) {
         case CHANGE_DIFF_RIGHT_LAYER_ID:
             return Object.assign({}, state, {
                 diffLayerRightId: action.payload.id,
+            });
+        case CHANGE_SHARE_TITLE:
+            return Object.assign({}, state, {
+                shareTitle: action.payload.shareTitle,
             });
         case CHANGE_SHARE_DESCRIPTION:
             return Object.assign({}, state, {
