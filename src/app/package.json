@@ -27,6 +27,7 @@
     "ol": "4.3.3",
     "prop-types": "15.5.10",
     "react": "15.6.1",
+    "react-copy-to-clipboard": "5.0.1",
     "react-dom": "15.6.1",
     "react-flexbox-grid": "1.1.5",
     "react-json-view": "1.13.1",
