@@ -28,6 +28,11 @@ export const TOGGLE_DIFF_MODE = 'TOGGLE_DIFF_MODE';
 export const CHANGE_DIFF_LEFT_LAYER_ID = 'CHANGE_DIFF_LEFT_LAYER_ID';
 export const CHANGE_DIFF_RIGHT_LAYER_ID = 'CHANGE_DIFF_RIGHT_LAYER_ID';
 
+export const CHANGE_SHARE_TITLE = 'CHANGE_SHARE_TITLE';
+export const CHANGE_SHARE_DESCRIPTION = 'CHANGE_SHARE_DESCRIPTION';
+export const TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN =
+    'TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -178,6 +183,27 @@ export function changeDiffLeftLayerId(payload) {
 export function changeDiffRightLayerId(payload) {
     return {
         type: CHANGE_DIFF_RIGHT_LAYER_ID,
+        payload,
+    };
+}
+
+export function changeShareTitle(payload) {
+    return {
+        type: CHANGE_SHARE_TITLE,
+        payload,
+    };
+}
+
+export function changeShareDescription(payload) {
+    return {
+        type: CHANGE_SHARE_DESCRIPTION,
+        payload,
+    };
+}
+
+export function toggleShareDescriptionDialogOpen(payload) {
+    return {
+        type: TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
         payload,
     };
 }

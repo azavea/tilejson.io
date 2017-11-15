@@ -25,6 +25,8 @@ import {
     editLayer,
     postAddEditClear,
     changeCurrentBaseLayer,
+    changeShareTitle,
+    changeShareDescription,
 } from './actions';
 import {
     baseLayer,
@@ -36,6 +38,7 @@ import {
 } from './constants';
 import AddLayerDialog from './AddLayerDialog';
 import ShareDialog from './ShareDialog';
+import ShareDescriptionDialog from './ShareDescriptionDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
@@ -203,6 +206,16 @@ class App extends Component {
         const tileJSON = this.props.tileJSON.slice(0);
         tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
+        const info = {};
+        if (this.props.shareTitle !== '') {
+            info.title = this.props.shareTitle;
+        } else {
+            info.title = 'Shared Map';
+        }
+        if (this.props.shareDescription !== '') {
+            info.description = this.props.shareDescription;
+        }
+        gistRequest.files['info.json'].content = JSON.stringify(info, null, '\t');
         axios.post('https://api.github.com/gists', gistRequest)
             .then((response) => {
                 this.props.dispatch(changeShareLink({
@@ -212,6 +225,12 @@ class App extends Component {
                     shareSnackbarOpen: true,
                 }));
             });
+        this.props.dispatch(changeShareDescription({
+            shareDescription: '',
+        }));
+        this.props.dispatch(changeShareTitle({
+            shareTitle: '',
+        }));
     }
 
     handleErrorSbRequestClose() {
@@ -236,7 +255,6 @@ class App extends Component {
             bar = (
                 <NavBar
                     openAddLayerDialog={this.openAddLayerDialog}
-                    share={this.share}
                     clearLayers={this.clearLayers}
                 />
             );
@@ -247,7 +265,6 @@ class App extends Component {
             bar = (
                 <SideBar
                     openAddLayerDialog={this.openAddLayerDialog}
-                    share={this.share}
                     clearLayers={this.clearLayers}
                     addLayer={this.addLayer}
                     removeLayers={this.removeLayers}
@@ -289,6 +306,7 @@ class App extends Component {
                             editLayer={this.editLayer}
                         />
                         <ShareDialog />
+                        <ShareDescriptionDialog share={this.share} />
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -306,6 +324,8 @@ App.propTypes = {
     isCollapsed: bool.isRequired,
     currentBaseLayer: number.isRequired,
     diffMode: bool.isRequired,
+    shareTitle: string.isRequired,
+    shareDescription: string.isRequired,
 };
 
 function mapStateToProps(state) {

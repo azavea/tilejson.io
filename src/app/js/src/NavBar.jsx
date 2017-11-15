@@ -13,6 +13,7 @@ import { Col } from 'react-flexbox-grid';
 import {
     toggleCollapse,
     toggleDiffMode,
+    toggleShareDescriptionDialogOpen,
 } from './actions';
 import {
     map,
@@ -23,6 +24,7 @@ class NavBar extends Component {
         super(props);
         this.expand = this.expand.bind(this);
         this.closeDiffMode = this.closeDiffMode.bind(this);
+        this.share = this.share.bind(this);
     }
 
     expand() {
@@ -43,6 +45,12 @@ class NavBar extends Component {
         }, 100);
     }
 
+    share() {
+        this.props.dispatch(toggleShareDescriptionDialogOpen({
+            shareDescriptionDialogOpen: true,
+        }));
+    }
+
     render() {
         const styleWhiteText = {
             color: '#fff',
@@ -56,7 +64,7 @@ class NavBar extends Component {
         let toolbarGroupRight = (
             <ToolbarGroup lastChild>
                 <FlatButton onClick={this.props.openAddLayerDialog} label="Add Layer" style={styleWhiteText} />
-                <FlatButton onClick={this.props.share} label="Share" style={styleWhiteText} />
+                <FlatButton onClick={this.share} label="Share" style={styleWhiteText} />
                 <FlatButton onClick={this.props.clearLayers} label="Clear" style={styleWhiteText} />
             </ToolbarGroup>
         );
@@ -83,7 +91,6 @@ class NavBar extends Component {
 NavBar.propTypes = {
     dispatch: func.isRequired,
     openAddLayerDialog: func.isRequired,
-    share: func.isRequired,
     clearLayers: func.isRequired,
     diffMode: bool.isRequired,
 };
