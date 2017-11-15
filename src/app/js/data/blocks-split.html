@@ -26,14 +26,60 @@
         }
 
         #map {
-            height: calc(100% - 64px);
+            position: absolute;
+            top: 116px;
+            left: 0px;
+            width: 100%;
+            height: calc(100% - 116px);
+            z-index: 500;
+        }
+
+        #overDiffMap {
+            position: absolute;
+            top: 132px;
+            left: 0px;
+            width: 100%;
+            max-height: calc(100% - 116px);
+            z-index: 1000;
         }
 
         #card {
             position: absolute;
-            top: 96px;
+            top: 180px;
             right: 16px;
             width: 320px;
+            z-index: 2000;
+        }
+
+        #swipe {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 0px;
+            opacity: 0.7;
+            border: none;
+        }
+
+        #swipe:hover {
+            opacity: 1;
+        }
+
+        #swipe::-webkit-slider-runnable-track {
+            height: 28px;
+            background-color: transparent;
+            border: none;
+        }
+
+        #swipe::-webkit-slider-thumb {
+            background: #ee6e73;
+            height: 32px;
+            width: 32px;
+        }
+
+        #layer-toolbar {
+            background-color: #e8e8e8;
+            height: 52px;
+            margin-bottom: 0px;
         }
     </style>
     <div id="container">
@@ -45,12 +91,23 @@
                 </ul>
             </div>
         </nav>
+        <div class="row" id="layer-toolbar">
+            <div class="col s6">
+                <p><span id="layer-left">Layer 1</span></p>
+            </div>
+            <div class="col s6" align="right">
+                <p><span id="layer-right">Layer 2</span></p>
+            </div>
+        </div>
         <div  id="map" class="col s9 map"></div>
+        <div  id="overDiffMap">
+            <input type="range" id="swipe" min="0" max="100" />
+        </div>
         <div id="card" class="card darken-1" hidden>
             <a class="btn-floating halfway-fab waves-effect waves-light red" id="card-show" hidden><i class="material-icons">expand_more</i></a>
             <a class="btn-floating halfway-fab waves-effect waves-light red" id="card-hide"><i class="material-icons">expand_less</i></a>
             <div id="card-content" class="card-content">
-                <span class="card-title" id="map-title">Shared Map</span>
+                <span class="card-title" id="map-title">Map Description</span>
                 <p><span id="map-description"></p></p>
             </div>
         </div>
@@ -88,15 +145,71 @@
                 zoom: 2
             })
         });
+
+        function setListeners() {
+            const layers = map.getLayers().getArray();
+
+            var swipe = document.getElementById('swipe');
+
+            layers[1].on('precompose', function(event) {
+                var ctx = event.context;
+                var width = ctx.canvas.width * swipe.value / 100;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, width, ctx.canvas.height);
+                ctx.clip();
+            });
+
+            layers[1].on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+            layers[2].on('precompose', function(event) {
+                var ctx = event.context;
+                var width = ctx.canvas.width * swipe.value / 100;
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);
+                ctx.clip();
+            });
+
+            layers[2].on('postcompose', function(event) {
+                var ctx = event.context;
+                const width = ctx.canvas.width * swipe.value / 100;
+
+                ctx.restore();
+
+                ctx.save();
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.fillRect(width - 6, 0, 12, ctx.canvas.height);
+                ctx.restore();
+            });
+
+            swipe.addEventListener('input', function() {
+                map.render();
+            }, false);
+        }
+
         $.getJSON('tile.json', function(data) {
-            data.forEach(function (tileJson) {
+            if (data.length !== 3) {
+                return;
+            }
+            $('#layer-left').text(data[1].name);
+            $('#layer-right').text(data[2].name);
+            for (var i = 0; i < data.length; i++) {
+                var tileJson = data[i];
                 var layer = new ol.layer.Tile({
                     source: new ol.source.TileJSON({
                         tileJSON: tileJson,
                     })
                 });
                 map.addLayer(layer);
-            });
+            }
+            setListeners();
         });
     </script>
 </body>
