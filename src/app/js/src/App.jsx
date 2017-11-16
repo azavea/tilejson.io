@@ -13,6 +13,7 @@ import Attribution from 'ol/attribution';
 import XYZ from 'ol/source/xyz';
 
 import gistRequest from '../data/request.json';
+import gistRequestDiff from '../data/request-diff.json';
 import {
     changeTileJson,
     clearScreen,
@@ -61,6 +62,7 @@ class App extends Component {
         this.getLayerName = this.getLayerName.bind(this);
         this.getLayerTileJSON = this.getLayerTileJSON.bind(this);
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
+        this.shareDiff = this.shareDiff.bind(this);
     }
 
     componentDidMount() {
@@ -233,6 +235,40 @@ class App extends Component {
         }));
     }
 
+    shareDiff() {
+        const tileJSON = [
+            getBaseLayerTileJSON(this.props.currentBaseLayer),
+            this.props.tileJSON[this.props.diffLayerLeftId],
+            this.props.tileJSON[this.props.diffLayerRightId],
+        ];
+        gistRequestDiff.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
+        const info = {};
+        if (this.props.shareTitle !== '') {
+            info.title = this.props.shareTitle;
+        } else {
+            info.title = 'Shared Map';
+        }
+        if (this.props.shareDescription !== '') {
+            info.description = this.props.shareDescription;
+        }
+        gistRequestDiff.files['info.json'].content = JSON.stringify(info, null, '\t');
+        axios.post('https://api.github.com/gists', gistRequestDiff)
+            .then((response) => {
+                this.props.dispatch(changeShareLink({
+                    shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
+                }));
+                this.props.dispatch(toggleShareSnackbarOpen({
+                    shareSnackbarOpen: true,
+                }));
+            });
+        this.props.dispatch(changeShareDescription({
+            shareDescription: '',
+        }));
+        this.props.dispatch(changeShareTitle({
+            shareTitle: '',
+        }));
+    }
+
     handleErrorSbRequestClose() {
         this.props.dispatch(toggleErrorSnackbarOpen({
             errorSnackbarOpen: false,
@@ -306,7 +342,10 @@ class App extends Component {
                             editLayer={this.editLayer}
                         />
                         <ShareDialog />
-                        <ShareDescriptionDialog share={this.share} />
+                        <ShareDescriptionDialog
+                            share={this.share}
+                            shareDiff={this.shareDiff}
+                        />
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -326,6 +365,8 @@ App.propTypes = {
     diffMode: bool.isRequired,
     shareTitle: string.isRequired,
     shareDescription: string.isRequired,
+    diffLayerLeftId: number.isRequired,
+    diffLayerRightId: number.isRequired,
 };
 
 function mapStateToProps(state) {

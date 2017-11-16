@@ -31,7 +31,11 @@ class ShareDescriptionDialog extends Component {
         this.props.dispatch(toggleShareDescriptionDialogOpen({
             shareDescriptionDialogOpen: false,
         }));
-        this.props.share();
+        if (this.props.diffMode) {
+            this.props.shareDiff();
+        } else {
+            this.props.share();
+        }
     }
 
     changeShareDescription(e) {
@@ -93,6 +97,8 @@ ShareDescriptionDialog.propTypes = {
     shareTitle: string.isRequired,
     shareDescription: string.isRequired,
     share: func.isRequired,
+    shareDiff: func.isRequired,
+    diffMode: bool.isRequired,
 };
 
 function mapStateToProps(state) {

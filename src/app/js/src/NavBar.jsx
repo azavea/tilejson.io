@@ -25,6 +25,7 @@ class NavBar extends Component {
         this.expand = this.expand.bind(this);
         this.closeDiffMode = this.closeDiffMode.bind(this);
         this.share = this.share.bind(this);
+        this.shareDiff = this.shareDiff.bind(this);
     }
 
     expand() {
@@ -51,6 +52,12 @@ class NavBar extends Component {
         }));
     }
 
+    shareDiff() {
+        this.props.dispatch(toggleShareDescriptionDialogOpen({
+            shareDescriptionDialogOpen: true,
+        }));
+    }
+
     render() {
         const styleWhiteText = {
             color: '#fff',
@@ -72,7 +79,11 @@ class NavBar extends Component {
             toolbarGroupIconButton = (
                 <IconButton onClick={this.closeDiffMode}><NavigationCloseIcon color="white" /></IconButton>
             );
-            toolbarGroupRight = null;
+            toolbarGroupRight = (
+                <ToolbarGroup lastChild>
+                    <FlatButton onClick={this.shareDiff} label="Share" style={styleWhiteText} />
+                </ToolbarGroup>
+            );
         }
         return (
             <Col xs={12} id="header">
