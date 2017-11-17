@@ -217,6 +217,9 @@ class App extends Component {
         if (this.props.shareDescription !== '') {
             info.description = this.props.shareDescription;
         }
+        const view = map.getView();
+        info.center = view.getCenter();
+        info.zoom = view.getZoom();
         gistRequest.files['info.json'].content = JSON.stringify(info, null, '\t');
         axios.post('https://api.github.com/gists', gistRequest)
             .then((response) => {
@@ -251,6 +254,9 @@ class App extends Component {
         if (this.props.shareDescription !== '') {
             info.description = this.props.shareDescription;
         }
+        const view = map.getView();
+        info.center = view.getCenter();
+        info.zoom = view.getZoom();
         gistRequestDiff.files['info.json'].content = JSON.stringify(info, null, '\t');
         axios.post('https://api.github.com/gists', gistRequestDiff)
             .then((response) => {

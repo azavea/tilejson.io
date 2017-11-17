@@ -10,7 +10,6 @@ import { Col } from 'react-flexbox-grid';
 import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/xyz';
 import Map from 'ol/map';
-import View from 'ol/view';
 
 import {
     map,
@@ -33,6 +32,7 @@ class DiffToolbar extends Component {
 
     componentDidMount() {
         const layers = map.getLayers().getArray();
+        const view = map.getView();
         this.diffMap = new Map({
             layers: [
                 layers[0],
@@ -47,10 +47,7 @@ class DiffToolbar extends Component {
                     }),
                 }),
             ],
-            view: new View({
-                center: [0, 0],
-                zoom: 2,
-            }),
+            view,
         });
 
         const diffMapLayers = this.diffMap.getLayers().getArray();

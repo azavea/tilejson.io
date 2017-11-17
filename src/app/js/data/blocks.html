@@ -67,6 +67,23 @@
                     }
                     $('#card').show();
                 }
+                var map = new ol.Map({
+                    target: 'map',
+                    view: new ol.View({
+                        center: data.center,
+                        zoom: data.zoom
+                    })
+                });
+                $.getJSON('tile.json', function(tileData) {
+                    tileData.forEach(function (tileJson) {
+                        var layer = new ol.layer.Tile({
+                            source: new ol.source.TileJSON({
+                                tileJSON: tileJson,
+                            })
+                        });
+                        map.addLayer(layer);
+                    });
+                });
             });
             $('#card-hide').click(function() {
                 $('#card-content').hide();
@@ -77,25 +94,6 @@
                 $('#card-content').show();
                 $('#card-hide').show();
                 $('#card-show').hide();
-            });
-        });
-    </script>
-    <script>
-        var map = new ol.Map({
-            target: 'map',
-            view: new ol.View({
-                center: [0, 0],
-                zoom: 2
-            })
-        });
-        $.getJSON('tile.json', function(data) {
-            data.forEach(function (tileJson) {
-                var layer = new ol.layer.Tile({
-                    source: new ol.source.TileJSON({
-                        tileJSON: tileJson,
-                    })
-                });
-                map.addLayer(layer);
             });
         });
     </script>
