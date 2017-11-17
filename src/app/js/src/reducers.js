@@ -27,6 +27,7 @@ import {
     CHANGE_SHARE_DESCRIPTION,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
     CHANGE_LAYER_OPACITY,
+    TOGGLE_LAYER_VISIBILITY,
 } from './actions';
 
 import {
@@ -145,6 +146,7 @@ function mainReducer(state = initialState, action) {
                 detailView: false,
                 sourceView: false,
                 opacity: 1,
+                visible: true,
             };
             layers.push(newLayer);
             return Object.assign({}, state, {
@@ -187,6 +189,7 @@ function mainReducer(state = initialState, action) {
                 detailView: false,
                 sourceView: false,
                 opacity: layers[action.payload.i].opacity,
+                visible: layers[action.payload.i].visible,
             };
             layers[action.payload.i] = newLayer;
             return Object.assign({}, state, {
@@ -250,6 +253,13 @@ function mainReducer(state = initialState, action) {
         case CHANGE_LAYER_OPACITY: {
             const layers = state.layers;
             layers[action.payload.i].opacity = action.payload.opacity;
+            return Object.assign({}, state, {
+                layers,
+            });
+        }
+        case TOGGLE_LAYER_VISIBILITY: {
+            const layers = state.layers;
+            layers[action.payload.i].visible = action.payload.visible;
             return Object.assign({}, state, {
                 layers,
             });

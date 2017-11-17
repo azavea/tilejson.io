@@ -24,6 +24,8 @@ class LayerBoxes extends Component {
                     removeLayer={this.props.removeLayer}
                     opacity={layer.opacity}
                     changeOpacity={this.props.changeOpacity}
+                    visible={layer.visible}
+                    toggleVisibility={this.props.toggleVisibility}
                 />
                 <br />
             </div>,
@@ -45,6 +47,7 @@ LayerBoxes.propTypes = {
     layers: arrayOf(object).isRequired,
     changeBaseLayer: func.isRequired,
     changeOpacity: func.isRequired,
+    toggleVisibility: func.isRequired,
 };
 
 function mapStateToProps(state) {

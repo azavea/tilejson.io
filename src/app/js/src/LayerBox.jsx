@@ -7,6 +7,8 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import NavigationExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
 import ActionDeleteIcon from 'material-ui/svg-icons/action/delete';
 import ActionOpacityIcon from 'material-ui/svg-icons/action/opacity';
+import ActionVisibilityIcon from 'material-ui/svg-icons/action/visibility';
+import ActionVisibilityOffIcon from 'material-ui/svg-icons/action/visibility-off';
 import EditorModeEditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
@@ -20,6 +22,7 @@ import {
     toggleLayerBoxInfo,
     toggleEditLayerDialog,
     changeLayerOpacity,
+    toggleLayerVisibility,
 } from './actions';
 
 class LayerBox extends Component {
@@ -28,6 +31,7 @@ class LayerBox extends Component {
         this.state = {
             opacityControl: false,
             opacity: this.props.opacity,
+            visible: this.props.visible,
         };
         this.collapseDetails = this.collapseDetails.bind(this);
         this.expandDetails = this.expandDetails.bind(this);
@@ -36,6 +40,9 @@ class LayerBox extends Component {
         this.handleOpacityOpen = this.handleOpacityOpen.bind(this);
         this.handleOpacityClose = this.handleOpacityClose.bind(this);
         this.changeOpacity = this.changeOpacity.bind(this);
+        this.toggleVisibilityOn = this.toggleVisibilityOn.bind(this);
+        this.toggleVisibilityOff = this.toggleVisibilityOff.bind(this);
+        this.toggleVisibility = this.toggleVisibility.bind(this);
     }
 
     collapseDetails() {
@@ -84,6 +91,25 @@ class LayerBox extends Component {
         this.setState({
             opacityControl: false,
         });
+    }
+
+    toggleVisibility(value) {
+        this.props.dispatch(toggleLayerVisibility({
+            visible: value,
+            i: this.props.i,
+        }));
+        this.setState({
+            visible: value,
+        });
+        this.props.toggleVisibility(this.props.i, value);
+    }
+
+    toggleVisibilityOn() {
+        this.toggleVisibility(true);
+    }
+
+    toggleVisibilityOff() {
+        this.toggleVisibility(false);
     }
 
     render() {
@@ -183,18 +209,33 @@ class LayerBox extends Component {
             </div>
         );
         if (this.state.opacityControl) {
+            const sliderStyle = {
+                width: 136,
+                marginTop: 0,
+                marginBottom: 0,
+                marginRight: 12,
+            };
             sliderOrControls = (
                 <Slider
                     value={this.state.opacity}
                     onChange={this.changeOpacity}
-                    sliderStyle={{ width: 144, marginTop: 0, marginBottom: 0 }}
+                    sliderStyle={sliderStyle}
                 />
             );
         }
         return (
             <Paper zDepth={1} style={{ overflow: 'hidden' }}>
                 <Toolbar>
-                    <ToolbarGroup>
+                    <ToolbarGroup firstChild>
+                        <IconButton
+                            iconStyle={smallIcon}
+                            onClick={this.state.visible ?
+                                this.toggleVisibilityOff : this.toggleVisibilityOn}
+                            touch
+                        >
+                            {this.state.visible ?
+                                <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
+                        </IconButton>
                         <ToolbarTitle style={fontSize11} text={this.props.layerName} />
                     </ToolbarGroup>
                     <ToolbarGroup lastChild>
@@ -226,6 +267,8 @@ LayerBox.propTypes = {
     removeLayer: func.isRequired,
     opacity: number.isRequired,
     changeOpacity: func.isRequired,
+    visible: bool.isRequired,
+    toggleVisibility: func.isRequired,
 };
 
 function mapStateToProps(state) {

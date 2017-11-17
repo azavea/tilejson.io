@@ -175,6 +175,7 @@ class SideBar extends Component {
                         removeLayer={this.props.removeLayer}
                         changeBaseLayer={this.props.changeBaseLayer}
                         changeOpacity={this.props.changeOpacity}
+                        toggleVisibility={this.props.toggleVisibility}
                     />
                 </div>
             );
@@ -237,6 +238,7 @@ SideBar.propTypes = {
     changeBaseLayer: func.isRequired,
     layers: arrayOf(object).isRequired,
     changeOpacity: func.isRequired,
+    toggleVisibility: func.isRequired,
 };
 
 function mapStateToProps(state) {

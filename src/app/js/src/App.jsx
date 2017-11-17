@@ -63,6 +63,7 @@ class App extends Component {
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
         this.shareDiff = this.shareDiff.bind(this);
         this.changeOpacity = this.changeOpacity.bind(this);
+        this.toggleVisibility = this.toggleVisibility.bind(this);
     }
 
     componentDidMount() {
@@ -291,6 +292,10 @@ class App extends Component {
         this.layers[i + 1].setOpacity(opacity);
     }
 
+    toggleVisibility(i, visibile) {
+        this.layers[i + 1].setVisible(visibile);
+    }
+
     render() {
         const errorSnackbarStyle = {
             backgroundColor: '#fd4582',
@@ -315,6 +320,7 @@ class App extends Component {
                     changeBaseLayer={this.changeBaseLayer}
                     openDiffMode={this.openDiffMode}
                     changeOpacity={this.changeOpacity}
+                    toggleVisibility={this.toggleVisibility}
                 />
             );
         }
