@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import NavigationExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
-import ActionCodeIcon from 'material-ui/svg-icons/action/code';
 import ActionDeleteIcon from 'material-ui/svg-icons/action/delete';
 import EditorModeEditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
@@ -25,8 +24,6 @@ class LayerBox extends Component {
         super(props);
         this.collapseDetails = this.collapseDetails.bind(this);
         this.expandDetails = this.expandDetails.bind(this);
-        this.collapseSource = this.collapseSource.bind(this);
-        this.expandSource = this.expandSource.bind(this);
         this.removeLayer = this.removeLayer.bind(this);
         this.openEditLayerDialog = this.openEditLayerDialog.bind(this);
     }
@@ -42,20 +39,6 @@ class LayerBox extends Component {
         this.props.dispatch(toggleLayerBoxInfo({
             i: this.props.i,
             detailView: true,
-        }));
-    }
-
-    collapseSource() {
-        this.props.dispatch(toggleLayerBoxInfo({
-            i: this.props.i,
-            sourceView: false,
-        }));
-    }
-
-    expandSource() {
-        this.props.dispatch(toggleLayerBoxInfo({
-            i: this.props.i,
-            sourceView: true,
         }));
     }
 
@@ -87,6 +70,7 @@ class LayerBox extends Component {
             backgroundColor: '#f7f7f7',
         };
         let details;
+        let source;
         let expandOrCollapseButton = (
             <IconButton
                 iconStyle={smallIcon}
@@ -133,9 +117,6 @@ class LayerBox extends Component {
                     <NavigationExpandLessIcon />
                 </IconButton>
             );
-        }
-        let source;
-        if (this.props.viewSource) {
             source = (
                 <Grid style={sourceStyle} className="detailValue" fluid>
                     <br />
@@ -170,14 +151,6 @@ class LayerBox extends Component {
                         >
                             <ActionDeleteIcon />
                         </IconButton>
-                        <IconButton
-                            onClick={this.props.viewSource ?
-                                this.collapseSource : this.expandSource}
-                            iconStyle={smallIcon}
-                            touch
-                        >
-                            <ActionCodeIcon />
-                        </IconButton>
                         {expandOrCollapseButton}
                     </ToolbarGroup>
                 </Toolbar>
@@ -194,7 +167,6 @@ LayerBox.propTypes = {
     layerUrl: string.isRequired,
     i: number.isRequired,
     viewDetail: bool.isRequired,
-    viewSource: bool.isRequired,
     layerTileJSON: shape({}).isRequired,
     removeLayer: func.isRequired,
 };
