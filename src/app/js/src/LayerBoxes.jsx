@@ -3,7 +3,6 @@ import { arrayOf, func, object } from 'prop-types';
 import { connect } from 'react-redux';
 
 import LayerBox from './LayerBox';
-import QuickAddLayerBox from './QuickAddLayerBox';
 import BaseLayerBox from './BaseLayerBox';
 
 class LayerBoxes extends Component {
@@ -29,10 +28,6 @@ class LayerBoxes extends Component {
         );
         return (
             <div>
-                <QuickAddLayerBox
-                    addLayer={this.props.addLayer}
-                />
-                <br />
                 <BaseLayerBox
                     changeBaseLayer={this.props.changeBaseLayer}
                 />
@@ -44,7 +39,6 @@ class LayerBoxes extends Component {
 }
 
 LayerBoxes.propTypes = {
-    addLayer: func.isRequired,
     removeLayer: func.isRequired,
     layers: arrayOf(object).isRequired,
     changeBaseLayer: func.isRequired,

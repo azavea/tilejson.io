@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { func, string } from 'prop-types';
+import { arrayOf, func, object, string } from 'prop-types';
 import { connect } from 'react-redux';
 
-import IconButton from 'material-ui/IconButton';
-import ContentAddIcon from 'material-ui/svg-icons/content/add';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
-import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import { Card, CardTitle, CardText } from 'material-ui/Card';
+
+import { Row, Col } from 'react-flexbox-grid';
 
 import {
     changeLayerUrl,
@@ -17,6 +17,10 @@ class QuickAddLayerBox extends Component {
         super(props);
         this.changeUrl = this.changeUrl.bind(this);
         this.quickAddOnKeyDown = this.quickAddOnKeyDown.bind(this);
+    }
+
+    componentDidMount() {
+        this.nameInput.focus();
     }
 
     changeUrl(e) {
@@ -32,42 +36,63 @@ class QuickAddLayerBox extends Component {
     }
 
     render() {
-        const smallIcon = {
-            width: 18,
-            height: 18,
-            color: '#8b8b8b',
-        };
-        const fontSize11 = {
-            fontSize: '11pt',
-        };
+        let paperZDepth = 1;
+        let cardTitle = null;
+        let cardText = null;
+        if (this.props.layers.length === 0) {
+            paperZDepth = 3;
+            cardTitle = <CardTitle title="Welcome to TileJSON.io" />;
+            cardText = (
+                <div>
+                    Add your first layer to the map by entering a Tile URL below.
+                    <br /><br />
+                </div>
+            );
+        }
         return (
-            <Paper zDepth={1} style={{ overflow: 'hidden' }}>
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={fontSize11} text="Quick Add" />
-                        <TextField
-                            style={fontSize11}
-                            hintText="Tile URL"
-                            onChange={this.changeUrl}
-                            value={this.props.url}
-                            onKeyDown={this.quickAddOnKeyDown}
-                        />
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <IconButton iconStyle={smallIcon} onClick={this.props.addLayer} touch>
-                            <ContentAddIcon />
-                        </IconButton>
-                    </ToolbarGroup>
-                </Toolbar>
-            </Paper>
+            <Card zDepth={paperZDepth}>
+                {cardTitle}
+                <CardText>
+                    {cardText}
+                    <TextField
+                        hintText="Tile URL"
+                        value={this.props.url}
+                        onChange={this.changeUrl}
+                        onKeyDown={this.quickAddOnKeyDown}
+                        ref={(input) => { this.nameInput = input; }}
+                        fullWidth
+                    />
+                    <br />
+                    <Row>
+                        <Col xsOffset={4} xs={4}>
+                            <FlatButton
+                                label="Add"
+                                onClick={this.props.addLayer}
+                                primary
+                                fullWidth
+                            />
+                        </Col>
+                        <Col xs={4}>
+                            <FlatButton
+                                onClick={this.props.openAddLayerDialog}
+                                label="More"
+                                primary
+                                fullWidth
+                            />
+                        </Col>
+                    </Row>
+                </CardText>
+            </Card>
         );
     }
 }
 
 QuickAddLayerBox.propTypes = {
     dispatch: func.isRequired,
+    openAddLayerDialog: func.isRequired,
     addLayer: func.isRequired,
     url: string.isRequired,
+    layers: arrayOf(object).isRequired,
 };
 
 function mapStateToProps(state) {

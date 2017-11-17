@@ -16,6 +16,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { validate } from 'tilejson-validator';
 
 import LayerBoxes from './LayerBoxes';
+import QuickAddLayerBox from './QuickAddLayerBox';
 
 import {
     changeTileJson,
@@ -183,10 +184,7 @@ class SideBar extends Component {
                 <Grid fluid>
                     <br />
                     <Row>
-                        <Col xs={3}>
-                            <FlatButton onClick={this.props.openAddLayerDialog} label="Add" primary fullWidth />
-                        </Col>
-                        <Col xs={3}>
+                        <Col xs={4}>
                             <FlatButton
                                 onClick={this.openDiffMode}
                                 label="Diff"
@@ -195,14 +193,30 @@ class SideBar extends Component {
                                 fullWidth
                             />
                         </Col>
-                        <Col xs={3}>
-                            <FlatButton onClick={this.share} label="Share" primary fullWidth />
+                        <Col xs={4}>
+                            <FlatButton
+                                onClick={this.share}
+                                label="Share"
+                                disabled={this.props.layers.length === 0}
+                                primary
+                                fullWidth
+                            />
                         </Col>
-                        <Col xs={3}>
-                            <FlatButton onClick={this.props.clearLayers} label="Clear" primary fullWidth />
+                        <Col xs={4}>
+                            <FlatButton
+                                onClick={this.props.clearLayers}
+                                label="Clear"
+                                disabled={this.props.layers.length === 0}
+                                primary
+                                fullWidth
+                            />
                         </Col>
                     </Row>
                     <br />
+                    <QuickAddLayerBox
+                        addLayer={this.props.addLayer}
+                        openAddLayerDialog={this.props.openAddLayerDialog}
+                    />
                     {sideBarItems}
                 </Grid>
             </Col>
