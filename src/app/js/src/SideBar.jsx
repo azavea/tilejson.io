@@ -174,6 +174,7 @@ class SideBar extends Component {
                         addLayer={this.props.addLayer}
                         removeLayer={this.props.removeLayer}
                         changeBaseLayer={this.props.changeBaseLayer}
+                        changeOpacity={this.props.changeOpacity}
                     />
                 </div>
             );
@@ -235,6 +236,7 @@ SideBar.propTypes = {
     tileJSONString: string.isRequired,
     changeBaseLayer: func.isRequired,
     layers: arrayOf(object).isRequired,
+    changeOpacity: func.isRequired,
 };
 
 function mapStateToProps(state) {

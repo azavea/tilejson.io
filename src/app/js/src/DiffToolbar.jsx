@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { arrayOf, func, number, object } from 'prop-types';
 import { connect } from 'react-redux';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -13,6 +14,7 @@ import Map from 'ol/map';
 
 import {
     map,
+    muiTheme,
 } from './constants';
 import {
     changeDiffLeftLayerId,
@@ -135,32 +137,34 @@ class DiffToolbar extends Component {
             return (<MenuItem key={i} value={i} primaryText={layer.name} />);
         });
         return (
-            <Col xs={12} id="diffToolbar">
-                <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle text="Left Layer" />
-                        <DropDownMenu
-                            value={this.props.diffLayerLeftId}
-                            onChange={this.leftLayerChange}
-                        >
-                            {leftDropdown}
-                        </DropDownMenu>
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <DropDownMenu
-                            value={this.props.diffLayerRightId}
-                            onChange={this.rightLayerChange}
-                        >
-                            {rightDropdown}
-                        </DropDownMenu>
-                        <ToolbarTitle text="Right Layer" />
-                    </ToolbarGroup>
-                </Toolbar>
-                <div id="diffMap" className="diffMap" />
-                <div id="overDiffMap" className="overDiffMap">
-                    <Slider className="slider" value={this.state.swipeValue} onChange={this.changeSwipeValue} sliderStyle={{ marginBottom: 0, marginTop: 0 }} />
-                </div>
-            </Col>
+            <MuiThemeProvider muiTheme={muiTheme}>
+                <Col xs={12} id="diffToolbar">
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <ToolbarTitle text="Left Layer" />
+                            <DropDownMenu
+                                value={this.props.diffLayerLeftId}
+                                onChange={this.leftLayerChange}
+                            >
+                                {leftDropdown}
+                            </DropDownMenu>
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                            <DropDownMenu
+                                value={this.props.diffLayerRightId}
+                                onChange={this.rightLayerChange}
+                            >
+                                {rightDropdown}
+                            </DropDownMenu>
+                            <ToolbarTitle text="Right Layer" />
+                        </ToolbarGroup>
+                    </Toolbar>
+                    <div id="diffMap" className="diffMap" />
+                    <div id="overDiffMap" className="overDiffMap">
+                        <Slider className="slider" value={this.state.swipeValue} onChange={this.changeSwipeValue} sliderStyle={{ marginBottom: 0, marginTop: 0 }} />
+                    </div>
+                </Col>
+            </MuiThemeProvider>
         );
     }
 }

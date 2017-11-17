@@ -35,7 +35,6 @@ import {
     getDefaultTileJSON,
     getBaseLayerTileJSON,
     baseLayers,
-    muiTheme,
 } from './constants';
 import AddLayerDialog from './AddLayerDialog';
 import ShareDialog from './ShareDialog';
@@ -63,6 +62,7 @@ class App extends Component {
         this.getLayerTileJSON = this.getLayerTileJSON.bind(this);
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
         this.shareDiff = this.shareDiff.bind(this);
+        this.changeOpacity = this.changeOpacity.bind(this);
     }
 
     componentDidMount() {
@@ -287,6 +287,10 @@ class App extends Component {
         }));
     }
 
+    changeOpacity(i, opacity) {
+        this.layers[i + 1].setOpacity(opacity);
+    }
+
     render() {
         const errorSnackbarStyle = {
             backgroundColor: '#fd4582',
@@ -310,6 +314,7 @@ class App extends Component {
                     removeLayer={this.removeLayer}
                     changeBaseLayer={this.changeBaseLayer}
                     openDiffMode={this.openDiffMode}
+                    changeOpacity={this.changeOpacity}
                 />
             );
         }
@@ -320,7 +325,7 @@ class App extends Component {
             mapClassName = 'map mapExpanded';
         }
         return (
-            <MuiThemeProvider muiTheme={muiTheme}>
+            <MuiThemeProvider>
                 <div>
                     <Row>
                         {bar}

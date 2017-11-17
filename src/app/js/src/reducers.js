@@ -26,6 +26,7 @@ import {
     CHANGE_SHARE_TITLE,
     CHANGE_SHARE_DESCRIPTION,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
+    CHANGE_LAYER_OPACITY,
 } from './actions';
 
 import {
@@ -143,6 +144,7 @@ function mainReducer(state = initialState, action) {
                 tileJSON: action.payload.newLayer.tileJSON,
                 detailView: false,
                 sourceView: false,
+                opacity: 1,
             };
             layers.push(newLayer);
             return Object.assign({}, state, {
@@ -184,6 +186,7 @@ function mainReducer(state = initialState, action) {
                 tileJSON: action.payload.newLayer.tileJSON,
                 detailView: false,
                 sourceView: false,
+                opacity: layers[action.payload.i].opacity,
             };
             layers[action.payload.i] = newLayer;
             return Object.assign({}, state, {
@@ -244,6 +247,13 @@ function mainReducer(state = initialState, action) {
                 shareDescriptionDialogOpen:
                     action.payload.shareDescriptionDialogOpen,
             });
+        case CHANGE_LAYER_OPACITY: {
+            const layers = state.layers;
+            layers[action.payload.i].opacity = action.payload.opacity;
+            return Object.assign({}, state, {
+                layers,
+            });
+        }
         default:
             return state;
     }

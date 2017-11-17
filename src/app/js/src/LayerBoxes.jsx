@@ -22,6 +22,8 @@ class LayerBoxes extends Component {
                     viewSource={layer.sourceView}
                     layerTileJSON={layer.tileJSON}
                     removeLayer={this.props.removeLayer}
+                    opacity={layer.opacity}
+                    changeOpacity={this.props.changeOpacity}
                 />
                 <br />
             </div>,
@@ -42,6 +44,7 @@ LayerBoxes.propTypes = {
     removeLayer: func.isRequired,
     layers: arrayOf(object).isRequired,
     changeBaseLayer: func.isRequired,
+    changeOpacity: func.isRequired,
 };
 
 function mapStateToProps(state) {
