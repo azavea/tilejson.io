@@ -189,8 +189,18 @@ class LayerBox extends Component {
                 </Grid>
             );
         }
+        const lastToolbarGroupStyle = {
+            marginTop: 4,
+        };
         let sliderOrControls = (
-            <div>
+            <ToolbarGroup style={lastToolbarGroupStyle} lastChild>
+                <IconButton
+                    iconStyle={smallIcon}
+                    onClick={this.handleOpacityOpen}
+                    touch
+                >
+                    <ActionOpacityIcon />
+                </IconButton>
                 <IconButton
                     iconStyle={smallIcon}
                     onClick={this.openEditLayerDialog}
@@ -206,49 +216,56 @@ class LayerBox extends Component {
                     <ActionDeleteIcon />
                 </IconButton>
                 {expandOrCollapseButton}
-            </div>
+            </ToolbarGroup>
         );
         if (this.state.opacityControl) {
             const sliderStyle = {
-                width: 136,
+                width: 124,
                 marginTop: 0,
                 marginBottom: 0,
-                marginRight: 12,
+                marginRight: 24,
             };
             sliderOrControls = (
-                <Slider
-                    value={this.state.opacity}
-                    onChange={this.changeOpacity}
-                    sliderStyle={sliderStyle}
-                />
+                <ToolbarGroup style={lastToolbarGroupStyle} lastChild>
+                    <IconButton
+                        iconStyle={smallIcon}
+                        onClick={this.handleOpacityClose}
+                        touch
+                    >
+                        <ActionOpacityIcon />
+                    </IconButton>
+                    <Slider
+                        value={this.state.opacity}
+                        onChange={this.changeOpacity}
+                        sliderStyle={sliderStyle}
+                    />
+                </ToolbarGroup>
             );
         }
         return (
             <Paper zDepth={1} style={{ overflow: 'hidden' }}>
                 <Toolbar>
-                    <ToolbarGroup firstChild>
-                        <IconButton
-                            iconStyle={smallIcon}
-                            onClick={this.state.visible ?
-                                this.toggleVisibilityOff : this.toggleVisibilityOn}
-                            touch
-                        >
-                            {this.state.visible ?
-                                <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
-                        </IconButton>
-                        <ToolbarTitle style={fontSize11} text={this.props.layerName} />
-                    </ToolbarGroup>
-                    <ToolbarGroup lastChild>
-                        <IconButton
-                            iconStyle={smallIcon}
-                            onClick={this.state.opacityControl ?
-                                this.handleOpacityClose : this.handleOpacityOpen}
-                            touch
-                        >
-                            <ActionOpacityIcon />
-                        </IconButton>
-                        {sliderOrControls}
-                    </ToolbarGroup>
+                    <Grid>
+                        <Row>
+                            <Col xs={4}>
+                                <ToolbarGroup firstChild>
+                                    <IconButton
+                                        iconStyle={smallIcon}
+                                        onClick={this.state.visible ?
+                                            this.toggleVisibilityOff : this.toggleVisibilityOn}
+                                        touch
+                                    >
+                                        {this.state.visible ?
+                                            <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
+                                    </IconButton>
+                                    <ToolbarTitle style={fontSize11} text={this.props.layerName} />
+                                </ToolbarGroup>
+                            </Col>
+                            <Col xs={8}>
+                                {sliderOrControls}
+                            </Col>
+                        </Row>
+                    </Grid>
                 </Toolbar>
                 {details}
                 {source}

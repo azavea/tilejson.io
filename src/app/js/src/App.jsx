@@ -206,8 +206,19 @@ class App extends Component {
     }
 
     share() {
-        const tileJSON = this.props.tileJSON.slice(0);
+        let tileJSON = this.props.tileJSON.slice(0);
         tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
+        tileJSON = tileJSON.map((t, i) => {
+            const newT = Object.assign({}, t);
+            if (i === 0) {
+                newT.opacity = 1;
+                newT.visible = this.props.baseLayerVisible;
+            } else {
+                newT.opacity = this.props.layers[i - 1].opacity;
+                newT.visible = this.props.layers[i - 1].visible;
+            }
+            return newT;
+        });
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
         const info = {};
         if (this.props.shareTitle !== '') {
@@ -292,8 +303,8 @@ class App extends Component {
         this.layers[i + 1].setOpacity(opacity);
     }
 
-    toggleVisibility(i, visibile) {
-        this.layers[i + 1].setVisible(visibile);
+    toggleVisibility(i, visible) {
+        this.layers[i + 1].setVisible(visible);
     }
 
     render() {
@@ -381,6 +392,8 @@ App.propTypes = {
     shareDescription: string.isRequired,
     diffLayerLeftId: number.isRequired,
     diffLayerRightId: number.isRequired,
+    baseLayerVisible: bool.isRequired,
+    layers: arrayOf(object).isRequired,
 };
 
 function mapStateToProps(state) {
