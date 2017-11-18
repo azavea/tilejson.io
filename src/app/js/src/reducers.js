@@ -28,6 +28,7 @@ import {
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
     CHANGE_LAYER_OPACITY,
     TOGGLE_LAYER_VISIBILITY,
+    TOGGLE_BASE_LAYER_VISIBILITY,
 } from './actions';
 
 import {
@@ -59,6 +60,7 @@ const initialState = {
     shareTitle: '',
     shareDescription: '',
     shareDescriptionDialogOpen: false,
+    baseLayerVisible: true,
 };
 
 function mainReducer(state = initialState, action) {
@@ -99,6 +101,7 @@ function mainReducer(state = initialState, action) {
                 shareTitle: '',
                 shareDescription: '',
                 shareDescriptionDialogOpen: false,
+                baseLayerVisible: true,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -264,6 +267,10 @@ function mainReducer(state = initialState, action) {
                 layers,
             });
         }
+        case TOGGLE_BASE_LAYER_VISIBILITY:
+            return Object.assign({}, state, {
+                baseLayerVisible: action.payload.visible,
+            });
         default:
             return state;
     }

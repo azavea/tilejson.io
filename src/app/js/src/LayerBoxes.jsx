@@ -34,6 +34,7 @@ class LayerBoxes extends Component {
             <div>
                 <BaseLayerBox
                     changeBaseLayer={this.props.changeBaseLayer}
+                    toggleVisibility={this.props.toggleVisibility}
                 />
                 <br />
                 {layerBoxes}

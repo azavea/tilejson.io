@@ -35,6 +35,7 @@ export const TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN =
 
 export const CHANGE_LAYER_OPACITY = 'CHANGE_LAYER_OPACITY';
 export const TOGGLE_LAYER_VISIBILITY = 'TOGGLE_LAYER_VISIBILITY';
+export const TOGGLE_BASE_LAYER_VISIBILITY = 'TOGGLE_BASE_LAYER_VISIBILITY';
 
 export function changeLayerName(payload) {
     return {
@@ -221,6 +222,13 @@ export function changeLayerOpacity(payload) {
 export function toggleLayerVisibility(payload) {
     return {
         type: TOGGLE_LAYER_VISIBILITY,
+        payload,
+    };
+}
+
+export function toggleBaseLayerVisibility(payload) {
+    return {
+        type: TOGGLE_BASE_LAYER_VISIBILITY,
         payload,
     };
 }

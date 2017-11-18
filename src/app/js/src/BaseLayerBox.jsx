@@ -7,12 +7,15 @@ import Paper from 'material-ui/Paper';
 import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import NavigationExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
+import ActionVisibilityIcon from 'material-ui/svg-icons/action/visibility';
+import ActionVisibilityOffIcon from 'material-ui/svg-icons/action/visibility-off';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 import { Grid, Row } from 'react-flexbox-grid';
 
 import {
     toggleBaseLayerDetails,
+    toggleBaseLayerVisibility,
 } from './actions';
 
 import {
@@ -25,6 +28,9 @@ class BaseLayerBox extends Component {
         this.expandDetails = this.expandDetails.bind(this);
         this.collapseDetails = this.collapseDetails.bind(this);
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
+        this.toggleVisibilityOn = this.toggleVisibilityOn.bind(this);
+        this.toggleVisibilityOff = this.toggleVisibilityOff.bind(this);
+        this.toggleVisibility = this.toggleVisibility.bind(this);
     }
 
     changeBaseLayer(event, value) {
@@ -41,6 +47,21 @@ class BaseLayerBox extends Component {
         this.props.dispatch(toggleBaseLayerDetails({
             baseLayerDetails: false,
         }));
+    }
+
+    toggleVisibility(value) {
+        this.props.dispatch(toggleBaseLayerVisibility({
+            visible: value,
+        }));
+        this.props.toggleVisibility(-1, value);
+    }
+
+    toggleVisibilityOn() {
+        this.toggleVisibility(true);
+    }
+
+    toggleVisibilityOff() {
+        this.toggleVisibility(false);
     }
 
     render() {
@@ -101,10 +122,19 @@ class BaseLayerBox extends Component {
         return (
             <Paper zDepth={1} style={{ overflow: 'hidden' }}>
                 <Toolbar>
-                    <ToolbarGroup>
+                    <ToolbarGroup firstChild>
+                        <IconButton
+                            iconStyle={smallIcon}
+                            onClick={this.props.baseLayerVisible ?
+                                this.toggleVisibilityOff : this.toggleVisibilityOn}
+                            touch
+                        >
+                            {this.props.baseLayerVisible ?
+                                <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
+                        </IconButton>
                         <ToolbarTitle style={fontSize11} text="Base Layer" />
                     </ToolbarGroup>
-                    <ToolbarGroup>
+                    <ToolbarGroup lastChild>
                         {expandOrCollapseButton}
                     </ToolbarGroup>
                 </Toolbar>
@@ -119,6 +149,8 @@ BaseLayerBox.propTypes = {
     baseLayerDetails: bool.isRequired,
     currentBaseLayer: number.isRequired,
     changeBaseLayer: func.isRequired,
+    toggleVisibility: func.isRequired,
+    baseLayerVisible: bool.isRequired,
 };
 
 function mapStateToProps(state) {
