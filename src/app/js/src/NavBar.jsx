@@ -24,7 +24,6 @@ class NavBar extends Component {
         super(props);
         this.expand = this.expand.bind(this);
         this.closeDiffMode = this.closeDiffMode.bind(this);
-        this.share = this.share.bind(this);
         this.shareDiff = this.shareDiff.bind(this);
     }
 
@@ -46,12 +45,6 @@ class NavBar extends Component {
         }, 100);
     }
 
-    share() {
-        this.props.dispatch(toggleShareDescriptionDialogOpen({
-            shareDescriptionDialogOpen: true,
-        }));
-    }
-
     shareDiff() {
         this.props.dispatch(toggleShareDescriptionDialogOpen({
             shareDescriptionDialogOpen: true,
@@ -68,13 +61,7 @@ class NavBar extends Component {
         let toolbarGroupIconButton = (
             <IconButton onClick={this.expand}><NavigationExpandMoreIcon color="white" /></IconButton>
         );
-        let toolbarGroupRight = (
-            <ToolbarGroup lastChild>
-                <FlatButton onClick={this.props.openAddLayerDialog} label="Add Layer" style={styleWhiteText} />
-                <FlatButton onClick={this.share} label="Share" style={styleWhiteText} />
-                <FlatButton onClick={this.props.clearLayers} label="Clear" style={styleWhiteText} />
-            </ToolbarGroup>
-        );
+        let toolbarGroupRight = null;
         if (this.props.diffMode) {
             toolbarGroupIconButton = (
                 <IconButton onClick={this.closeDiffMode}><NavigationCloseIcon color="white" /></IconButton>
@@ -101,8 +88,6 @@ class NavBar extends Component {
 
 NavBar.propTypes = {
     dispatch: func.isRequired,
-    openAddLayerDialog: func.isRequired,
-    clearLayers: func.isRequired,
     diffMode: bool.isRequired,
 };
 

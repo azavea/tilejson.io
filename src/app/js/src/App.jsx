@@ -295,10 +295,7 @@ class App extends Component {
         let diffToolbar;
         if (this.props.isCollapsed || this.props.diffMode) {
             bar = (
-                <NavBar
-                    openAddLayerDialog={this.openAddLayerDialog}
-                    clearLayers={this.clearLayers}
-                />
+                <NavBar />
             );
             if (this.props.diffMode) {
                 diffToolbar = (<DiffToolbar />);
