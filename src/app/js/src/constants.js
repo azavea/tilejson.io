@@ -62,8 +62,15 @@ export function getBaseLayerTileJSON(i) {
 export const muiTheme = getMuiTheme({
     slider: {
         handleSize: 36,
-        handleSizeDisabled: 32,
-        handleSizeActive: 48,
+        handleSizeDisabled: 36,
+        handleSizeActive: 36,
         trackSize: 0,
+        rippleColor: 'none',
+        handleColorZero: '#7d7d7d',
+        handleFillColor: '#7d7d7d',
+        selectionColor: '#7d7d7d',
+    },
+    dropDownMenu: {
+        accentColor: '#000',
     },
 });

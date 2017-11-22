@@ -22,6 +22,20 @@ html, body, #root, #root > div , #root > div > div {
     z-index: 100;
 }
 
+#floatingheader {
+    padding: 0 !important;
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ol-zoom {
+    top: .5em;
+    right: .5em;
+    left: auto;
+}
+
 #map {
     padding: 0 !important;
 }
@@ -31,7 +45,7 @@ html, body, #root, #root > div , #root > div > div {
 }
 
 .mapExpanded {
-    max-height: calc(100% - 56px);
+    max-height: 100%;
 }
 
 .mapDiff {
