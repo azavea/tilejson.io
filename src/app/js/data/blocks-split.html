@@ -124,6 +124,80 @@
                     }
                     $('#card').show();
                 }
+
+                var map = new ol.Map({
+                    target: 'map',
+                    view: new ol.View({
+                        center: data.center,
+                        zoom: data.zoom
+                    })
+                });
+
+                function setListeners() {
+                    const layers = map.getLayers().getArray();
+
+                    var swipe = document.getElementById('swipe');
+
+                    layers[1].on('precompose', function(event) {
+                        var ctx = event.context;
+                        var width = ctx.canvas.width * swipe.value / 100;
+
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(0, 0, width, ctx.canvas.height);
+                        ctx.clip();
+                    });
+
+                    layers[1].on('postcompose', function(event) {
+                        var ctx = event.context;
+                        ctx.restore();
+                    });
+
+                    layers[2].on('precompose', function(event) {
+                        var ctx = event.context;
+                        var width = ctx.canvas.width * swipe.value / 100;
+
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);
+                        ctx.clip();
+                    });
+
+                    layers[2].on('postcompose', function(event) {
+                        var ctx = event.context;
+                        const width = ctx.canvas.width * swipe.value / 100;
+
+                        ctx.restore();
+
+                        ctx.save();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.fillRect(width - 6, 0, 12, ctx.canvas.height);
+                        ctx.restore();
+                    });
+
+                    swipe.addEventListener('input', function() {
+                        map.render();
+                    }, false);
+                }
+
+                $.getJSON('tile.json', function(tileData) {
+                    if (tileData.length !== 3) {
+                        return;
+                    }
+                    $('#layer-left').text(tileData[1].name);
+                    $('#layer-right').text(tileData[2].name);
+                    for (var i = 0; i < tileData.length; i++) {
+                        var tileJson = tileData[i];
+                        var layer = new ol.layer.Tile({
+                            source: new ol.source.TileJSON({
+                                tileJSON: tileJson,
+                            })
+                        });
+                        map.addLayer(layer);
+                    }
+                    setListeners();
+                });
             });
             $('#card-hide').click(function() {
                 $('#card-content').hide();
@@ -135,81 +209,6 @@
                 $('#card-hide').show();
                 $('#card-show').hide();
             });
-        });
-    </script>
-    <script>
-        var map = new ol.Map({
-            target: 'map',
-            view: new ol.View({
-                center: [0, 0],
-                zoom: 2
-            })
-        });
-
-        function setListeners() {
-            const layers = map.getLayers().getArray();
-
-            var swipe = document.getElementById('swipe');
-
-            layers[1].on('precompose', function(event) {
-                var ctx = event.context;
-                var width = ctx.canvas.width * swipe.value / 100;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(0, 0, width, ctx.canvas.height);
-                ctx.clip();
-            });
-
-            layers[1].on('postcompose', function(event) {
-                var ctx = event.context;
-                ctx.restore();
-            });
-
-            layers[2].on('precompose', function(event) {
-                var ctx = event.context;
-                var width = ctx.canvas.width * swipe.value / 100;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(width, 0, ctx.canvas.width - width, ctx.canvas.height);
-                ctx.clip();
-            });
-
-            layers[2].on('postcompose', function(event) {
-                var ctx = event.context;
-                const width = ctx.canvas.width * swipe.value / 100;
-
-                ctx.restore();
-
-                ctx.save();
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath();
-                ctx.fillRect(width - 6, 0, 12, ctx.canvas.height);
-                ctx.restore();
-            });
-
-            swipe.addEventListener('input', function() {
-                map.render();
-            }, false);
-        }
-
-        $.getJSON('tile.json', function(data) {
-            if (data.length !== 3) {
-                return;
-            }
-            $('#layer-left').text(data[1].name);
-            $('#layer-right').text(data[2].name);
-            for (var i = 0; i < data.length; i++) {
-                var tileJson = data[i];
-                var layer = new ol.layer.Tile({
-                    source: new ol.source.TileJSON({
-                        tileJSON: tileJson,
-                    })
-                });
-                map.addLayer(layer);
-            }
-            setListeners();
         });
     </script>
 </body>
