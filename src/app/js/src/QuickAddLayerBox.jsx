@@ -67,8 +67,7 @@ class QuickAddLayerBox extends Component {
                         <Col xsOffset={4} xs={4}>
                             <FlatButton
                                 label="Add"
-                                onChange={this.changeUrl}
-                                value={this.props.url}
+                                onClick={this.props.addLayer}
                                 primary
                                 fullWidth
                             />
