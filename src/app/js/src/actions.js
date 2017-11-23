@@ -30,6 +30,11 @@ export const CHANGE_DIFF_RIGHT_LAYER_ID = 'CHANGE_DIFF_RIGHT_LAYER_ID';
 
 export const CHANGE_SHARE_TITLE = 'CHANGE_SHARE_TITLE';
 export const CHANGE_SHARE_DESCRIPTION = 'CHANGE_SHARE_DESCRIPTION';
+export const TOGGLE_SHARE_GIST = 'TOGGLE_SHARE_GIST';
+export const TOGGLE_SHARE_TILE_JSON_LINK = 'TOGGLE_SHARE_TILE_JSON_LINK';
+export const TOGGLE_SHARE_BASE = 'TOGGLE_SHARE_BASE';
+export const RESET_SHARE_VALUES = 'RESET_SHARE_VALUES';
+
 export const TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN =
     'TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN';
 
@@ -202,6 +207,33 @@ export function changeShareDescription(payload) {
     return {
         type: CHANGE_SHARE_DESCRIPTION,
         payload,
+    };
+}
+
+export function toggleShareGist(payload) {
+    return {
+        type: TOGGLE_SHARE_GIST,
+        payload,
+    };
+}
+
+export function toggleShareTileJSONLink(payload) {
+    return {
+        type: TOGGLE_SHARE_TILE_JSON_LINK,
+        payload,
+    };
+}
+
+export function toggleShareBase(payload) {
+    return {
+        type: TOGGLE_SHARE_BASE,
+        payload,
+    };
+}
+
+export function resetShareValues() {
+    return {
+        type: RESET_SHARE_VALUES,
     };
 }
 

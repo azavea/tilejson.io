@@ -25,6 +25,10 @@ import {
     CHANGE_DIFF_RIGHT_LAYER_ID,
     CHANGE_SHARE_TITLE,
     CHANGE_SHARE_DESCRIPTION,
+    TOGGLE_SHARE_GIST,
+    TOGGLE_SHARE_TILE_JSON_LINK,
+    TOGGLE_SHARE_BASE,
+    RESET_SHARE_VALUES,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
     CHANGE_LAYER_OPACITY,
     TOGGLE_LAYER_VISIBILITY,
@@ -34,6 +38,9 @@ import {
 import {
     getDefaultTileJSON,
     defaultBaseLayer,
+    defaultShareGist,
+    defaultShareTileJSONLink,
+    defaultShareBase,
 } from './constants';
 
 const initialState = {
@@ -59,6 +66,9 @@ const initialState = {
     swipeValue: 0.5,
     shareTitle: '',
     shareDescription: '',
+    shareGist: defaultShareGist,
+    shareTileJSONLink: defaultShareTileJSONLink,
+    shareBase: defaultShareBase,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
 };
@@ -100,6 +110,9 @@ function mainReducer(state = initialState, action) {
                 swipeValue: 0.5,
                 shareTitle: '',
                 shareDescription: '',
+                shareGist: defaultShareGist,
+                shareTileJSONLink: defaultShareTileJSONLink,
+                shareBase: defaultShareBase,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
             });
@@ -247,6 +260,26 @@ function mainReducer(state = initialState, action) {
         case CHANGE_SHARE_DESCRIPTION:
             return Object.assign({}, state, {
                 shareDescription: action.payload.shareDescription,
+            });
+        case TOGGLE_SHARE_GIST:
+            return Object.assign({}, state, {
+                shareGist: action.payload.shareGist,
+            });
+        case TOGGLE_SHARE_TILE_JSON_LINK:
+            return Object.assign({}, state, {
+                shareTileJSONLink: action.payload.shareTileJSONLink,
+            });
+        case TOGGLE_SHARE_BASE:
+            return Object.assign({}, state, {
+                shareBase: action.payload.shareBase,
+            });
+        case RESET_SHARE_VALUES:
+            return Object.assign({}, state, {
+                shareTitle: '',
+                shareDescription: '',
+                shareGist: defaultShareGist,
+                shareTileJSONLink: defaultShareTileJSONLink,
+                shareBase: defaultShareBase,
             });
         case TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN:
             return Object.assign({}, state, {

@@ -74,3 +74,7 @@ export const muiTheme = getMuiTheme({
         accentColor: '#000',
     },
 });
+
+export const defaultShareGist = false;
+export const defaultShareTileJSONLink = false;
+export const defaultShareBase = false;
