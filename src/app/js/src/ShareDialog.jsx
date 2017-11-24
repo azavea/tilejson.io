@@ -10,20 +10,12 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
     toggleShareSnackbarOpen,
-    toggleShareUrlCopied,
 } from './actions';
 
 class ShareDialog extends Component {
     constructor(props) {
         super(props);
         this.closeShareDialog = this.closeShareDialog.bind(this);
-        this.onCopy = this.onCopy.bind(this);
-    }
-
-    onCopy() {
-        this.props.dispatch(toggleShareUrlCopied({
-            shareUrlCopied: true,
-        }));
     }
 
     closeShareDialog() {
@@ -40,7 +32,6 @@ class ShareDialog extends Component {
             />,
             <CopyToClipboard
                 text={this.props.shareLink}
-                onCopy={this.onCopy}
             >
                 <FlatButton
                     label="Copy URL"
