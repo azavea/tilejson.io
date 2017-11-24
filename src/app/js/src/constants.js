@@ -78,3 +78,5 @@ export const muiTheme = getMuiTheme({
 export const defaultShareGist = false;
 export const defaultShareTileJSONLink = false;
 export const defaultShareBase = false;
+export const defaultShareDiff = false;
+export const defaultDefaultToDiff = false;

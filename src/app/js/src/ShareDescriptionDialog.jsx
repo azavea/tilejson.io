@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { bool, func, string } from 'prop-types';
+import { arrayOf, bool, func, object, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Checkbox from 'material-ui/Checkbox';
+
+import { Row, Col } from 'react-flexbox-grid';
 
 import {
     toggleShareDescriptionDialogOpen,
@@ -14,6 +16,8 @@ import {
     toggleShareGist,
     toggleShareTileJSONLink,
     toggleShareBase,
+    toggleShareDiff,
+    toggleDefaultToDiff,
 } from './actions';
 
 class ShareDescriptionDialog extends Component {
@@ -26,6 +30,8 @@ class ShareDescriptionDialog extends Component {
         this.toggleShareGist = this.toggleShareGist.bind(this);
         this.toggleShareTileJSONLink = this.toggleShareTileJSONLink.bind(this);
         this.toggleShareBase = this.toggleShareBase.bind(this);
+        this.toggleShareDiff = this.toggleShareDiff.bind(this);
+        this.toggleDefaultToDiff = this.toggleDefaultToDiff.bind(this);
     }
 
     handleCancel() {
@@ -71,6 +77,18 @@ class ShareDescriptionDialog extends Component {
         }));
     }
 
+    toggleShareDiff(event, value) {
+        this.props.dispatch(toggleShareDiff({
+            shareDiff: value,
+        }));
+    }
+
+    toggleDefaultToDiff(event, value) {
+        this.props.dispatch(toggleDefaultToDiff({
+            defaultToDiff: value,
+        }));
+    }
+
     render() {
         const actions = [
             <FlatButton
@@ -83,6 +101,28 @@ class ShareDescriptionDialog extends Component {
                 primary
             />,
         ];
+        let diffOptions;
+        if (this.props.layers.length >= 2) {
+            diffOptions = (
+                <Row>
+                    <Col xs={6}>
+                        <Checkbox
+                            label="Include diff view"
+                            checked={this.props.shareDiff}
+                            onCheck={this.toggleShareDiff}
+                        />
+                    </Col>
+                    <Col xs={6}>
+                        <Checkbox
+                            label="Default to diff view"
+                            checked={this.props.defaultToDiff}
+                            onCheck={this.toggleDefaultToDiff}
+                            disabled={!this.props.shareDiff}
+                        />
+                    </Col>
+                </Row>
+            );
+        }
         return (
             <div>
                 <Dialog
@@ -122,6 +162,7 @@ class ShareDescriptionDialog extends Component {
                         checked={this.props.shareBase}
                         onCheck={this.toggleShareBase}
                     />
+                    {diffOptions}
                 </Dialog>
             </div>
         );
@@ -137,6 +178,10 @@ ShareDescriptionDialog.propTypes = {
     shareGist: bool.isRequired,
     shareTileJSONLink: bool.isRequired,
     shareBase: bool.isRequired,
+    layers: arrayOf(object).isRequired,
+    shareDiff: bool.isRequired,
+    defaultToDiff: bool.isRequired,
+
 };
 
 function mapStateToProps(state) {

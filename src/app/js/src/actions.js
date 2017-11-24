@@ -33,6 +33,8 @@ export const CHANGE_SHARE_DESCRIPTION = 'CHANGE_SHARE_DESCRIPTION';
 export const TOGGLE_SHARE_GIST = 'TOGGLE_SHARE_GIST';
 export const TOGGLE_SHARE_TILE_JSON_LINK = 'TOGGLE_SHARE_TILE_JSON_LINK';
 export const TOGGLE_SHARE_BASE = 'TOGGLE_SHARE_BASE';
+export const TOGGLE_SHARE_DIFF = 'TOGGLE_SHARE_DIFF';
+export const TOGGLE_DEFAULT_TO_DIFF = 'TOGGLE_DEFAULT_TO_DIFF';
 export const RESET_SHARE_VALUES = 'RESET_SHARE_VALUES';
 
 export const TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN =
@@ -227,6 +229,20 @@ export function toggleShareTileJSONLink(payload) {
 export function toggleShareBase(payload) {
     return {
         type: TOGGLE_SHARE_BASE,
+        payload,
+    };
+}
+
+export function toggleShareDiff(payload) {
+    return {
+        type: TOGGLE_SHARE_DIFF,
+        payload,
+    };
+}
+
+export function toggleDefaultToDiff(payload) {
+    return {
+        type: TOGGLE_DEFAULT_TO_DIFF,
         payload,
     };
 }

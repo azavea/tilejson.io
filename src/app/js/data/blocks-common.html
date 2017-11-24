@@ -166,7 +166,7 @@
             $('select').material_select();
             $('#exit-diff-btn').hide();
             var urlPath = window.location.pathname.split('/');
-            $('#gist-link').attr('href', 'https://gist.github.com/anonymous/' + urlPath[urlPath.length - 2])
+            $('#gist-link').attr('href', 'https://gist.github.com/anonymous/' + urlPath[urlPath.length - 2] + '#file-tile-json');
             $.getJSON('info.json', function(data) { 
                 var map = new ol.Map({
                     target: 'map',
@@ -199,6 +199,8 @@
                 diffMap.addLayer(baseLayer);
                 if (data.shareBase) {
                     map.addLayer(baseLayer);
+                } else {
+                    baseLayer.setVisible(false);
                 }
 
                 $.getJSON('tile.json', function(tileData) {
@@ -211,13 +213,13 @@
                             $('#tilejson-link').hide();
                         }
                     }
-                    if (tileData.length < 2) {
+                    if (tileData.length < 2 || !data.shareDiff) {
                         $('#diff-btn').hide();
                         if (!data.shareGist && !data.shareTileJSONLink) {
                             $('#header').hide();
                         }
                     }
-                    
+
                     tileData.forEach(function (tileJson) {
                         var layer = new ol.layer.Tile({
                             source: new ol.source.TileJSON({
@@ -351,7 +353,9 @@
                     $('#exit-diff-btn').click(function() {
                         $('#diff-btn').show();
                         $('#exit-diff-btn').hide();
-                        $('#card').show();
+                        if (data.title || data.description) {
+                            $('#card').show();
+                        }
                         $('#overDiffMap').hide();
                         $('#map').show();
                         $('#diffMap').hide();
@@ -365,6 +369,10 @@
                     $('#rightLayerSelect').on('change', function() {
                         initDiffMapAndSelects($('#leftLayerSelect').val(), this.value);
                     });
+
+                    if (data.shareDiff && data.defaultToDiff) {
+                        $('#diff-btn').trigger('click');
+                    }
                 });
             });
             $('#card-hide').click(function() {

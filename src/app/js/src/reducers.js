@@ -28,6 +28,8 @@ import {
     TOGGLE_SHARE_GIST,
     TOGGLE_SHARE_TILE_JSON_LINK,
     TOGGLE_SHARE_BASE,
+    TOGGLE_SHARE_DIFF,
+    TOGGLE_DEFAULT_TO_DIFF,
     RESET_SHARE_VALUES,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
     CHANGE_LAYER_OPACITY,
@@ -41,6 +43,8 @@ import {
     defaultShareGist,
     defaultShareTileJSONLink,
     defaultShareBase,
+    defaultShareDiff,
+    defaultDefaultToDiff,
 } from './constants';
 
 const initialState = {
@@ -69,6 +73,8 @@ const initialState = {
     shareGist: defaultShareGist,
     shareTileJSONLink: defaultShareTileJSONLink,
     shareBase: defaultShareBase,
+    shareDiff: defaultShareDiff,
+    defaultToDiff: defaultDefaultToDiff,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
 };
@@ -113,6 +119,8 @@ function mainReducer(state = initialState, action) {
                 shareGist: defaultShareGist,
                 shareTileJSONLink: defaultShareTileJSONLink,
                 shareBase: defaultShareBase,
+                shareDiff: defaultShareDiff,
+                defaultToDiff: defaultDefaultToDiff,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
             });
@@ -237,12 +245,16 @@ function mainReducer(state = initialState, action) {
                     diffMode: true,
                     diffLayerLeftId: 0,
                     diffLayerRightId: 1,
+                    shareDiff: true,
+                    defaultToDiff: true,
                 });
             }
             return Object.assign({}, state, {
                 diffMode: false,
                 diffLayerLeftId: -1,
                 diffLayerRightId: -1,
+                shareDiff: false,
+                defaultToDiff: false,
             });
         }
         case CHANGE_DIFF_LEFT_LAYER_ID:
@@ -273,6 +285,14 @@ function mainReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 shareBase: action.payload.shareBase,
             });
+        case TOGGLE_SHARE_DIFF:
+            return Object.assign({}, state, {
+                shareDiff: action.payload.shareDiff,
+            });
+        case TOGGLE_DEFAULT_TO_DIFF:
+            return Object.assign({}, state, {
+                defaultToDiff: action.payload.defaultToDiff,
+            });
         case RESET_SHARE_VALUES:
             return Object.assign({}, state, {
                 shareTitle: '',
@@ -280,6 +300,8 @@ function mainReducer(state = initialState, action) {
                 shareGist: defaultShareGist,
                 shareTileJSONLink: defaultShareTileJSONLink,
                 shareBase: defaultShareBase,
+                shareDiff: defaultShareDiff,
+                defaultToDiff: defaultDefaultToDiff,
             });
         case TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN:
             return Object.assign({}, state, {

@@ -225,6 +225,8 @@ class App extends Component {
             shareGist: this.props.shareGist,
             shareTileJSONLink: this.props.shareTileJSONLink,
             shareBase: this.props.shareBase,
+            shareDiff: this.props.shareDiff,
+            defaultToDiff: this.props.defaultToDiff,
             center: view.getCenter(),
             zoom: view.getZoom(),
         };
@@ -356,6 +358,8 @@ App.propTypes = {
     shareGist: bool.isRequired,
     shareTileJSONLink: bool.isRequired,
     shareBase: bool.isRequired,
+    shareDiff: bool.isRequired,
+    defaultToDiff: bool.isRequired,
 };
 
 function mapStateToProps(state) {
