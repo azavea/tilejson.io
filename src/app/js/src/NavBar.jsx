@@ -73,7 +73,7 @@ class NavBar extends Component {
             );
         }
         return (
-            <Col xs={12} id="header">
+            <Col xs={12} id={this.props.diffMode ? 'header' : 'floatingheader'}>
                 <Toolbar style={styleBlueBackground}>
                     <ToolbarGroup firstChild>
                         {toolbarGroupIconButton}
