@@ -82,6 +82,8 @@
                             })
                         });
                         map.addLayer(layer);
+                        layer.setVisible(tileJson.visible);
+                        layer.setOpacity(tileJson.opacity);
                     });
                 });
             });

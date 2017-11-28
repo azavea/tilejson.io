@@ -5,11 +5,14 @@ import { connect } from 'react-redux';
 import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import NavigationExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
-import ActionCodeIcon from 'material-ui/svg-icons/action/code';
 import ActionDeleteIcon from 'material-ui/svg-icons/action/delete';
+import ActionOpacityIcon from 'material-ui/svg-icons/action/opacity';
+import ActionVisibilityIcon from 'material-ui/svg-icons/action/visibility';
+import ActionVisibilityOffIcon from 'material-ui/svg-icons/action/visibility-off';
 import EditorModeEditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
+import Slider from 'material-ui/Slider';
 
 import ReactJson from 'react-json-view';
 
@@ -18,17 +21,28 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import {
     toggleLayerBoxInfo,
     toggleEditLayerDialog,
+    changeLayerOpacity,
+    toggleLayerVisibility,
 } from './actions';
 
 class LayerBox extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            opacityControl: false,
+            opacity: this.props.opacity,
+            visible: this.props.visible,
+        };
         this.collapseDetails = this.collapseDetails.bind(this);
         this.expandDetails = this.expandDetails.bind(this);
-        this.collapseSource = this.collapseSource.bind(this);
-        this.expandSource = this.expandSource.bind(this);
         this.removeLayer = this.removeLayer.bind(this);
         this.openEditLayerDialog = this.openEditLayerDialog.bind(this);
+        this.handleOpacityOpen = this.handleOpacityOpen.bind(this);
+        this.handleOpacityClose = this.handleOpacityClose.bind(this);
+        this.changeOpacity = this.changeOpacity.bind(this);
+        this.toggleVisibilityOn = this.toggleVisibilityOn.bind(this);
+        this.toggleVisibilityOff = this.toggleVisibilityOff.bind(this);
+        this.toggleVisibility = this.toggleVisibility.bind(this);
     }
 
     collapseDetails() {
@@ -45,20 +59,6 @@ class LayerBox extends Component {
         }));
     }
 
-    collapseSource() {
-        this.props.dispatch(toggleLayerBoxInfo({
-            i: this.props.i,
-            sourceView: false,
-        }));
-    }
-
-    expandSource() {
-        this.props.dispatch(toggleLayerBoxInfo({
-            i: this.props.i,
-            sourceView: true,
-        }));
-    }
-
     removeLayer() {
         this.props.removeLayer(this.props.i);
     }
@@ -68,6 +68,48 @@ class LayerBox extends Component {
             showEditLayerDialog: true,
             i: this.props.i,
         }));
+    }
+
+    changeOpacity(event, value) {
+        this.props.dispatch(changeLayerOpacity({
+            opacity: value,
+            i: this.props.i,
+        }));
+        this.setState({
+            opacity: value,
+        });
+        this.props.changeOpacity(this.props.i, value);
+    }
+
+    handleOpacityOpen() {
+        this.setState({
+            opacityControl: true,
+        });
+    }
+
+    handleOpacityClose() {
+        this.setState({
+            opacityControl: false,
+        });
+    }
+
+    toggleVisibility(value) {
+        this.props.dispatch(toggleLayerVisibility({
+            visible: value,
+            i: this.props.i,
+        }));
+        this.setState({
+            visible: value,
+        });
+        this.props.toggleVisibility(this.props.i, value);
+    }
+
+    toggleVisibilityOn() {
+        this.toggleVisibility(true);
+    }
+
+    toggleVisibilityOff() {
+        this.toggleVisibility(false);
     }
 
     render() {
@@ -87,6 +129,7 @@ class LayerBox extends Component {
             backgroundColor: '#f7f7f7',
         };
         let details;
+        let source;
         let expandOrCollapseButton = (
             <IconButton
                 iconStyle={smallIcon}
@@ -133,9 +176,6 @@ class LayerBox extends Component {
                     <NavigationExpandLessIcon />
                 </IconButton>
             );
-        }
-        let source;
-        if (this.props.viewSource) {
             source = (
                 <Grid style={sourceStyle} className="detailValue" fluid>
                     <br />
@@ -149,37 +189,83 @@ class LayerBox extends Component {
                 </Grid>
             );
         }
+        const lastToolbarGroupStyle = {
+            marginTop: 4,
+        };
+        let sliderOrControls = (
+            <ToolbarGroup style={lastToolbarGroupStyle} lastChild>
+                <IconButton
+                    iconStyle={smallIcon}
+                    onClick={this.handleOpacityOpen}
+                    touch
+                >
+                    <ActionOpacityIcon />
+                </IconButton>
+                <IconButton
+                    iconStyle={smallIcon}
+                    onClick={this.openEditLayerDialog}
+                    touch
+                >
+                    <EditorModeEditIcon />
+                </IconButton>
+                <IconButton
+                    iconStyle={smallIcon}
+                    onClick={this.removeLayer}
+                    touch
+                >
+                    <ActionDeleteIcon />
+                </IconButton>
+                {expandOrCollapseButton}
+            </ToolbarGroup>
+        );
+        if (this.state.opacityControl) {
+            const sliderStyle = {
+                width: 124,
+                marginTop: 0,
+                marginBottom: 0,
+                marginRight: 24,
+            };
+            sliderOrControls = (
+                <ToolbarGroup style={lastToolbarGroupStyle} lastChild>
+                    <IconButton
+                        iconStyle={smallIcon}
+                        onClick={this.handleOpacityClose}
+                        touch
+                    >
+                        <ActionOpacityIcon />
+                    </IconButton>
+                    <Slider
+                        value={this.state.opacity}
+                        onChange={this.changeOpacity}
+                        sliderStyle={sliderStyle}
+                    />
+                </ToolbarGroup>
+            );
+        }
         return (
             <Paper zDepth={1} style={{ overflow: 'hidden' }}>
                 <Toolbar>
-                    <ToolbarGroup>
-                        <ToolbarTitle style={fontSize11} text={this.props.layerName} />
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <IconButton
-                            iconStyle={smallIcon}
-                            onClick={this.openEditLayerDialog}
-                            touch
-                        >
-                            <EditorModeEditIcon />
-                        </IconButton>
-                        <IconButton
-                            iconStyle={smallIcon}
-                            onClick={this.removeLayer}
-                            touch
-                        >
-                            <ActionDeleteIcon />
-                        </IconButton>
-                        <IconButton
-                            onClick={this.props.viewSource ?
-                                this.collapseSource : this.expandSource}
-                            iconStyle={smallIcon}
-                            touch
-                        >
-                            <ActionCodeIcon />
-                        </IconButton>
-                        {expandOrCollapseButton}
-                    </ToolbarGroup>
+                    <Grid>
+                        <Row>
+                            <Col xs={4}>
+                                <ToolbarGroup firstChild>
+                                    <IconButton
+                                        iconStyle={smallIcon}
+                                        onClick={this.state.visible ?
+                                            this.toggleVisibilityOff : this.toggleVisibilityOn}
+                                        touch
+                                    >
+                                        {this.state.visible ?
+                                            <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
+                                    </IconButton>
+                                    <ToolbarTitle style={fontSize11} text={this.props.layerName} />
+                                </ToolbarGroup>
+                            </Col>
+                            <Col xs={8}>
+                                {sliderOrControls}
+                            </Col>
+                        </Row>
+                    </Grid>
                 </Toolbar>
                 {details}
                 {source}
@@ -194,9 +280,12 @@ LayerBox.propTypes = {
     layerUrl: string.isRequired,
     i: number.isRequired,
     viewDetail: bool.isRequired,
-    viewSource: bool.isRequired,
     layerTileJSON: shape({}).isRequired,
     removeLayer: func.isRequired,
+    opacity: number.isRequired,
+    changeOpacity: func.isRequired,
+    visible: bool.isRequired,
+    toggleVisibility: func.isRequired,
 };
 
 function mapStateToProps(state) {

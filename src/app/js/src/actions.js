@@ -33,6 +33,10 @@ export const CHANGE_SHARE_DESCRIPTION = 'CHANGE_SHARE_DESCRIPTION';
 export const TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN =
     'TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN';
 
+export const CHANGE_LAYER_OPACITY = 'CHANGE_LAYER_OPACITY';
+export const TOGGLE_LAYER_VISIBILITY = 'TOGGLE_LAYER_VISIBILITY';
+export const TOGGLE_BASE_LAYER_VISIBILITY = 'TOGGLE_BASE_LAYER_VISIBILITY';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -204,6 +208,27 @@ export function changeShareDescription(payload) {
 export function toggleShareDescriptionDialogOpen(payload) {
     return {
         type: TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
+        payload,
+    };
+}
+
+export function changeLayerOpacity(payload) {
+    return {
+        type: CHANGE_LAYER_OPACITY,
+        payload,
+    };
+}
+
+export function toggleLayerVisibility(payload) {
+    return {
+        type: TOGGLE_LAYER_VISIBILITY,
+        payload,
+    };
+}
+
+export function toggleBaseLayerVisibility(payload) {
+    return {
+        type: TOGGLE_BASE_LAYER_VISIBILITY,
         payload,
     };
 }

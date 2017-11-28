@@ -35,7 +35,6 @@ import {
     getDefaultTileJSON,
     getBaseLayerTileJSON,
     baseLayers,
-    muiTheme,
 } from './constants';
 import AddLayerDialog from './AddLayerDialog';
 import ShareDialog from './ShareDialog';
@@ -63,6 +62,8 @@ class App extends Component {
         this.getLayerTileJSON = this.getLayerTileJSON.bind(this);
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
         this.shareDiff = this.shareDiff.bind(this);
+        this.changeOpacity = this.changeOpacity.bind(this);
+        this.toggleVisibility = this.toggleVisibility.bind(this);
     }
 
     componentDidMount() {
@@ -205,8 +206,19 @@ class App extends Component {
     }
 
     share() {
-        const tileJSON = this.props.tileJSON.slice(0);
+        let tileJSON = this.props.tileJSON.slice(0);
         tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
+        tileJSON = tileJSON.map((t, i) => {
+            const newT = Object.assign({}, t);
+            if (i === 0) {
+                newT.opacity = 1;
+                newT.visible = this.props.baseLayerVisible;
+            } else {
+                newT.opacity = this.props.layers[i - 1].opacity;
+                newT.visible = this.props.layers[i - 1].visible;
+            }
+            return newT;
+        });
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
         const info = {};
         if (this.props.shareTitle !== '') {
@@ -287,6 +299,14 @@ class App extends Component {
         }));
     }
 
+    changeOpacity(i, opacity) {
+        this.layers[i + 1].setOpacity(opacity);
+    }
+
+    toggleVisibility(i, visible) {
+        this.layers[i + 1].setVisible(visible);
+    }
+
     render() {
         const errorSnackbarStyle = {
             backgroundColor: '#fd4582',
@@ -310,6 +330,8 @@ class App extends Component {
                     removeLayer={this.removeLayer}
                     changeBaseLayer={this.changeBaseLayer}
                     openDiffMode={this.openDiffMode}
+                    changeOpacity={this.changeOpacity}
+                    toggleVisibility={this.toggleVisibility}
                 />
             );
         }
@@ -320,7 +342,7 @@ class App extends Component {
             mapClassName = 'map mapExpanded';
         }
         return (
-            <MuiThemeProvider muiTheme={muiTheme}>
+            <MuiThemeProvider>
                 <div>
                     <Row>
                         {bar}
@@ -370,6 +392,8 @@ App.propTypes = {
     shareDescription: string.isRequired,
     diffLayerLeftId: number.isRequired,
     diffLayerRightId: number.isRequired,
+    baseLayerVisible: bool.isRequired,
+    layers: arrayOf(object).isRequired,
 };
 
 function mapStateToProps(state) {

@@ -26,6 +26,9 @@ import {
     CHANGE_SHARE_TITLE,
     CHANGE_SHARE_DESCRIPTION,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
+    CHANGE_LAYER_OPACITY,
+    TOGGLE_LAYER_VISIBILITY,
+    TOGGLE_BASE_LAYER_VISIBILITY,
 } from './actions';
 
 import {
@@ -57,6 +60,7 @@ const initialState = {
     shareTitle: '',
     shareDescription: '',
     shareDescriptionDialogOpen: false,
+    baseLayerVisible: true,
 };
 
 function mainReducer(state = initialState, action) {
@@ -97,6 +101,7 @@ function mainReducer(state = initialState, action) {
                 shareTitle: '',
                 shareDescription: '',
                 shareDescriptionDialogOpen: false,
+                baseLayerVisible: true,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -143,6 +148,8 @@ function mainReducer(state = initialState, action) {
                 tileJSON: action.payload.newLayer.tileJSON,
                 detailView: false,
                 sourceView: false,
+                opacity: 1,
+                visible: true,
             };
             layers.push(newLayer);
             return Object.assign({}, state, {
@@ -184,6 +191,8 @@ function mainReducer(state = initialState, action) {
                 tileJSON: action.payload.newLayer.tileJSON,
                 detailView: false,
                 sourceView: false,
+                opacity: layers[action.payload.i].opacity,
+                visible: layers[action.payload.i].visible,
             };
             layers[action.payload.i] = newLayer;
             return Object.assign({}, state, {
@@ -243,6 +252,24 @@ function mainReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 shareDescriptionDialogOpen:
                     action.payload.shareDescriptionDialogOpen,
+            });
+        case CHANGE_LAYER_OPACITY: {
+            const layers = state.layers;
+            layers[action.payload.i].opacity = action.payload.opacity;
+            return Object.assign({}, state, {
+                layers,
+            });
+        }
+        case TOGGLE_LAYER_VISIBILITY: {
+            const layers = state.layers;
+            layers[action.payload.i].visible = action.payload.visible;
+            return Object.assign({}, state, {
+                layers,
+            });
+        }
+        case TOGGLE_BASE_LAYER_VISIBILITY:
+            return Object.assign({}, state, {
+                baseLayerVisible: action.payload.visible,
             });
         default:
             return state;
