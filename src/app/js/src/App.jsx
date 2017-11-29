@@ -13,7 +13,6 @@ import Attribution from 'ol/attribution';
 import XYZ from 'ol/source/xyz';
 
 import gistRequest from '../data/request.json';
-import gistRequestDiff from '../data/request-diff.json';
 import {
     changeTileJson,
     clearScreen,
@@ -26,8 +25,7 @@ import {
     editLayer,
     postAddEditClear,
     changeCurrentBaseLayer,
-    changeShareTitle,
-    changeShareDescription,
+    resetShareValues,
 } from './actions';
 import {
     baseLayer,
@@ -61,7 +59,6 @@ class App extends Component {
         this.getLayerName = this.getLayerName.bind(this);
         this.getLayerTileJSON = this.getLayerTileJSON.bind(this);
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
-        this.shareDiff = this.shareDiff.bind(this);
         this.changeOpacity = this.changeOpacity.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
     }
@@ -220,18 +217,25 @@ class App extends Component {
             return newT;
         });
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
-        const info = {};
+        const view = map.getView();
+        const info = {
+            baseLayer: getBaseLayerTileJSON(this.props.currentBaseLayer),
+            diffLayerLeftId: this.props.diffLayerLeftId,
+            diffLayerRightId: this.props.diffLayerRightId,
+            shareGist: this.props.shareGist,
+            shareTileJSONLink: this.props.shareTileJSONLink,
+            shareBase: this.props.shareBase,
+            shareDiff: this.props.shareDiff,
+            defaultToDiff: this.props.defaultToDiff,
+            center: view.getCenter(),
+            zoom: view.getZoom(),
+        };
         if (this.props.shareTitle !== '') {
             info.title = this.props.shareTitle;
-        } else {
-            info.title = 'Shared Map';
         }
         if (this.props.shareDescription !== '') {
             info.description = this.props.shareDescription;
         }
-        const view = map.getView();
-        info.center = view.getCenter();
-        info.zoom = view.getZoom();
         gistRequest.files['info.json'].content = JSON.stringify(info, null, '\t');
         axios.post('https://api.github.com/gists', gistRequest)
             .then((response) => {
@@ -242,49 +246,7 @@ class App extends Component {
                     shareSnackbarOpen: true,
                 }));
             });
-        this.props.dispatch(changeShareDescription({
-            shareDescription: '',
-        }));
-        this.props.dispatch(changeShareTitle({
-            shareTitle: '',
-        }));
-    }
-
-    shareDiff() {
-        const tileJSON = [
-            getBaseLayerTileJSON(this.props.currentBaseLayer),
-            this.props.tileJSON[this.props.diffLayerLeftId],
-            this.props.tileJSON[this.props.diffLayerRightId],
-        ];
-        gistRequestDiff.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
-        const info = {};
-        if (this.props.shareTitle !== '') {
-            info.title = this.props.shareTitle;
-        } else {
-            info.title = 'Shared Map';
-        }
-        if (this.props.shareDescription !== '') {
-            info.description = this.props.shareDescription;
-        }
-        const view = map.getView();
-        info.center = view.getCenter();
-        info.zoom = view.getZoom();
-        gistRequestDiff.files['info.json'].content = JSON.stringify(info, null, '\t');
-        axios.post('https://api.github.com/gists', gistRequestDiff)
-            .then((response) => {
-                this.props.dispatch(changeShareLink({
-                    shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
-                }));
-                this.props.dispatch(toggleShareSnackbarOpen({
-                    shareSnackbarOpen: true,
-                }));
-            });
-        this.props.dispatch(changeShareDescription({
-            shareDescription: '',
-        }));
-        this.props.dispatch(changeShareTitle({
-            shareTitle: '',
-        }));
+        this.props.dispatch(resetShareValues());
     }
 
     handleErrorSbRequestClose() {
@@ -369,7 +331,6 @@ class App extends Component {
                         <ShareDialog />
                         <ShareDescriptionDialog
                             share={this.share}
-                            shareDiff={this.shareDiff}
                         />
                     </Row>
                 </div>
@@ -394,6 +355,11 @@ App.propTypes = {
     diffLayerRightId: number.isRequired,
     baseLayerVisible: bool.isRequired,
     layers: arrayOf(object).isRequired,
+    shareGist: bool.isRequired,
+    shareTileJSONLink: bool.isRequired,
+    shareBase: bool.isRequired,
+    shareDiff: bool.isRequired,
+    defaultToDiff: bool.isRequired,
 };
 
 function mapStateToProps(state) {

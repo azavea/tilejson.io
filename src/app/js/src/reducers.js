@@ -25,6 +25,12 @@ import {
     CHANGE_DIFF_RIGHT_LAYER_ID,
     CHANGE_SHARE_TITLE,
     CHANGE_SHARE_DESCRIPTION,
+    TOGGLE_SHARE_GIST,
+    TOGGLE_SHARE_TILE_JSON_LINK,
+    TOGGLE_SHARE_BASE,
+    TOGGLE_SHARE_DIFF,
+    TOGGLE_DEFAULT_TO_DIFF,
+    RESET_SHARE_VALUES,
     TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN,
     CHANGE_LAYER_OPACITY,
     TOGGLE_LAYER_VISIBILITY,
@@ -34,6 +40,11 @@ import {
 import {
     getDefaultTileJSON,
     defaultBaseLayer,
+    defaultShareGist,
+    defaultShareTileJSONLink,
+    defaultShareBase,
+    defaultShareDiff,
+    defaultDefaultToDiff,
 } from './constants';
 
 const initialState = {
@@ -59,6 +70,11 @@ const initialState = {
     swipeValue: 0.5,
     shareTitle: '',
     shareDescription: '',
+    shareGist: defaultShareGist,
+    shareTileJSONLink: defaultShareTileJSONLink,
+    shareBase: defaultShareBase,
+    shareDiff: defaultShareDiff,
+    defaultToDiff: defaultDefaultToDiff,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
 };
@@ -100,6 +116,11 @@ function mainReducer(state = initialState, action) {
                 swipeValue: 0.5,
                 shareTitle: '',
                 shareDescription: '',
+                shareGist: defaultShareGist,
+                shareTileJSONLink: defaultShareTileJSONLink,
+                shareBase: defaultShareBase,
+                shareDiff: defaultShareDiff,
+                defaultToDiff: defaultDefaultToDiff,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
             });
@@ -224,12 +245,16 @@ function mainReducer(state = initialState, action) {
                     diffMode: true,
                     diffLayerLeftId: 0,
                     diffLayerRightId: 1,
+                    shareDiff: true,
+                    defaultToDiff: true,
                 });
             }
             return Object.assign({}, state, {
                 diffMode: false,
                 diffLayerLeftId: -1,
                 diffLayerRightId: -1,
+                shareDiff: false,
+                defaultToDiff: false,
             });
         }
         case CHANGE_DIFF_LEFT_LAYER_ID:
@@ -247,6 +272,36 @@ function mainReducer(state = initialState, action) {
         case CHANGE_SHARE_DESCRIPTION:
             return Object.assign({}, state, {
                 shareDescription: action.payload.shareDescription,
+            });
+        case TOGGLE_SHARE_GIST:
+            return Object.assign({}, state, {
+                shareGist: action.payload.shareGist,
+            });
+        case TOGGLE_SHARE_TILE_JSON_LINK:
+            return Object.assign({}, state, {
+                shareTileJSONLink: action.payload.shareTileJSONLink,
+            });
+        case TOGGLE_SHARE_BASE:
+            return Object.assign({}, state, {
+                shareBase: action.payload.shareBase,
+            });
+        case TOGGLE_SHARE_DIFF:
+            return Object.assign({}, state, {
+                shareDiff: action.payload.shareDiff,
+            });
+        case TOGGLE_DEFAULT_TO_DIFF:
+            return Object.assign({}, state, {
+                defaultToDiff: action.payload.defaultToDiff,
+            });
+        case RESET_SHARE_VALUES:
+            return Object.assign({}, state, {
+                shareTitle: '',
+                shareDescription: '',
+                shareGist: defaultShareGist,
+                shareTileJSONLink: defaultShareTileJSONLink,
+                shareBase: defaultShareBase,
+                shareDiff: defaultShareDiff,
+                defaultToDiff: defaultDefaultToDiff,
             });
         case TOGGLE_SHARE_DESCRIPTION_DIALOG_OPEN:
             return Object.assign({}, state, {
