@@ -204,7 +204,6 @@ class App extends Component {
 
     share() {
         let tileJSON = this.props.tileJSON.slice(0);
-        tileJSON.unshift(getBaseLayerTileJSON(this.props.currentBaseLayer));
         tileJSON = tileJSON.map((t, i) => {
             const newT = Object.assign({}, t);
             if (i === 0) {
