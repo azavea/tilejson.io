@@ -296,12 +296,6 @@ class App extends Component {
                 />
             );
         }
-        let mapClassName = 'map mapCollapsed';
-        if (this.props.diffMode) {
-            mapClassName = 'map mapDiff';
-        } else if (this.props.isCollapsed) {
-            mapClassName = 'map mapExpanded';
-        }
         return (
             <MuiThemeProvider>
                 <div>
@@ -311,7 +305,7 @@ class App extends Component {
                         <Col
                             xs={this.props.isCollapsed || this.props.diffMode ? 12 : 8}
                             id="map"
-                            className={mapClassName}
+                            className="map"
                         />
                         <Snackbar
                             open={this.props.errorSnackbarOpen}

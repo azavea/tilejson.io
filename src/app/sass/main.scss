@@ -66,7 +66,7 @@ html, body, #root, #root > div , #root > div > div {
 }
 
 #diffToolbar {
-    height: 112px;
+    height: calc(100% - 56px);
 }
 
 #diffMap {
@@ -74,7 +74,7 @@ html, body, #root, #root > div , #root > div > div {
     top: 112px;
     left: 0px;
     width: 100%;
-    max-height: calc(100% - 112px);
+    height: calc(100% - 112px);
     z-index: 500;
 }
 
