@@ -59,7 +59,7 @@ export function getBaseLayerTileJSON(i) {
     };
 }
 
-export const muiTheme = getMuiTheme({
+export const diffMuiTheme = getMuiTheme({
     slider: {
         handleSize: 36,
         handleSizeDisabled: 36,
@@ -75,8 +75,19 @@ export const muiTheme = getMuiTheme({
     },
 });
 
+export const appMuiTheme = getMuiTheme({
+    dropDownMenu: {
+        accentColor: '#000',
+    },
+    button: {
+        iconButtonSize: 36,
+    },
+});
+
 export const defaultShareGist = false;
 export const defaultShareTileJSONLink = false;
 export const defaultShareBase = false;
 export const defaultShareDiff = false;
 export const defaultDefaultToDiff = false;
+
+export const exampleURL = 'https://a.tiles.azavea.com/nlcd/{z}/{x}/{y}.png';

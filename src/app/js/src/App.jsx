@@ -28,6 +28,7 @@ import {
     resetShareValues,
 } from './actions';
 import {
+    appMuiTheme,
     baseLayer,
     map,
     getDefaultTileJSON,
@@ -297,7 +298,7 @@ class App extends Component {
             );
         }
         return (
-            <MuiThemeProvider>
+            <MuiThemeProvider muiTheme={appMuiTheme}>
                 <div>
                     <Row>
                         {bar}

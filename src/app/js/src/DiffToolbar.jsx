@@ -14,7 +14,7 @@ import Map from 'ol/map';
 
 import {
     map,
-    muiTheme,
+    diffMuiTheme,
 } from './constants';
 import {
     changeDiffLeftLayerId,
@@ -137,7 +137,7 @@ class DiffToolbar extends Component {
             return (<MenuItem key={i} value={i} primaryText={layer.name} />);
         });
         return (
-            <MuiThemeProvider muiTheme={muiTheme}>
+            <MuiThemeProvider muiTheme={diffMuiTheme}>
                 <Col xs={12} id="diffToolbar">
                     <Toolbar>
                         <ToolbarGroup>

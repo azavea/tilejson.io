@@ -4,17 +4,10 @@ import { connect } from 'react-redux';
 
 import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
-import IconButton from 'material-ui/IconButton';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import NavigationExpandLessIcon from 'material-ui/svg-icons/navigation/expand-less';
-import ActionVisibilityIcon from 'material-ui/svg-icons/action/visibility';
-import ActionVisibilityOffIcon from 'material-ui/svg-icons/action/visibility-off';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-
-import { Grid, Row } from 'react-flexbox-grid';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 import {
-    toggleBaseLayerDetails,
     toggleBaseLayerVisibility,
 } from './actions';
 
@@ -25,8 +18,6 @@ import {
 class BaseLayerBox extends Component {
     constructor(props) {
         super(props);
-        this.expandDetails = this.expandDetails.bind(this);
-        this.collapseDetails = this.collapseDetails.bind(this);
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
         this.toggleVisibilityOn = this.toggleVisibilityOn.bind(this);
         this.toggleVisibilityOff = this.toggleVisibilityOff.bind(this);
@@ -34,19 +25,12 @@ class BaseLayerBox extends Component {
     }
 
     changeBaseLayer(event, value) {
-        this.props.changeBaseLayer(value);
-    }
-
-    expandDetails() {
-        this.props.dispatch(toggleBaseLayerDetails({
-            baseLayerDetails: true,
-        }));
-    }
-
-    collapseDetails() {
-        this.props.dispatch(toggleBaseLayerDetails({
-            baseLayerDetails: false,
-        }));
+        if (value === baseLayers.length) {
+            this.toggleVisibilityOff();
+        } else {
+            this.toggleVisibilityOn();
+            this.props.changeBaseLayer(value);
+        }
     }
 
     toggleVisibility(value) {
@@ -68,77 +52,28 @@ class BaseLayerBox extends Component {
         const fontSize11 = {
             fontSize: '11pt',
         };
-        const fontSize9 = {
-            fontSize: '9pt',
-        };
-        const smallIcon = {
-            width: 18,
-            height: 18,
-            color: '#8b8b8b',
-        };
-        let expandOrCollapseButton = (
-            <IconButton
-                iconStyle={smallIcon}
-                onClick={this.expandDetails}
-                touch
-            >
-                <NavigationExpandMoreIcon />
-            </IconButton>
+        const baseLayerDropdown = baseLayers.map((layer, i) => (
+            <MenuItem key={i} value={i} primaryText={layer.name} />
+        ));
+        baseLayerDropdown.push(
+            <MenuItem key={baseLayers.length} value={baseLayers.length} primaryText={'None'} />,
         );
-        let baseLayerPicker;
-        if (this.props.baseLayerDetails) {
-            expandOrCollapseButton = (
-                <IconButton
-                    iconStyle={smallIcon}
-                    onClick={this.collapseDetails}
-                    touch
-                >
-                    <NavigationExpandLessIcon />
-                </IconButton>
-            );
-            const radioButtons = baseLayers.map((layer, i) => (
-                <RadioButton
-                    key={i}
-                    value={i}
-                    label={layer.name}
-                />
-            ));
-            baseLayerPicker = (
-                <Grid style={fontSize9} fluid>
-                    <br />
-                    <Row>
-                        <RadioButtonGroup
-                            name="baseLayerSelection"
-                            defaultSelected={this.props.currentBaseLayer}
-                            onChange={this.changeBaseLayer}
-                        >
-                            {radioButtons}
-                        </RadioButtonGroup>
-                    </Row>
-                    <br />
-                </Grid>
-            );
-        }
         return (
             <Paper zDepth={1} style={{ overflow: 'hidden' }}>
-                <Toolbar>
-                    <ToolbarGroup firstChild>
-                        <IconButton
-                            iconStyle={smallIcon}
-                            onClick={this.props.baseLayerVisible ?
-                                this.toggleVisibilityOff : this.toggleVisibilityOn}
-                            touch
-                        >
-                            {this.props.baseLayerVisible ?
-                                <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
-                        </IconButton>
+                <Toolbar style={{ backgroundColor: 'white' }}>
+                    <ToolbarGroup>
                         <ToolbarTitle style={fontSize11} text="Base Layer" />
                     </ToolbarGroup>
                     <ToolbarGroup lastChild>
-                        {expandOrCollapseButton}
+                        <DropDownMenu
+                            value={this.props.baseLayerVisible ?
+                                this.props.currentBaseLayer : baseLayers.length}
+                            onChange={this.changeBaseLayer}
+                        >
+                            {baseLayerDropdown}
+                        </DropDownMenu>
                     </ToolbarGroup>
                 </Toolbar>
-                {baseLayerPicker}
             </Paper>
         );
     }
@@ -146,7 +81,6 @@ class BaseLayerBox extends Component {
 
 BaseLayerBox.propTypes = {
     dispatch: func.isRequired,
-    baseLayerDetails: bool.isRequired,
     currentBaseLayer: number.isRequired,
     changeBaseLayer: func.isRequired,
     toggleVisibility: func.isRequired,
