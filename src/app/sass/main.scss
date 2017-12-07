@@ -80,7 +80,7 @@ html, body, #root, #root > div , #root > div > div {
 
 #overDiffMap {
     position: absolute;
-    top: 136px;
+    top: 50%;
     left: 0px;
     width: 100%;
     max-height: calc(100% - 112px);
@@ -90,4 +90,22 @@ html, body, #root, #root > div , #root > div > div {
 .code {
     font-family: monospace;
     word-wrap: break-word;
+}
+
+#overDiffMap, .slider, .slider > div {
+    pointer-events: none;
+}
+
+.slider > div > div {
+    pointer-events: auto;
+}
+
+.slider > div > div > div {
+    pointer-events: auto;
+    // "Arrows" by ProSymbols from the Noun Project
+    background-image: url('./img/arrows.png');
+    background-size: 18px 18px;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: invert(100%);
 }

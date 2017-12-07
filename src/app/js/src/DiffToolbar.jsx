@@ -87,6 +87,19 @@ class DiffToolbar extends Component {
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.fillRect(width - 6, 0, 12, ctx.canvas.height);
+
+            ctx.strokeStyle = '#7d7d7d';
+
+            ctx.beginPath();
+            ctx.moveTo(width - 6, 0);
+            ctx.lineTo(width - 6, ctx.canvas.height);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(width + 6, 0);
+            ctx.lineTo(width + 6, ctx.canvas.height);
+            ctx.stroke();
+
             ctx.restore();
         });
 
@@ -138,7 +151,7 @@ class DiffToolbar extends Component {
         });
         return (
             <MuiThemeProvider muiTheme={diffMuiTheme}>
-                <Col xs={12} id="diffToolbar">
+                <Col xs={12} id="diffToolbar" style={{ paddingLeft: 0, paddingRight: 0 }}>
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarTitle text="Left Layer" />
