@@ -29,15 +29,20 @@ class LayerBoxes extends Component {
                 />
                 <br />
             </div>,
-        );
-        return (
-            <div>
+        ).reverse();
+        let baseLayerBox;
+        if (this.props.layers.length !== 0) {
+            baseLayerBox = (
                 <BaseLayerBox
                     changeBaseLayer={this.props.changeBaseLayer}
                     toggleVisibility={this.props.toggleVisibility}
                 />
-                <br />
+            );
+        }
+        return (
+            <div>
                 {layerBoxes}
+                {baseLayerBox}
             </div>
         );
     }

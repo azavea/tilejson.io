@@ -86,3 +86,8 @@ html, body, #root, #root > div , #root > div > div {
     max-height: calc(100% - 112px);
     z-index: 1000;
 }
+
+.code {
+    font-family: monospace;
+    word-wrap: break-word;
+}

@@ -118,6 +118,10 @@ class LayerBox extends Component {
             height: 18,
             color: '#8b8b8b',
         };
+        const iconButtonStyle = {
+            paddingLeft: 0,
+            paddingRight: 0,
+        };
         const fontSize11 = {
             fontSize: '11pt',
         };
@@ -132,6 +136,7 @@ class LayerBox extends Component {
         let source;
         let expandOrCollapseButton = (
             <IconButton
+                style={iconButtonStyle}
                 iconStyle={smallIcon}
                 onClick={this.expandDetails}
                 touch
@@ -169,6 +174,7 @@ class LayerBox extends Component {
             );
             expandOrCollapseButton = (
                 <IconButton
+                    style={iconButtonStyle}
                     iconStyle={smallIcon}
                     onClick={this.collapseDetails}
                     touch
@@ -195,6 +201,7 @@ class LayerBox extends Component {
         let sliderOrControls = (
             <ToolbarGroup style={lastToolbarGroupStyle} lastChild>
                 <IconButton
+                    style={iconButtonStyle}
                     iconStyle={smallIcon}
                     onClick={this.handleOpacityOpen}
                     touch
@@ -202,6 +209,7 @@ class LayerBox extends Component {
                     <ActionOpacityIcon />
                 </IconButton>
                 <IconButton
+                    style={iconButtonStyle}
                     iconStyle={smallIcon}
                     onClick={this.openEditLayerDialog}
                     touch
@@ -209,6 +217,7 @@ class LayerBox extends Component {
                     <EditorModeEditIcon />
                 </IconButton>
                 <IconButton
+                    style={iconButtonStyle}
                     iconStyle={smallIcon}
                     onClick={this.removeLayer}
                     touch
@@ -220,7 +229,7 @@ class LayerBox extends Component {
         );
         if (this.state.opacityControl) {
             const sliderStyle = {
-                width: 124,
+                width: 108,
                 marginTop: 0,
                 marginBottom: 0,
                 marginRight: 24,
@@ -228,6 +237,7 @@ class LayerBox extends Component {
             sliderOrControls = (
                 <ToolbarGroup style={lastToolbarGroupStyle} lastChild>
                     <IconButton
+                        style={iconButtonStyle}
                         iconStyle={smallIcon}
                         onClick={this.handleOpacityClose}
                         touch
@@ -247,9 +257,10 @@ class LayerBox extends Component {
                 <Toolbar>
                     <Grid>
                         <Row>
-                            <Col xs={4}>
-                                <ToolbarGroup firstChild>
+                            <Col xs={1}>
+                                <ToolbarGroup style={lastToolbarGroupStyle} firstChild>
                                     <IconButton
+                                        style={iconButtonStyle}
                                         iconStyle={smallIcon}
                                         onClick={this.state.visible ?
                                             this.toggleVisibilityOff : this.toggleVisibilityOn}
@@ -258,10 +269,14 @@ class LayerBox extends Component {
                                         {this.state.visible ?
                                             <ActionVisibilityIcon /> : <ActionVisibilityOffIcon />}
                                     </IconButton>
+                                </ToolbarGroup>
+                            </Col>
+                            <Col xs={5}>
+                                <ToolbarGroup>
                                     <ToolbarTitle style={fontSize11} text={this.props.layerName} />
                                 </ToolbarGroup>
                             </Col>
-                            <Col xs={8}>
+                            <Col xs={6}>
                                 {sliderOrControls}
                             </Col>
                         </Row>

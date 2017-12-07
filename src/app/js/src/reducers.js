@@ -153,13 +153,21 @@ function mainReducer(state = initialState, action) {
                 showAddLayerDialog: action.payload.showAddLayerDialog,
             });
         case TOGGLE_EDIT_LAYER_DIALOG:
+            if (action.payload.i === undefined) {
+                return Object.assign({}, state, {
+                    showEditLayerDialog: action.payload.showEditLayerDialog,
+                    editLayerId: -1,
+                    name: '',
+                    url: '',
+                });
+            }
             return Object.assign({}, state, {
                 showEditLayerDialog: action.payload.showEditLayerDialog,
                 editLayerId: action.payload.i,
                 name: action.payload.showEditLayerDialog ?
-                    state.layers[action.payload.i].name : state.name,
+                    state.layers[action.payload.i].name : '',
                 url: action.payload.showEditLayerDialog ?
-                    state.layers[action.payload.i].url : state.url,
+                    state.layers[action.payload.i].url : '',
             });
         case ADD_LAYER: {
             const layers = state.layers;

@@ -12,6 +12,10 @@ import {
     changeLayerUrl,
 } from './actions';
 
+import {
+    exampleURL,
+} from './constants';
+
 class QuickAddLayerBox extends Component {
     constructor(props) {
         super(props);
@@ -45,6 +49,7 @@ class QuickAddLayerBox extends Component {
             cardText = (
                 <div>
                     Add your first layer to the map by entering a Tile URL below.
+                    For example: <span className="code">{exampleURL}</span>.
                     <br /><br />
                 </div>
             );
