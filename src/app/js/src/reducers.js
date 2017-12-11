@@ -155,11 +155,11 @@ function mainReducer(state = initialState, action) {
         case TOGGLE_EDIT_LAYER_DIALOG:
             return Object.assign({}, state, {
                 showEditLayerDialog: action.payload.showEditLayerDialog,
-                editLayerId: action.payload.i,
+                editLayerId: action.payload.i ? action.payload.i : -1,
                 name: action.payload.showEditLayerDialog ?
-                    state.layers[action.payload.i].name : state.name,
+                    state.layers[action.payload.i].name : '',
                 url: action.payload.showEditLayerDialog ?
-                    state.layers[action.payload.i].url : state.url,
+                    state.layers[action.payload.i].url : '',
             });
         case ADD_LAYER: {
             const layers = state.layers;
