@@ -49,7 +49,7 @@ class QuickAddLayerBox extends Component {
             cardText = (
                 <div>
                     Add your first layer to the map by entering a Tile URL below.
-                    Here is what a Tile URL looks like: <span className="code">{exampleURL}</span>.
+                    For example: <span className="code">{exampleURL}</span>.
                     <br /><br />
                 </div>
             );
