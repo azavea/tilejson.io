@@ -44,6 +44,8 @@ export const CHANGE_LAYER_OPACITY = 'CHANGE_LAYER_OPACITY';
 export const TOGGLE_LAYER_VISIBILITY = 'TOGGLE_LAYER_VISIBILITY';
 export const TOGGLE_BASE_LAYER_VISIBILITY = 'TOGGLE_BASE_LAYER_VISIBILITY';
 
+export const LOAD_GIST = 'LOAD_GIST';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -277,6 +279,13 @@ export function toggleLayerVisibility(payload) {
 export function toggleBaseLayerVisibility(payload) {
     return {
         type: TOGGLE_BASE_LAYER_VISIBILITY,
+        payload,
+    };
+}
+
+export function loadGist(payload) {
+    return {
+        type: LOAD_GIST,
         payload,
     };
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, number, object, string } from 'prop-types';
+import { arrayOf, bool, func, number, object, shape, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import axios from 'axios';
@@ -26,6 +26,7 @@ import {
     postAddEditClear,
     changeCurrentBaseLayer,
     resetShareValues,
+    loadGist,
 } from './actions';
 import {
     appMuiTheme,
@@ -62,6 +63,10 @@ class App extends Component {
         this.changeBaseLayer = this.changeBaseLayer.bind(this);
         this.changeOpacity = this.changeOpacity.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
+        this.loadGist = this.loadGist.bind(this);
+        if (props.params) {
+            this.loadGist();
+        }
     }
 
     componentDidMount() {
@@ -207,13 +212,8 @@ class App extends Component {
         let tileJSON = this.props.tileJSON.slice(0);
         tileJSON = tileJSON.map((t, i) => {
             const newT = Object.assign({}, t);
-            if (i === 0) {
-                newT.opacity = 1;
-                newT.visible = this.props.baseLayerVisible;
-            } else {
-                newT.opacity = this.props.layers[i - 1].opacity;
-                newT.visible = this.props.layers[i - 1].visible;
-            }
+            newT.opacity = this.props.layers[i].opacity;
+            newT.visible = this.props.layers[i].visible;
             return newT;
         });
         gistRequest.files['tile.json'].content = JSON.stringify(tileJSON, null, '\t');
@@ -229,6 +229,7 @@ class App extends Component {
             defaultToDiff: this.props.defaultToDiff,
             center: view.getCenter(),
             zoom: view.getZoom(),
+            currentBaseLayer: this.props.currentBaseLayer,
         };
         if (this.props.shareTitle !== '') {
             info.title = this.props.shareTitle;
@@ -267,6 +268,45 @@ class App extends Component {
 
     toggleVisibility(i, visible) {
         this.layers[i + 1].setVisible(visible);
+    }
+
+    loadGist() {
+        axios.get(`https://api.github.com/gists/${this.props.params.id}`)
+            .then((response) => {
+                if (response.data.files['tile.json'].content === undefined ||
+                    response.data.files['info.json'].content === undefined) {
+                    return;
+                }
+                const tileJSON = JSON.parse(response.data.files['tile.json'].content);
+                const infoJSON = JSON.parse(response.data.files['info.json'].content);
+                if (tileJSON === undefined || infoJSON === undefined) {
+                    return;
+                }
+                this.props.dispatch(loadGist({
+                    tileJSON,
+                    infoJSON,
+                }));
+                tileJSON.forEach((t) => {
+                    const newLayer = new TileLayer({
+                        source: new XYZ({
+                            url: t.tiles[0],
+                        }),
+                    });
+                    map.addLayer(newLayer);
+                    newLayer.setVisible(t.visible);
+                    newLayer.setOpacity(t.opacity);
+                    this.layers.push(newLayer);
+                    this.layersCounter += 1;
+                });
+                map.getView().setCenter(infoJSON.center);
+                map.getView().setZoom(infoJSON.zoom);
+                if (!infoJSON.shareBase) {
+                    this.layers[0].setVisible(false);
+                }
+                if (infoJSON.currentBaseLayer !== undefined) {
+                    this.changeBaseLayer(infoJSON.currentBaseLayer);
+                }
+            });
     }
 
     render() {
@@ -347,13 +387,15 @@ App.propTypes = {
     shareDescription: string.isRequired,
     diffLayerLeftId: number.isRequired,
     diffLayerRightId: number.isRequired,
-    baseLayerVisible: bool.isRequired,
     layers: arrayOf(object).isRequired,
     shareGist: bool.isRequired,
     shareTileJSONLink: bool.isRequired,
     shareBase: bool.isRequired,
     shareDiff: bool.isRequired,
     defaultToDiff: bool.isRequired,
+    params: shape({
+        id: string,
+    }),
 };
 
 function mapStateToProps(state) {

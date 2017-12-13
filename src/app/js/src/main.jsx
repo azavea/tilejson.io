@@ -14,6 +14,7 @@ const store = createStoreWithMiddleware(reducers);
 render(
     <Provider store={store}>
         <Router history={browserHistory}>
+            <Route path="/g/:id" component={App} />
             <Route path="/" component={App} />
         </Router>
     </Provider>,
