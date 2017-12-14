@@ -27,6 +27,7 @@ import {
     changeCurrentBaseLayer,
     resetShareValues,
     loadGist,
+    toggleGistNotFoundDialog,
 } from './actions';
 import {
     appMuiTheme,
@@ -39,6 +40,7 @@ import {
 import AddLayerDialog from './AddLayerDialog';
 import ShareDialog from './ShareDialog';
 import ShareDescriptionDialog from './ShareDescriptionDialog';
+import GistNotFoundDialog from './GistNotFoundDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
@@ -306,6 +308,12 @@ class App extends Component {
                 if (infoJSON.currentBaseLayer !== undefined) {
                     this.changeBaseLayer(infoJSON.currentBaseLayer);
                 }
+            })
+            .catch(() => {
+                this.props.router.push('/');
+                this.props.dispatch(toggleGistNotFoundDialog({
+                    gistNotFoundDialogOpen: true,
+                }));
             });
     }
 
@@ -366,6 +374,7 @@ class App extends Component {
                         <ShareDescriptionDialog
                             share={this.share}
                         />
+                        <GistNotFoundDialog />
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -395,6 +404,9 @@ App.propTypes = {
     defaultToDiff: bool.isRequired,
     params: shape({
         id: string,
+    }),
+    router: shape({
+        push: func,
     }),
 };
 

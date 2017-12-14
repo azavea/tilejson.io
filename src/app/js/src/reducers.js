@@ -36,6 +36,7 @@ import {
     TOGGLE_LAYER_VISIBILITY,
     TOGGLE_BASE_LAYER_VISIBILITY,
     LOAD_GIST,
+    TOGGLE_GIST_NOT_FOUND_DIALOG,
 } from './actions';
 
 import {
@@ -78,6 +79,7 @@ const initialState = {
     defaultToDiff: defaultDefaultToDiff,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
+    gistNotFoundDialogOpen: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -124,6 +126,7 @@ function mainReducer(state = initialState, action) {
                 defaultToDiff: defaultDefaultToDiff,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
+                gistNotFoundDialogOpen: false,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -357,6 +360,10 @@ function mainReducer(state = initialState, action) {
                     true : action.payload.infoJSON.shareBase,
             });
         }
+        case TOGGLE_GIST_NOT_FOUND_DIALOG:
+            return Object.assign({}, state, {
+                gistNotFoundDialogOpen: action.payload.gistNotFoundDialogOpen,
+            });
         default:
             return state;
     }
