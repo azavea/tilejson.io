@@ -66,8 +66,10 @@ class App extends Component {
         this.changeOpacity = this.changeOpacity.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
         this.loadGist = this.loadGist.bind(this);
-        if (props.params) {
+        if (props.match.params.id) {
             this.loadGist();
+        } else {
+            this.props.history.push('/');
         }
     }
 
@@ -273,7 +275,7 @@ class App extends Component {
     }
 
     loadGist() {
-        axios.get(`https://api.github.com/gists/${this.props.params.id}`)
+        axios.get(`https://api.github.com/gists/${this.props.match.params.id}`)
             .then((response) => {
                 if (response.data.files['tile.json'].content === undefined ||
                     response.data.files['info.json'].content === undefined) {
@@ -310,7 +312,7 @@ class App extends Component {
                 }
             })
             .catch(() => {
-                this.props.router.push('/');
+                this.props.history.push('/');
                 this.props.dispatch(toggleGistNotFoundDialog({
                     gistNotFoundDialogOpen: true,
                 }));
@@ -402,10 +404,12 @@ App.propTypes = {
     shareBase: bool.isRequired,
     shareDiff: bool.isRequired,
     defaultToDiff: bool.isRequired,
-    params: shape({
-        id: string,
+    match: shape({
+        params: shape({
+            id: string,
+        }),
     }),
-    router: shape({
+    history: shape({
         push: func,
     }),
 };
