@@ -35,6 +35,8 @@ import {
     CHANGE_LAYER_OPACITY,
     TOGGLE_LAYER_VISIBILITY,
     TOGGLE_BASE_LAYER_VISIBILITY,
+    LOAD_GIST,
+    TOGGLE_GIST_NOT_FOUND_DIALOG,
 } from './actions';
 
 import {
@@ -77,6 +79,7 @@ const initialState = {
     defaultToDiff: defaultDefaultToDiff,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
+    gistNotFoundDialogOpen: false,
 };
 
 function mainReducer(state = initialState, action) {
@@ -123,6 +126,7 @@ function mainReducer(state = initialState, action) {
                 defaultToDiff: defaultDefaultToDiff,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
+                gistNotFoundDialogOpen: false,
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -333,6 +337,32 @@ function mainReducer(state = initialState, action) {
         case TOGGLE_BASE_LAYER_VISIBILITY:
             return Object.assign({}, state, {
                 baseLayerVisible: action.payload.visible,
+            });
+        case LOAD_GIST: {
+            const layers = action.payload.tileJSON.map((t) => {
+                const newLayer = {
+                    name: t.name,
+                    url: t.tiles[0],
+                    tileJSON: t,
+                    detailView: false,
+                    sourceView: false,
+                    opacity: t.opacity,
+                    visible: t.visible,
+                };
+                return newLayer;
+            });
+            return Object.assign({}, state, {
+                layers,
+                tileJSON: action.payload.tileJSON,
+                currentBaseLayer: action.payload.infoJSON.currentBaseLayer === undefined ?
+                    0 : action.payload.infoJSON.currentBaseLayer,
+                baseLayerVisible: action.payload.infoJSON.shareBase === undefined ?
+                    true : action.payload.infoJSON.shareBase,
+            });
+        }
+        case TOGGLE_GIST_NOT_FOUND_DIALOG:
+            return Object.assign({}, state, {
+                gistNotFoundDialogOpen: action.payload.gistNotFoundDialogOpen,
             });
         default:
             return state;
