@@ -33,6 +33,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Project Name',
             template: 'template.html',
+            favicon: 'img/favicon.png',
         }),
         new webpack.LoaderOptionsPlugin({
             options: {
