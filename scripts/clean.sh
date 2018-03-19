@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -n "${project_name_DEBUG}" ]]; then
+if [[ -n "${TILEJSON_IO_DEBUG}" ]]; then
     set -x
 fi
 

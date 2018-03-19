@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TileJSON</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.3.3/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.3.3/build/ol.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+    <style>
+        html, body, #container {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+        #map {
+            height: calc(100% - 64px);
+        }
+
+        #card {
+            position: absolute;
+            top: 96px;
+            right: 16px;
+            width: 320px;
+        }
+    </style>
+    <div id="container">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="https://tilejson.io" target="_blank" class="brand-logo center">TileJSON.io</a>
+                <ul id="nav-mobile" class="right">
+                    <li><a id="gist-link" href="#" target="_blank">GitHub Gist</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div  id="map" class="col s9 map"></div>
+        <div id="card" class="card darken-1" hidden>
+            <a class="btn-floating halfway-fab waves-effect waves-light red" id="card-show" hidden><i class="material-icons">expand_more</i></a>
+            <a class="btn-floating halfway-fab waves-effect waves-light red" id="card-hide"><i class="material-icons">expand_less</i></a>
+            <div id="card-content" class="card-content">
+                <span class="card-title" id="map-title">Shared Map</span>
+                <p><span id="map-description"></p></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        $( document ).ready(function() {
+            var urlPath = window.location.pathname.split('/');
+            $('#gist-link').attr('href', 'https://gist.github.com/anonymous/' + urlPath[urlPath.length - 2])
+            $.getJSON('info.json', function(data) {
+                if (data.title) {
+                    $('#map-title').text(data.title);
+                    if (data.description) {
+                        $('#map-description').text(data.description);
+                    }
+                    $('#card').show();
+                }
+                var map = new ol.Map({
+                    target: 'map',
+                    view: new ol.View({
+                        center: data.center,
+                        zoom: data.zoom
+                    })
+                });
+                $.getJSON('tile.json', function(tileData) {
+                    tileData.forEach(function (tileJson) {
+                        var layer = new ol.layer.Tile({
+                            source: new ol.source.TileJSON({
+                                tileJSON: tileJson,
+                            })
+                        });
+                        map.addLayer(layer);
+                        layer.setVisible(tileJson.visible);
+                        layer.setOpacity(tileJson.opacity);
+                    });
+                });
+            });
+            $('#card-hide').click(function() {
+                $('#card-content').hide();
+                $('#card-hide').hide();
+                $('#card-show').show();
+            });
+            $('#card-show').click(function() {
+                $('#card-content').show();
+                $('#card-hide').show();
+                $('#card-show').hide();
+            });
+        });
+    </script>
+</body>
+</html>

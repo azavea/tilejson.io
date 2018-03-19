@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -n "${project_name_DEBUG}" ]]; then
+if [[ -n "${TILEJSON_IO_DEBUG}" ]]; then
     set -x
 fi
 
@@ -23,7 +23,7 @@ then
         docker-compose \
             -f docker-compose.yml \
             run --rm --no-deps app \
-            yarn
+            yarn install --frozen-lockfile
 
         # Build containers.
         docker-compose \

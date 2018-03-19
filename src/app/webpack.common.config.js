@@ -33,6 +33,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Project Name',
             template: 'template.html',
+            favicon: 'img/favicon.png',
         }),
         new webpack.LoaderOptionsPlugin({
             options: {
@@ -47,7 +48,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /(node_modules|lib)/,
+                exclude: /(node_modules|lib)\/(?!tilejson-validator)/,
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015', 'react'],
@@ -78,6 +79,11 @@ module.exports = {
                         loader: 'sass-loader?sourceMap'
                     }
                 ],
+            },
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader?modules',
+                include: /flexboxgrid/
             },
             {
                 test: /fonts.*\.(woff|woff2|ttf|eot|svg)($|\?)/,
@@ -113,6 +119,7 @@ module.exports = {
         fs: 'empty',
     },
     devServer: {
+        disableHostCheck: true,
         historyApiFallback: {
             index: '/',
         }

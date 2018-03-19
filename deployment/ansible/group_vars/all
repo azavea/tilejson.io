@@ -3,3 +3,7 @@ docker_version: "17.*"
 docker_compose_version: "1.15.0"
 
 shellcheck_version: "0.3.*"
+
+aws_profile: "tilejson-io"
+aws_cli_version: "1.11.56"
+terraform_version: "0.9.11"
