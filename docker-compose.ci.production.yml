@@ -10,8 +10,8 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-      - TILEJSON_IO_SETTINGS_BUCKET=${TILEJSON_IO_SETTINGS_BUCKET:-tilejson-io-config-us-east-1}
-      - TILEJSON_IO_SITE_BUCKET=${TILEJSON_IO_SITE_BUCKET:-tilejson-io-site-us-east-1}
+      - TILEJSON_IO_SETTINGS_BUCKET=${TILEJSON_IO_SETTINGS_BUCKET:-tilejson-io-production-config-us-east-1}
+      - TILEJSON_IO_SITE_BUCKET=${TILEJSON_IO_SITE_BUCKET:-tilejson-io-production-site-us-east-1}
       - GIT_COMMIT=${GIT_COMMIT:-latest}
     working_dir: /usr/local/src
     entrypoint: bash
