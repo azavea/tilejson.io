@@ -12,6 +12,8 @@ import TileLayer from 'ol/layer/tile';
 import Attribution from 'ol/attribution';
 import XYZ from 'ol/source/xyz';
 
+import qs from 'qs';
+
 import gistRequest from '../data/request.json';
 import {
     changeTileJson,
@@ -28,6 +30,7 @@ import {
     resetShareValues,
     loadGist,
     toggleGistNotFoundDialog,
+    githubLogin,
 } from './actions';
 import {
     appMuiTheme,
@@ -66,10 +69,23 @@ class App extends Component {
         this.changeOpacity = this.changeOpacity.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
         this.loadGist = this.loadGist.bind(this);
-        if (props.match.params.id) {
-            this.loadGist();
-        } else {
-            this.props.history.push('/');
+        this.loginGithub = this.loginGithub.bind(this);
+        switch (this.props.match.path) {
+            case '/g/:id':
+                loadGist();
+                break;
+            case '/login': {
+                const queryParams = qs.parse(window.location.search.substr(1));
+                if (queryParams.code) {
+                    this.loginGithub(queryParams.code);
+                } else {
+                    this.props.history.push('/');
+                    // TODO: Add login failed message
+                }
+                break;
+            }
+            default:
+                this.props.history.push('/');
         }
     }
 
@@ -316,6 +332,17 @@ class App extends Component {
                 this.props.dispatch(toggleGistNotFoundDialog({
                     gistNotFoundDialogOpen: true,
                 }));
+            });
+    }
+
+    loginGithub(code) {
+        axios.get(`https://tilejson-io-authenticate.glitch.me/authenticate/${code}`)
+            .then((response) => {
+                if (response.data.token) {
+                    this.props.dispatch(githubLogin({
+                        githubToken: response.data.token,
+                    }));
+                }
             });
     }
 

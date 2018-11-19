@@ -91,3 +91,5 @@ export const defaultShareDiff = false;
 export const defaultDefaultToDiff = false;
 
 export const exampleURL = 'https://a.tiles.azavea.com/nlcd/{z}/{x}/{y}.png';
+
+export const githubClientID = '89533185813936ae7111';

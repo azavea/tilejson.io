@@ -10,6 +10,9 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import ExpandLess from 'material-ui/svg-icons/navigation/expand-less';
 import TextField from 'material-ui/TextField';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
@@ -26,10 +29,12 @@ import {
     toggleTileJSONEditMode,
     toggleDiffMode,
     toggleShareDescriptionDialogOpen,
+    githubLogout,
 } from './actions';
 import {
     map,
     getDefaultTileJSON,
+    githubClientID,
 } from './constants';
 
 class SideBar extends Component {
@@ -40,6 +45,8 @@ class SideBar extends Component {
         this.renderTileJSON = this.renderTileJSON.bind(this);
         this.openDiffMode = this.openDiffMode.bind(this);
         this.share = this.share.bind(this);
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     collapse() {
@@ -70,6 +77,17 @@ class SideBar extends Component {
         this.props.dispatch(toggleShareDescriptionDialogOpen({
             shareDescriptionDialogOpen: true,
         }));
+    }
+
+    login() {
+        if (this.props.githubToken !== '') {
+            return;
+        }
+        window.location = `https://github.com/login/oauth/authorize?client_id=${githubClientID}`;
+    }
+
+    logout() {
+        this.props.dispatch(githubLogout());
     }
 
     renderTileJSON() {
@@ -182,7 +200,27 @@ class SideBar extends Component {
         }
         return (
             <Col xs={4} id="menu">
-                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
+                <AppBar
+                    title="TileJSON.io"
+                    iconElementLeft={
+                        <IconButton onClick={this.collapse}>
+                            <ExpandLess />
+                        </IconButton>
+                    }
+                    iconElementRight={
+                        this.props.githubToken === '' ?
+                            <FlatButton label="Login" onClick={this.login} /> :
+                            <IconMenu
+                                iconButtonElement={
+                                    <IconButton><MoreVertIcon /></IconButton>
+                                }
+                                targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            >
+                                <MenuItem primaryText="Logout" onClick={this.logout} />
+                            </IconMenu>
+                    }
+                />
                 <Grid fluid>
                     <br />
                     <Row>
@@ -239,6 +277,7 @@ SideBar.propTypes = {
     layers: arrayOf(object).isRequired,
     changeOpacity: func.isRequired,
     toggleVisibility: func.isRequired,
+    githubToken: string.isRequired,
 };
 
 function mapStateToProps(state) {

@@ -23,7 +23,7 @@ then
         docker-compose \
             -f docker-compose.yml \
             run --rm --no-deps app \
-            yarn install --frozen-lockfile
+            yarn
 
         # Build containers.
         docker-compose \

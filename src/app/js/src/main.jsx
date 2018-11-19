@@ -16,6 +16,7 @@ render(
         <Router>
             <Switch>
                 <Route path="/g/:id" component={App} />
+                <Route path="/login" component={App} />
                 <Route exact path="/" component={App} />
                 <Route component={App} />
             </Switch>
