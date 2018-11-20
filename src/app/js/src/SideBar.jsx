@@ -32,6 +32,8 @@ import {
 import {
     map,
     getDefaultTileJSON,
+    authenticator,
+    authConfig,
 } from './constants';
 
 class SideBar extends Component {
@@ -77,9 +79,19 @@ class SideBar extends Component {
     }
 
     login() {
-        this.props.dispatch(githubLogin({
-            githubToken: 'abc',
-        }));
+        if (this.props.githubToken !== '') {
+            return;
+        }
+        authenticator.authenticate(authConfig, (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(data);
+                this.props.dispatch(githubLogin({
+                    githubToken: data.token,
+                }));
+            }
+        });
     }
 
     logout() {
