@@ -46,7 +46,7 @@ export const TOGGLE_BASE_LAYER_VISIBILITY = 'TOGGLE_BASE_LAYER_VISIBILITY';
 
 export const LOAD_GIST = 'LOAD_GIST';
 
-export const TOGGLE_GIST_NOT_FOUND_DIALOG = 'TOGGLE_GIST_NOT_FOUND_DIALOG';
+export const TOGGLE_ERROR_DIALOG = 'TOGGLE_ERROR_DIALOG';
 
 export const GITHUB_LOGIN = 'GITHUB_LOGIN';
 export const GITHUB_LOGOUT = 'GITHUB_LOGOUT';
@@ -295,9 +295,9 @@ export function loadGist(payload) {
     };
 }
 
-export function toggleGistNotFoundDialog(payload) {
+export function toggleErrorDialog(payload) {
     return {
-        type: TOGGLE_GIST_NOT_FOUND_DIALOG,
+        type: TOGGLE_ERROR_DIALOG,
         payload,
     };
 }

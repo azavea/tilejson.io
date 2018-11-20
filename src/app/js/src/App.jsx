@@ -27,7 +27,7 @@ import {
     changeCurrentBaseLayer,
     resetShareValues,
     loadGist,
-    toggleGistNotFoundDialog,
+    toggleErrorDialog,
 } from './actions';
 import {
     appMuiTheme,
@@ -40,7 +40,7 @@ import {
 import AddLayerDialog from './AddLayerDialog';
 import ShareDialog from './ShareDialog';
 import ShareDescriptionDialog from './ShareDescriptionDialog';
-import GistNotFoundDialog from './GistNotFoundDialog';
+import ErrorDialog from './ErrorDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
@@ -313,8 +313,10 @@ class App extends Component {
             })
             .catch(() => {
                 this.props.history.push('/');
-                this.props.dispatch(toggleGistNotFoundDialog({
-                    gistNotFoundDialogOpen: true,
+                this.props.dispatch(toggleErrorDialog({
+                    errorDialogOpen: true,
+                    errorDialogTitle: 'Gist Not Found',
+                    errorDialogMessage: 'The GitHub Gist ID specified was not found.',
                 }));
             });
     }
@@ -376,7 +378,7 @@ class App extends Component {
                         <ShareDescriptionDialog
                             share={this.share}
                         />
-                        <GistNotFoundDialog />
+                        <ErrorDialog />
                     </Row>
                 </div>
             </MuiThemeProvider>

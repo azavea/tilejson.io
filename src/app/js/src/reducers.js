@@ -36,7 +36,7 @@ import {
     TOGGLE_LAYER_VISIBILITY,
     TOGGLE_BASE_LAYER_VISIBILITY,
     LOAD_GIST,
-    TOGGLE_GIST_NOT_FOUND_DIALOG,
+    TOGGLE_ERROR_DIALOG,
     GITHUB_LOGIN,
     GITHUB_LOGOUT,
 } from './actions';
@@ -81,7 +81,9 @@ const initialState = {
     defaultToDiff: defaultDefaultToDiff,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
-    gistNotFoundDialogOpen: false,
+    errorDialogOpen: false,
+    errorDialogTitle: '',
+    errorDialogMessage: '',
     githubToken: '',
 };
 
@@ -129,7 +131,9 @@ function mainReducer(state = initialState, action) {
                 defaultToDiff: defaultDefaultToDiff,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
-                gistNotFoundDialogOpen: false,
+                errorDialogOpen: false,
+                errorDialogTitle: '',
+                errorDialogMessage: '',
             });
         case CHANGE_SHARE_LINK:
             return Object.assign({}, state, {
@@ -363,9 +367,11 @@ function mainReducer(state = initialState, action) {
                     true : action.payload.infoJSON.shareBase,
             });
         }
-        case TOGGLE_GIST_NOT_FOUND_DIALOG:
+        case TOGGLE_ERROR_DIALOG:
             return Object.assign({}, state, {
-                gistNotFoundDialogOpen: action.payload.gistNotFoundDialogOpen,
+                errorDialogOpen: action.payload.errorDialogOpen,
+                errorDialogTitle: action.payload.errorDialogTitle,
+                errorDialogMessage: action.payload.errorDialogMessage,
             });
         case GITHUB_LOGIN:
             return Object.assign({}, state, {

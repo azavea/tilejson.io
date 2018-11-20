@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-import { bool, func } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 import {
-    toggleGistNotFoundDialog,
+    toggleErrorDialog,
 } from './actions';
 
-class GistNotFoundDialog extends Component {
+class ErrorDialog extends Component {
     constructor(props) {
         super(props);
         this.closeGistNotFoundDialog = this.closeGistNotFoundDialog.bind(this);
     }
 
     closeGistNotFoundDialog() {
-        this.props.dispatch(toggleGistNotFoundDialog({
-            gistNotFoundDialogOpen: false,
+        this.props.dispatch(toggleErrorDialog({
+            errorDialogOpen: false,
+            errorDialogTitle: '',
+            errorDialogMessage: '',
         }));
     }
 
@@ -31,26 +33,28 @@ class GistNotFoundDialog extends Component {
         return (
             <div>
                 <Dialog
-                    title="Gist Not Found"
+                    title={this.props.errorDialogTitle}
                     actions={actions}
                     modal={false}
-                    open={this.props.gistNotFoundDialogOpen}
+                    open={this.props.errorDialogOpen}
                     onRequestClose={this.closeGistNotFoundDialog}
                 >
-                    <p>The GitHub Gist ID specified was not found.</p>
+                    <p>{this.props.errorDialogMessage}</p>
                 </Dialog>
             </div>
         );
     }
 }
 
-GistNotFoundDialog.propTypes = {
+ErrorDialog.propTypes = {
     dispatch: func.isRequired,
-    gistNotFoundDialogOpen: bool.isRequired,
+    errorDialogOpen: bool.isRequired,
+    errorDialogTitle: string.isRequired,
+    errorDialogMessage: string.isRequired,
 };
 
 function mapStateToProps(state) {
     return state.main;
 }
 
-export default connect(mapStateToProps)(GistNotFoundDialog);
+export default connect(mapStateToProps)(ErrorDialog);
