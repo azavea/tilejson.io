@@ -1,7 +1,8 @@
 var webpack = require('webpack');
+var path = require('path');
 var config = require('./webpack.common.config');
 
-config.output.path = '/usr/dist/';
+config.output.path = path.join(__dirname, '../dist');
 
 config.plugins.push(
     new webpack.DefinePlugin({

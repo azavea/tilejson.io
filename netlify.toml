@@ -1,0 +1,28 @@
+[Settings]
+  ID = "tilejson"
+
+[build]
+  base    = "./src/app"
+  publish = "./src/dist"
+  command = "pushd ../.. && ./scripts/cibuild && popd"
+  environment = { CI = "1", YARN_VERSION = "1.12.3" }
+  
+# [[redirects]]
+#   from = "https://tilejson.netlify.com/*"
+#   to = "https://tilejson.io/:splat"
+#   status = 301
+#   force = true
+
+[[headers]]
+  for = "/*"
+[headers.values]
+  Content-Security-Policy = "default-src https: blob: data: 'unsafe-inline' 'unsafe-eval'"
+  X-Frame-Options = "DENY"
+  X-XSS-Protection = "1; mode=block"
+  X-Content-Type-Options = "nosniff"
+  Referrer-Policy = "origin-when-cross-origin"
+  
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

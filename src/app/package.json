@@ -3,18 +3,16 @@
   "version": "0.0.0",
   "description": "",
   "private": true,
-  "main": "main.js",
   "scripts": {
-    "bundle": "rm -rf /usr/dist/* && webpack --config webpack.prod.config.js --colors && echo $VERSION > /usr/dist/version.txt",
+    "bundle": "rm -rf ../dist/* && webpack --config webpack.prod.config.js --colors && echo $VERSION > ../dist/version.txt",
     "dev-server": "node_modules/.bin/webpack-dev-server --config webpack.dev.config.js --inline --hot --progress --colors --host 0.0.0.0 --port 4567 --history-api-fallback",
-    "test": "echo 'Error: no test specified' && exit 1",
-    "postinstall": "npm rebuild node-sass"
+    "test": "eslint js/src/ --ext .js --ext .jsx"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/azavea/tilejson.io.git"
   },
-  "author": "Azavea",
+  "author": "Azavea Inc.",
   "bugs": {
     "url": "https://github.com/azavea/tilejson.io/issues"
   },
