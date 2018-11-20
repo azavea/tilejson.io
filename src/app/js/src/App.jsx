@@ -342,7 +342,21 @@ class App extends Component {
                     this.props.dispatch(githubLogin({
                         githubToken: response.data.token,
                     }));
+                    const requestConfig = {
+                        headers: {
+                            Authorization: 'Bearer '.concat(response.data.token),
+                        },
+                    };
+                    axios.get('https://api.github.com/user', requestConfig)
+                        .then((user) => {
+                            console.log(user);
+                        });
+                } else {
+                    console.log(response.data);
                 }
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }
 
