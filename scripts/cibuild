@@ -23,14 +23,13 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
     if [ "${1:-}" = "--help" ]; then
         usage
     else
-        ./scripts/lint.sh
-        ./scripts/test.sh
+        ./scripts/update
+        ./scripts/test
 
         # Build static asset bundle
-        docker-compose run --rm --no-deps \
-                       -e NODE_ENV="${NODE_ENV:-production}" \
-                       -e INSTALL_ENV="${INSTALL_ENV:-internal}" \
-                       -e VERSION="${GIT_COMMIT}" app \
-                       yarn run bundle
+        pushd src/app
+        NODE_ENV="${NODE_ENV:-production}" VERSION="${GIT_COMMIT}" \
+            yarn run bundle
+        popd
     fi
 fi

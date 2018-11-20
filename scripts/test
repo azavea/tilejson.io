@@ -9,7 +9,7 @@ fi
 function usage() {
     echo -n "Usage: $(basename "$0")
 
-Run linters on the project's code
+Run project test suite.
 "
 }
 
@@ -18,14 +18,13 @@ if [ "${BASH_SOURCE[0]}" = "${0}" ]; then
         usage
     else
         # Lint Bash scripts
-        if which shellcheck > /dev/null; then
-            shellcheck scripts/*.sh
+        if command -v shellcheck; then
+            shellcheck scripts/*
         fi
 
         # Lint JavaScript
-        docker-compose \
-            -f docker-compose.yml \
-            run --rm --entrypoint ./node_modules/.bin/eslint \
-            app js/src/ --ext .js --ext .jsx
+        pushd src/app
+        yarn test
+        popd
     fi
 fi
