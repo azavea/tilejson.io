@@ -28,6 +28,7 @@ import {
     toggleShareDescriptionDialogOpen,
     githubLogin,
     githubLogout,
+    toggleErrorDialog,
 } from './actions';
 import {
     map,
@@ -84,9 +85,12 @@ class SideBar extends Component {
         }
         authenticator.authenticate(authConfig, (err, data) => {
             if (err) {
-                console.log(err);
+                this.props.dispatch(toggleErrorDialog({
+                    errorDialogOpen: true,
+                    errorDialogTitle: 'GitHub Authentication Error',
+                    errorDialogMessage: 'Your GitHub authentication seems to have failed. Try again later.',
+                }));
             } else {
-                console.log(data);
                 this.props.dispatch(githubLogin({
                     githubToken: data.token,
                 }));
