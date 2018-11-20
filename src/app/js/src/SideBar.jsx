@@ -26,6 +26,8 @@ import {
     toggleTileJSONEditMode,
     toggleDiffMode,
     toggleShareDescriptionDialogOpen,
+    githubLogin,
+    githubLogout,
 } from './actions';
 import {
     map,
@@ -40,6 +42,8 @@ class SideBar extends Component {
         this.renderTileJSON = this.renderTileJSON.bind(this);
         this.openDiffMode = this.openDiffMode.bind(this);
         this.share = this.share.bind(this);
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     collapse() {
@@ -70,6 +74,16 @@ class SideBar extends Component {
         this.props.dispatch(toggleShareDescriptionDialogOpen({
             shareDescriptionDialogOpen: true,
         }));
+    }
+
+    login() {
+        this.props.dispatch(githubLogin({
+            githubToken: 'abc',
+        }));
+    }
+
+    logout() {
+        this.props.dispatch(githubLogout());
     }
 
     renderTileJSON() {
@@ -180,9 +194,29 @@ class SideBar extends Component {
                 </div>
             );
         }
+        const loginButton = (
+            <FlatButton
+                onClick={this.login}
+                label="Login"
+            />
+        );
+        const logoutButton = (
+            <FlatButton
+                onClick={this.logout}
+                label="Logout"
+            />
+        );
         return (
             <Col xs={4} id="menu">
-                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
+                <AppBar
+                    title="TileJSON.io"
+                    iconElementLeft={
+                        <IconButton onClick={this.collapse}><ExpandLess /></IconButton>
+                    }
+                    iconElementRight={
+                        this.props.githubToken === '' ? loginButton : logoutButton
+                    }
+                />
                 <Grid fluid>
                     <br />
                     <Row>
@@ -239,6 +273,7 @@ SideBar.propTypes = {
     layers: arrayOf(object).isRequired,
     changeOpacity: func.isRequired,
     toggleVisibility: func.isRequired,
+    githubToken: string.isRequired,
 };
 
 function mapStateToProps(state) {

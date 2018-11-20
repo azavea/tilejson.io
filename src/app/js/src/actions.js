@@ -48,6 +48,9 @@ export const LOAD_GIST = 'LOAD_GIST';
 
 export const TOGGLE_GIST_NOT_FOUND_DIALOG = 'TOGGLE_GIST_NOT_FOUND_DIALOG';
 
+export const GITHUB_LOGIN = 'GITHUB_LOGIN';
+export const GITHUB_LOGOUT = 'GITHUB_LOGOUT';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -296,5 +299,18 @@ export function toggleGistNotFoundDialog(payload) {
     return {
         type: TOGGLE_GIST_NOT_FOUND_DIALOG,
         payload,
+    };
+}
+
+export function githubLogin(payload) {
+    return {
+        type: GITHUB_LOGIN,
+        payload,
+    };
+}
+
+export function githubLogout() {
+    return {
+        type: GITHUB_LOGOUT,
     };
 }

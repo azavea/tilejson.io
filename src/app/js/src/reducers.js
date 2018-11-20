@@ -37,6 +37,8 @@ import {
     TOGGLE_BASE_LAYER_VISIBILITY,
     LOAD_GIST,
     TOGGLE_GIST_NOT_FOUND_DIALOG,
+    GITHUB_LOGIN,
+    GITHUB_LOGOUT,
 } from './actions';
 
 import {
@@ -80,6 +82,7 @@ const initialState = {
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
     gistNotFoundDialogOpen: false,
+    githubToken: '',
 };
 
 function mainReducer(state = initialState, action) {
@@ -363,6 +366,14 @@ function mainReducer(state = initialState, action) {
         case TOGGLE_GIST_NOT_FOUND_DIALOG:
             return Object.assign({}, state, {
                 gistNotFoundDialogOpen: action.payload.gistNotFoundDialogOpen,
+            });
+        case GITHUB_LOGIN:
+            return Object.assign({}, state, {
+                githubToken: action.payload.githubToken,
+            });
+        case GITHUB_LOGOUT:
+            return Object.assign({}, state, {
+                githubToken: '',
             });
         default:
             return state;
