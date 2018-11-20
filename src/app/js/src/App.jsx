@@ -16,7 +16,7 @@ import gistRequest from '../data/request.json';
 import {
     changeTileJson,
     clearScreen,
-    changeShareLink,
+    changeGistID,
     toggleShareSnackbarOpen,
     toggleErrorSnackbarOpen,
     toggleAddLayerDialog,
@@ -254,8 +254,8 @@ class App extends Component {
         };
         axios.post('https://api.github.com/gists', gistRequest, requestConfig)
             .then((response) => {
-                this.props.dispatch(changeShareLink({
-                    shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
+                this.props.dispatch(changeGistID({
+                    gistID: response.data.id,
                 }));
                 this.props.dispatch(toggleShareSnackbarOpen({
                     shareSnackbarOpen: true,

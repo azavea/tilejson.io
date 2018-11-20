@@ -1,7 +1,7 @@
 export const CHANGE_LAYER_NAME = 'CHANGE_LAYER_NAME';
 export const CHANGE_LAYER_URL = 'CHANGE_LAYER_URL';
 export const CHANGE_TILE_JSON = 'CHANGE_TILE_JSON';
-export const CHANGE_SHARE_LINK = 'CHANGE_SHARE_LINK';
+export const CHANGE_GIST_ID = 'CHANGE_GIST_ID';
 
 export const CLEAR_SCREEN = 'CLEAR_SCREEN';
 
@@ -78,9 +78,9 @@ export function clearScreen() {
     };
 }
 
-export function changeShareLink(payload) {
+export function changeGistID(payload) {
     return {
-        type: CHANGE_SHARE_LINK,
+        type: CHANGE_GIST_ID,
         payload,
     };
 }

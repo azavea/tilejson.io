@@ -98,3 +98,5 @@ export const authConfig = {
     provider: 'github',
     scope: 'gist,read:user',
 };
+
+export const shareLink = 'http://bl.ocks.org/d/';

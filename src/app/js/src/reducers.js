@@ -5,7 +5,7 @@ import {
     CHANGE_LAYER_URL,
     CHANGE_TILE_JSON,
     CLEAR_SCREEN,
-    CHANGE_SHARE_LINK,
+    CHANGE_GIST_ID,
     TOGGLE_TILE_JSON_EDIT_MODE,
     CHANGE_TILE_JSON_PARSE_ERROR,
     TOGGLE_SHARE_SNACKBAR_OPEN,
@@ -58,7 +58,7 @@ const initialState = {
     tileJSONString: JSON.stringify(getDefaultTileJSON(), null, '\t'),
     tileJSONEditMode: false,
     tileJSONParseError: '',
-    shareLink: '',
+    gistID: '',
     shareSnackbarOpen: false,
     errorSnackbarOpen: false,
     isCollapsed: false,
@@ -107,7 +107,7 @@ function mainReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 tileJSON: getDefaultTileJSON(),
                 tileJSONString: JSON.stringify(getDefaultTileJSON(), null, '\t'),
-                shareLink: '',
+                gistID: '',
                 url: '',
                 name: '',
                 tileJSONParseError: '',
@@ -135,9 +135,9 @@ function mainReducer(state = initialState, action) {
                 errorDialogTitle: '',
                 errorDialogMessage: '',
             });
-        case CHANGE_SHARE_LINK:
+        case CHANGE_GIST_ID:
             return Object.assign({}, state, {
-                shareLink: action.payload.shareLink,
+                gistID: action.payload.gistID,
             });
         case TOGGLE_TILE_JSON_EDIT_MODE:
             return Object.assign({}, state, {
