@@ -249,7 +249,10 @@ class SideBar extends Component {
                             <FlatButton
                                 onClick={this.share}
                                 label="Share"
-                                disabled={this.props.layers.length === 0}
+                                disabled={
+                                    this.props.layers.length === 0 ||
+                                    this.props.githubToken === ''
+                                }
                                 primary
                                 fullWidth
                             />

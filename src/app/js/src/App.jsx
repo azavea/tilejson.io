@@ -213,6 +213,9 @@ class App extends Component {
     }
 
     share() {
+        if (this.props.githubToken === '') {
+            return;
+        }
         let tileJSON = this.props.tileJSON.slice(0);
         tileJSON = tileJSON.map((t, i) => {
             const newT = Object.assign({}, t);
@@ -237,12 +240,18 @@ class App extends Component {
         };
         if (this.props.shareTitle !== '') {
             info.title = this.props.shareTitle;
+            gistRequest.description += this.props.shareTitle;
         }
         if (this.props.shareDescription !== '') {
             info.description = this.props.shareDescription;
         }
         gistRequest.files['info.json'].content = JSON.stringify(info, null, '\t');
-        axios.post('https://api.github.com/gists', gistRequest)
+        const requestConfig = {
+            headers: {
+                Authorization: `Bearer ${this.props.githubToken}`,
+            },
+        };
+        axios.post('https://api.github.com/gists', gistRequest, requestConfig)
             .then((response) => {
                 this.props.dispatch(changeShareLink({
                     shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
@@ -414,6 +423,7 @@ App.propTypes = {
     history: shape({
         push: func,
     }),
+    githubToken: string.isRequired,
 };
 
 function mapStateToProps(state) {
