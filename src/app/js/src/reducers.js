@@ -39,6 +39,7 @@ import {
     TOGGLE_ERROR_DIALOG,
     GITHUB_LOGIN,
     GITHUB_LOGOUT,
+    TOGGLE_EDIT_MODE,
 } from './actions';
 
 import {
@@ -52,6 +53,7 @@ import {
 } from './constants';
 
 const initialState = {
+    editMode: true,
     name: '',
     url: '',
     tileJSON: getDefaultTileJSON(),
@@ -380,6 +382,10 @@ function mainReducer(state = initialState, action) {
         case GITHUB_LOGOUT:
             return Object.assign({}, state, {
                 githubToken: '',
+            });
+        case TOGGLE_EDIT_MODE:
+            return Object.assign({}, state, {
+                editMode: action.payload.editMode,
             });
         default:
             return state;

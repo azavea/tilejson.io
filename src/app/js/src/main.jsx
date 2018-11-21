@@ -15,7 +15,7 @@ render(
     <Provider store={store}>
         <Router>
             <Switch>
-                <Route path="/g/:id" component={App} />
+                <Route path="/g/:id/:mode" component={App} />
                 <Route exact path="/" component={App} />
                 <Route component={App} />
             </Switch>

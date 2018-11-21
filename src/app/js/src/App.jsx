@@ -28,6 +28,7 @@ import {
     resetShareValues,
     loadGist,
     toggleErrorDialog,
+    toggleEditMode,
 } from './actions';
 import {
     appMuiTheme,
@@ -66,7 +67,14 @@ class App extends Component {
         this.changeOpacity = this.changeOpacity.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
         this.loadGist = this.loadGist.bind(this);
-        if (props.match.params.id) {
+        if (this.props.match.params.id) {
+            if (this.props.match.params.mode && this.props.match.params.mode === 'view') {
+                this.props.dispatch(toggleEditMode({
+                    editMode: false,
+                }));
+            } else {
+                this.props.history.replace(`/g/${this.props.match.params.id}/edit`);
+            }
             this.loadGist();
         } else {
             this.props.history.push('/');
