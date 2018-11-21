@@ -5,7 +5,7 @@ import {
     CHANGE_LAYER_URL,
     CHANGE_TILE_JSON,
     CLEAR_SCREEN,
-    CHANGE_SHARE_LINK,
+    CHANGE_GIST_ID,
     TOGGLE_TILE_JSON_EDIT_MODE,
     CHANGE_TILE_JSON_PARSE_ERROR,
     TOGGLE_SHARE_SNACKBAR_OPEN,
@@ -36,7 +36,9 @@ import {
     TOGGLE_LAYER_VISIBILITY,
     TOGGLE_BASE_LAYER_VISIBILITY,
     LOAD_GIST,
-    TOGGLE_GIST_NOT_FOUND_DIALOG,
+    TOGGLE_ERROR_DIALOG,
+    GITHUB_LOGIN,
+    GITHUB_LOGOUT,
 } from './actions';
 
 import {
@@ -56,7 +58,7 @@ const initialState = {
     tileJSONString: JSON.stringify(getDefaultTileJSON(), null, '\t'),
     tileJSONEditMode: false,
     tileJSONParseError: '',
-    shareLink: '',
+    gistID: '',
     shareSnackbarOpen: false,
     errorSnackbarOpen: false,
     isCollapsed: false,
@@ -79,7 +81,10 @@ const initialState = {
     defaultToDiff: defaultDefaultToDiff,
     shareDescriptionDialogOpen: false,
     baseLayerVisible: true,
-    gistNotFoundDialogOpen: false,
+    errorDialogOpen: false,
+    errorDialogTitle: '',
+    errorDialogMessage: '',
+    githubToken: '',
 };
 
 function mainReducer(state = initialState, action) {
@@ -102,7 +107,7 @@ function mainReducer(state = initialState, action) {
             return Object.assign({}, state, {
                 tileJSON: getDefaultTileJSON(),
                 tileJSONString: JSON.stringify(getDefaultTileJSON(), null, '\t'),
-                shareLink: '',
+                gistID: '',
                 url: '',
                 name: '',
                 tileJSONParseError: '',
@@ -126,11 +131,13 @@ function mainReducer(state = initialState, action) {
                 defaultToDiff: defaultDefaultToDiff,
                 shareDescriptionDialogOpen: false,
                 baseLayerVisible: true,
-                gistNotFoundDialogOpen: false,
+                errorDialogOpen: false,
+                errorDialogTitle: '',
+                errorDialogMessage: '',
             });
-        case CHANGE_SHARE_LINK:
+        case CHANGE_GIST_ID:
             return Object.assign({}, state, {
-                shareLink: action.payload.shareLink,
+                gistID: action.payload.gistID,
             });
         case TOGGLE_TILE_JSON_EDIT_MODE:
             return Object.assign({}, state, {
@@ -360,9 +367,19 @@ function mainReducer(state = initialState, action) {
                     true : action.payload.infoJSON.shareBase,
             });
         }
-        case TOGGLE_GIST_NOT_FOUND_DIALOG:
+        case TOGGLE_ERROR_DIALOG:
             return Object.assign({}, state, {
-                gistNotFoundDialogOpen: action.payload.gistNotFoundDialogOpen,
+                errorDialogOpen: action.payload.errorDialogOpen,
+                errorDialogTitle: action.payload.errorDialogTitle,
+                errorDialogMessage: action.payload.errorDialogMessage,
+            });
+        case GITHUB_LOGIN:
+            return Object.assign({}, state, {
+                githubToken: action.payload.githubToken,
+            });
+        case GITHUB_LOGOUT:
+            return Object.assign({}, state, {
+                githubToken: '',
             });
         default:
             return state;

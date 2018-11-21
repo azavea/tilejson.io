@@ -26,10 +26,15 @@ import {
     toggleTileJSONEditMode,
     toggleDiffMode,
     toggleShareDescriptionDialogOpen,
+    githubLogin,
+    githubLogout,
+    toggleErrorDialog,
 } from './actions';
 import {
     map,
     getDefaultTileJSON,
+    authenticator,
+    authConfig,
 } from './constants';
 
 class SideBar extends Component {
@@ -40,6 +45,8 @@ class SideBar extends Component {
         this.renderTileJSON = this.renderTileJSON.bind(this);
         this.openDiffMode = this.openDiffMode.bind(this);
         this.share = this.share.bind(this);
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     collapse() {
@@ -70,6 +77,29 @@ class SideBar extends Component {
         this.props.dispatch(toggleShareDescriptionDialogOpen({
             shareDescriptionDialogOpen: true,
         }));
+    }
+
+    login() {
+        if (this.props.githubToken !== '') {
+            return;
+        }
+        authenticator.authenticate(authConfig, (err, data) => {
+            if (err) {
+                this.props.dispatch(toggleErrorDialog({
+                    errorDialogOpen: true,
+                    errorDialogTitle: 'GitHub Authentication Error',
+                    errorDialogMessage: 'Your GitHub authentication seems to have failed. Try again later.',
+                }));
+            } else {
+                this.props.dispatch(githubLogin({
+                    githubToken: data.token,
+                }));
+            }
+        });
+    }
+
+    logout() {
+        this.props.dispatch(githubLogout());
     }
 
     renderTileJSON() {
@@ -180,9 +210,29 @@ class SideBar extends Component {
                 </div>
             );
         }
+        const loginButton = (
+            <FlatButton
+                onClick={this.login}
+                label="Login"
+            />
+        );
+        const logoutButton = (
+            <FlatButton
+                onClick={this.logout}
+                label="Logout"
+            />
+        );
         return (
             <Col xs={4} id="menu">
-                <AppBar title="TileJSON.io" iconElementLeft={<IconButton onClick={this.collapse}><ExpandLess /></IconButton>} />
+                <AppBar
+                    title="TileJSON.io"
+                    iconElementLeft={
+                        <IconButton onClick={this.collapse}><ExpandLess /></IconButton>
+                    }
+                    iconElementRight={
+                        this.props.githubToken === '' ? loginButton : logoutButton
+                    }
+                />
                 <Grid fluid>
                     <br />
                     <Row>
@@ -199,7 +249,10 @@ class SideBar extends Component {
                             <FlatButton
                                 onClick={this.share}
                                 label="Share"
-                                disabled={this.props.layers.length === 0}
+                                disabled={
+                                    this.props.layers.length === 0 ||
+                                    this.props.githubToken === ''
+                                }
                                 primary
                                 fullWidth
                             />
@@ -239,6 +292,7 @@ SideBar.propTypes = {
     layers: arrayOf(object).isRequired,
     changeOpacity: func.isRequired,
     toggleVisibility: func.isRequired,
+    githubToken: string.isRequired,
 };
 
 function mapStateToProps(state) {
