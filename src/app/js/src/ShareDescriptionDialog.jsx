@@ -132,6 +132,10 @@ class ShareDescriptionDialog extends Component {
                     open={this.props.shareDescriptionDialogOpen}
                     onRequestClose={this.handleCancel}
                 >
+                    <p>
+                        To share this TileJSON,
+                        we will create a private Gist on your GitHub account.
+                    </p>
                     <TextField
                         name="shareTitle"
                         hintText="Map Title"

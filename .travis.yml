@@ -1,34 +1,7 @@
 language: node_js
 
 node_js:
-  - 6.0.0
-
-services:
-  - docker
-
-# establish environment variables
-env:
-  global:
-    # encrypted AWS credentials
-    - secure: "F0FL5zyT2p6HAD725krDxFLu/vJuVinOyaX+i0B23nYj0zjynl+2/wF7eQdLeqtzaRYXCC7z+Ouexgd8YOjW7BHNfoc74t2i5K4HnAtgt4XFERL1gTCgpFCNB+gv2t572Od92GYnKy2rWbj6GNJ2oVLuXjt3bHcPcmLNvCpFhk6Gf0mHHGPuGoJ/1QbR4CNtkr7RmQxjxmiyfuS198vhunUTdsrMTlbJkh87RwUYzpbL4LOmFBnbm9oUOeBRflfi6QP7oLgGZYc5ioG/EbJz1sP9LN/HiouuhWnuiYIAN1xMCakR+TrePmRMc7sDPORljzSPpzJ3lTCbhco1dhn077hESr3czDIVHZX3Tsk3sFZqn0pIErl1GLy15Oa1XZASrZX7gvGxM3tjpilIyF95bCzos1qwEzcyoysggPjQjueyNshz+1Y4vXXYMJ4Pl9BqwErffQGSpOPm94EPzOZ9Q75TxUHpLLeEJtrlCJYaZCgPHibqrsd8V+6mUwjmLDaXiLjJWoI+l8IJTzeM41FcSbbOgis2sM1o9Px7LWmUST3OMRX6nagUJTzRR1cvi773hYAKC9IFKaHATG4XB5lUXfeGaU631bnURh0MjM+gGKGDiogVK7uh9AQ3XwKrDsRoMJmsZb5AD2rnAPVZJcx0EGhLH8hdxfGcwkS757uEEYQ="
-
-install:
-  - ./scripts/update.sh
+  - "8"
 
 script:
-  - ./scripts/cibuild.sh
-
-# terraform deploy
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: "docker-compose -f docker-compose.ci.staging.yml run --rm terraform ./scripts/infra.sh plan && docker-compose -f docker-compose.ci.staging.yml run --rm terraform ./scripts/infra.sh apply"
-    on:
-      repo: azavea/tilejson.io
-      branch: develop
-  - provider: script
-    skip_cleanup: true
-    script: "docker-compose -f docker-compose.ci.production.yml run --rm terraform ./scripts/infra.sh plan && docker-compose -f docker-compose.ci.production.yml run --rm terraform ./scripts/infra.sh apply"
-    on:
-      tags: true
-      repo: azavea/tilejson.io
+  - ./scripts/cibuild

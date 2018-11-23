@@ -4291,6 +4291,11 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
+netlify-auth-providers@1.0.0-alpha5:
+  version "1.0.0-alpha5"
+  resolved "https://registry.yarnpkg.com/netlify-auth-providers/-/netlify-auth-providers-1.0.0-alpha5.tgz#f0ce642fe5534f04a1d539ca847c907dd20819c8"
+  integrity sha512-V4tqW60NEOYdd7QUWotB+XeMbw/kayi4Sbm67hSMWibXHG7xiRUp6+VEB8CmBt7/kb3HTw7+mQSwF7YR9hRaSQ==
+
 no-case@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"

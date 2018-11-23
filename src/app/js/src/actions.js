@@ -1,7 +1,7 @@
 export const CHANGE_LAYER_NAME = 'CHANGE_LAYER_NAME';
 export const CHANGE_LAYER_URL = 'CHANGE_LAYER_URL';
 export const CHANGE_TILE_JSON = 'CHANGE_TILE_JSON';
-export const CHANGE_SHARE_LINK = 'CHANGE_SHARE_LINK';
+export const CHANGE_GIST_ID = 'CHANGE_GIST_ID';
 
 export const CLEAR_SCREEN = 'CLEAR_SCREEN';
 
@@ -46,7 +46,10 @@ export const TOGGLE_BASE_LAYER_VISIBILITY = 'TOGGLE_BASE_LAYER_VISIBILITY';
 
 export const LOAD_GIST = 'LOAD_GIST';
 
-export const TOGGLE_GIST_NOT_FOUND_DIALOG = 'TOGGLE_GIST_NOT_FOUND_DIALOG';
+export const TOGGLE_ERROR_DIALOG = 'TOGGLE_ERROR_DIALOG';
+
+export const GITHUB_LOGIN = 'GITHUB_LOGIN';
+export const GITHUB_LOGOUT = 'GITHUB_LOGOUT';
 
 export function changeLayerName(payload) {
     return {
@@ -75,9 +78,9 @@ export function clearScreen() {
     };
 }
 
-export function changeShareLink(payload) {
+export function changeGistID(payload) {
     return {
-        type: CHANGE_SHARE_LINK,
+        type: CHANGE_GIST_ID,
         payload,
     };
 }
@@ -292,9 +295,22 @@ export function loadGist(payload) {
     };
 }
 
-export function toggleGistNotFoundDialog(payload) {
+export function toggleErrorDialog(payload) {
     return {
-        type: TOGGLE_GIST_NOT_FOUND_DIALOG,
+        type: TOGGLE_ERROR_DIALOG,
         payload,
+    };
+}
+
+export function githubLogin(payload) {
+    return {
+        type: GITHUB_LOGIN,
+        payload,
+    };
+}
+
+export function githubLogout() {
+    return {
+        type: GITHUB_LOGOUT,
     };
 }

@@ -12,6 +12,10 @@ import {
     toggleShareSnackbarOpen,
 } from './actions';
 
+import {
+    shareLink,
+} from './constants';
+
 class ShareDialog extends Component {
     constructor(props) {
         super(props);
@@ -31,7 +35,7 @@ class ShareDialog extends Component {
                 onClick={this.closeShareDialog}
             />,
             <CopyToClipboard
-                text={this.props.shareLink}
+                text={shareLink + this.props.gistID}
             >
                 <FlatButton
                     label="Copy URL"
@@ -50,7 +54,7 @@ class ShareDialog extends Component {
                 >
                     <TextField
                         name="shareUrl"
-                        value={this.props.shareLink}
+                        value={shareLink + this.props.gistID}
                         fullWidth
                     />
                 </Dialog>
@@ -62,7 +66,7 @@ class ShareDialog extends Component {
 ShareDialog.propTypes = {
     dispatch: func.isRequired,
     shareSnackbarOpen: bool.isRequired,
-    shareLink: string.isRequired,
+    gistID: string.isRequired,
 };
 
 function mapStateToProps(state) {

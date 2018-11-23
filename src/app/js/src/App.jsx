@@ -16,7 +16,7 @@ import gistRequest from '../data/request.json';
 import {
     changeTileJson,
     clearScreen,
-    changeShareLink,
+    changeGistID,
     toggleShareSnackbarOpen,
     toggleErrorSnackbarOpen,
     toggleAddLayerDialog,
@@ -27,7 +27,7 @@ import {
     changeCurrentBaseLayer,
     resetShareValues,
     loadGist,
-    toggleGistNotFoundDialog,
+    toggleErrorDialog,
 } from './actions';
 import {
     appMuiTheme,
@@ -40,7 +40,7 @@ import {
 import AddLayerDialog from './AddLayerDialog';
 import ShareDialog from './ShareDialog';
 import ShareDescriptionDialog from './ShareDescriptionDialog';
-import GistNotFoundDialog from './GistNotFoundDialog';
+import ErrorDialog from './ErrorDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
@@ -205,6 +205,7 @@ class App extends Component {
         this.layers = [
             this.layers[0],
         ];
+        this.props.history.push('/');
         this.props.dispatch(clearScreen());
         const tileJSONList = getDefaultTileJSON();
         if (document.getElementById('jsonTextarea')) {
@@ -213,6 +214,9 @@ class App extends Component {
     }
 
     share() {
+        if (this.props.githubToken === '') {
+            return;
+        }
         let tileJSON = this.props.tileJSON.slice(0);
         tileJSON = tileJSON.map((t, i) => {
             const newT = Object.assign({}, t);
@@ -237,15 +241,21 @@ class App extends Component {
         };
         if (this.props.shareTitle !== '') {
             info.title = this.props.shareTitle;
+            gistRequest.description += this.props.shareTitle;
         }
         if (this.props.shareDescription !== '') {
             info.description = this.props.shareDescription;
         }
         gistRequest.files['info.json'].content = JSON.stringify(info, null, '\t');
-        axios.post('https://api.github.com/gists', gistRequest)
+        const requestConfig = {
+            headers: {
+                Authorization: `Bearer ${this.props.githubToken}`,
+            },
+        };
+        axios.post('https://api.github.com/gists', gistRequest, requestConfig)
             .then((response) => {
-                this.props.dispatch(changeShareLink({
-                    shareLink: `http://bl.ocks.org/d/${response.data.id}/`,
+                this.props.dispatch(changeGistID({
+                    gistID: response.data.id,
                 }));
                 this.props.dispatch(toggleShareSnackbarOpen({
                     shareSnackbarOpen: true,
@@ -313,8 +323,10 @@ class App extends Component {
             })
             .catch(() => {
                 this.props.history.push('/');
-                this.props.dispatch(toggleGistNotFoundDialog({
-                    gistNotFoundDialogOpen: true,
+                this.props.dispatch(toggleErrorDialog({
+                    errorDialogOpen: true,
+                    errorDialogTitle: 'Gist Not Found',
+                    errorDialogMessage: 'The GitHub Gist ID specified was not found.',
                 }));
             });
     }
@@ -376,7 +388,7 @@ class App extends Component {
                         <ShareDescriptionDialog
                             share={this.share}
                         />
-                        <GistNotFoundDialog />
+                        <ErrorDialog />
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -412,6 +424,7 @@ App.propTypes = {
     history: shape({
         push: func,
     }),
+    githubToken: string.isRequired,
 };
 
 function mapStateToProps(state) {
