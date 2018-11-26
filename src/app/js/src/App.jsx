@@ -45,6 +45,7 @@ import ErrorDialog from './ErrorDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
+import ViewBar from './ViewBar';
 
 class App extends Component {
     constructor(props) {
@@ -72,6 +73,9 @@ class App extends Component {
                 this.props.dispatch(toggleEditMode({
                     editMode: false,
                 }));
+                setTimeout(() => {
+                    map.updateSize();
+                }, 100);
             } else {
                 this.props.history.replace(`/g/${this.props.match.params.id}/edit`);
             }
@@ -344,6 +348,7 @@ class App extends Component {
             backgroundColor: '#fd4582',
         };
         let bar;
+        let viewBar;
         let diffToolbar;
         if (this.props.isCollapsed || this.props.diffMode) {
             bar = (
@@ -352,6 +357,10 @@ class App extends Component {
             if (this.props.diffMode) {
                 diffToolbar = (<DiffToolbar />);
             }
+        } else if (!this.props.editMode) {
+            viewBar = (
+                <ViewBar viewGistID={this.props.match.params.id} />
+            );
         } else {
             bar = (
                 <SideBar
@@ -367,14 +376,19 @@ class App extends Component {
                 />
             );
         }
+        let mapWidth = 12;
+        if (this.props.editMode) {
+            mapWidth = this.props.isCollapsed || this.props.diffMode ? 12 : 8;
+        }
         return (
             <MuiThemeProvider muiTheme={appMuiTheme}>
                 <div>
                     <Row>
                         {bar}
                         {diffToolbar}
+                        {viewBar}
                         <Col
-                            xs={this.props.isCollapsed || this.props.diffMode ? 12 : 8}
+                            xs={mapWidth}
                             id="map"
                             className="map"
                         />
@@ -433,6 +447,7 @@ App.propTypes = {
         push: func,
     }),
     githubToken: string.isRequired,
+    editMode: bool.isRequired,
 };
 
 function mapStateToProps(state) {
