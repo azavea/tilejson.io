@@ -47,6 +47,7 @@ import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
 import ViewBar from './ViewBar';
+import MapInfo from './MapInfo';
 
 class App extends Component {
     constructor(props) {
@@ -359,6 +360,7 @@ class App extends Component {
         let bar;
         let viewBar;
         let diffToolbar;
+        let mapInfo;
         if (this.props.isCollapsed || this.props.diffMode) {
             bar = (
                 <NavBar />
@@ -370,6 +372,9 @@ class App extends Component {
             if (this.props.shareTileJSONLink || this.props.shareGist || this.props.shareDiff) {
                 viewBar = (
                     <ViewBar viewGistID={this.props.match.params.id} />
+                );
+                mapInfo = (
+                    <MapInfo />
                 );
             }
         } else {
@@ -422,6 +427,7 @@ class App extends Component {
                             share={this.share}
                         />
                         <ErrorDialog />
+                        {mapInfo}
                     </Row>
                 </div>
             </MuiThemeProvider>

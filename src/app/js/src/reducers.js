@@ -380,6 +380,8 @@ function mainReducer(state = initialState, action) {
                 defaultToDiff: action.payload.infoJSON.defaultToDiff,
                 diffLayerLeftId: action.payload.infoJSON.diffLayerLeftId,
                 diffLayerRightId: action.payload.infoJSON.diffLayerRightId,
+                shareTitle: action.payload.infoJSON.title,
+                shareDescription: action.payload.infoJSON.description,
             });
         }
         case TOGGLE_ERROR_DIALOG:
