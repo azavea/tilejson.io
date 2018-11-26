@@ -100,3 +100,5 @@ export const authConfig = {
 };
 
 export const shareLink = 'https://tilejson.io/g/:id/view';
+export const editLink = 'https://tilejson.io/g/:id/edit';
+export const gistLink = 'https://gist.github.com/:id';

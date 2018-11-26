@@ -12,6 +12,8 @@ import {
 } from './actions';
 import {
     map,
+    editLink,
+    gistLink,
 } from './constants';
 
 class ViewBar extends Component {
@@ -23,11 +25,11 @@ class ViewBar extends Component {
     }
 
     openGist() {
-        window.open(`https://gist.github.com/${this.props.viewGistID}`, '_blank');
+        window.open(gistLink.replace(':id', this.props.viewGistID), '_blank');
     }
 
     openSite() {
-        window.open(`https://tilejson.io/g/${this.props.viewGistID}`, '_blank');
+        window.open(editLink.replace(':id', this.props.viewGistID), '_blank');
     }
 
     openDiffMode() {
