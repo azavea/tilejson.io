@@ -258,6 +258,13 @@ function mainReducer(state = initialState, action) {
                 currentBaseLayer: action.payload.currentBaseLayer,
             });
         case TOGGLE_DIFF_MODE: {
+            if (!state.editMode) {
+                return Object.assign({}, state, {
+                    diffMode: action.payload.diffMode,
+                    diffLayerLeftId: state.diffLayerLeftId === -1 ? 0 : state.diffLayerLeftId,
+                    diffLayerRightId: state.diffLayerRightId === -1 ? 1 : state.diffLayerRightId,
+                });
+            }
             if (action.payload.diffMode) {
                 if (state.layers.length < 2) {
                     return state;
@@ -367,6 +374,12 @@ function mainReducer(state = initialState, action) {
                     0 : action.payload.infoJSON.currentBaseLayer,
                 baseLayerVisible: action.payload.infoJSON.shareBase === undefined ?
                     true : action.payload.infoJSON.shareBase,
+                shareTileJSONLink: action.payload.infoJSON.shareTileJSONLink,
+                shareGist: action.payload.infoJSON.shareGist,
+                shareDiff: action.payload.infoJSON.shareDiff,
+                defaultToDiff: action.payload.infoJSON.defaultToDiff,
+                diffLayerLeftId: action.payload.infoJSON.diffLayerLeftId,
+                diffLayerRightId: action.payload.infoJSON.diffLayerRightId,
             });
         }
         case TOGGLE_ERROR_DIALOG:

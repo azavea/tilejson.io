@@ -29,6 +29,7 @@ import {
     loadGist,
     toggleErrorDialog,
     toggleEditMode,
+    toggleDiffMode,
 } from './actions';
 import {
     appMuiTheme,
@@ -332,6 +333,14 @@ class App extends Component {
                 if (infoJSON.currentBaseLayer !== undefined) {
                     this.changeBaseLayer(infoJSON.currentBaseLayer);
                 }
+                if (infoJSON.defaultToDiff) {
+                    this.props.dispatch(toggleDiffMode({
+                        diffMode: true,
+                    }));
+                    setTimeout(() => {
+                        map.updateSize();
+                    }, 100);
+                }
             })
             .catch(() => {
                 this.props.history.push('/');
@@ -358,9 +367,11 @@ class App extends Component {
                 diffToolbar = (<DiffToolbar />);
             }
         } else if (!this.props.editMode) {
-            viewBar = (
-                <ViewBar viewGistID={this.props.match.params.id} />
-            );
+            if (this.props.shareTileJSONLink || this.props.shareGist || this.props.shareDiff) {
+                viewBar = (
+                    <ViewBar viewGistID={this.props.match.params.id} />
+                );
+            }
         } else {
             bar = (
                 <SideBar
