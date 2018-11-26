@@ -7,11 +7,16 @@
   command = "pushd ../.. && ./scripts/cibuild && popd"
   environment = { CI = "1", YARN_VERSION = "1.12.3" }
   
-# [[redirects]]
-#   from = "https://tilejson.netlify.com/*"
-#   to = "https://tilejson.io/:splat"
-#   status = 301
-#   force = true
+[[redirects]]
+  from = "https://tilejson.netlify.com/*"
+  to = "https://tilejson.io/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [[headers]]
   for = "/*"
@@ -21,8 +26,3 @@
   X-XSS-Protection = "1; mode=block"
   X-Content-Type-Options = "nosniff"
   Referrer-Policy = "origin-when-cross-origin"
-  
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
