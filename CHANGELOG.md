@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Re-enable Netlify subdomain redirects (#99)
+
 ## 2.0.0
 
 * Fix share feature (#94)
