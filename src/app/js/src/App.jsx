@@ -219,7 +219,7 @@ class App extends Component {
         this.layers = [
             this.layers[0],
         ];
-        this.props.history.push('/');
+        this.props.history.replace('/');
         this.props.dispatch(clearScreen());
         const tileJSONList = getDefaultTileJSON();
         if (document.getElementById('jsonTextarea')) {
