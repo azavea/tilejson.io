@@ -373,9 +373,11 @@ class App extends Component {
                 viewBar = (
                     <ViewBar viewGistID={this.props.match.params.id} />
                 );
-                mapInfo = (
-                    <MapInfo />
-                );
+                if (this.props.shareTitle !== '') {
+                    mapInfo = (
+                        <MapInfo />
+                    );
+                }
             }
         } else {
             bar = (
