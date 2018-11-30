@@ -51,6 +51,8 @@ export const TOGGLE_ERROR_DIALOG = 'TOGGLE_ERROR_DIALOG';
 export const GITHUB_LOGIN = 'GITHUB_LOGIN';
 export const GITHUB_LOGOUT = 'GITHUB_LOGOUT';
 
+export const TOGGLE_EDIT_MODE = 'TOGGLE_EDIT_MODE';
+
 export function changeLayerName(payload) {
     return {
         type: CHANGE_LAYER_NAME,
@@ -312,5 +314,12 @@ export function githubLogin(payload) {
 export function githubLogout() {
     return {
         type: GITHUB_LOGOUT,
+    };
+}
+
+export function toggleEditMode(payload) {
+    return {
+        type: TOGGLE_EDIT_MODE,
+        payload,
     };
 }

@@ -28,6 +28,8 @@ import {
     resetShareValues,
     loadGist,
     toggleErrorDialog,
+    toggleEditMode,
+    toggleDiffMode,
 } from './actions';
 import {
     appMuiTheme,
@@ -44,6 +46,8 @@ import ErrorDialog from './ErrorDialog';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
 import DiffToolbar from './DiffToolbar';
+import ViewBar from './ViewBar';
+import MapInfo from './MapInfo';
 
 class App extends Component {
     constructor(props) {
@@ -66,7 +70,17 @@ class App extends Component {
         this.changeOpacity = this.changeOpacity.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
         this.loadGist = this.loadGist.bind(this);
-        if (props.match.params.id) {
+        if (this.props.match.params.id) {
+            if (this.props.match.params.mode && this.props.match.params.mode === 'view') {
+                this.props.dispatch(toggleEditMode({
+                    editMode: false,
+                }));
+                setTimeout(() => {
+                    map.updateSize();
+                }, 100);
+            } else {
+                this.props.history.replace(`/g/${this.props.match.params.id}/edit`);
+            }
             this.loadGist();
         } else {
             this.props.history.push('/');
@@ -205,7 +219,7 @@ class App extends Component {
         this.layers = [
             this.layers[0],
         ];
-        this.props.history.push('/');
+        this.props.history.replace('/');
         this.props.dispatch(clearScreen());
         const tileJSONList = getDefaultTileJSON();
         if (document.getElementById('jsonTextarea')) {
@@ -320,6 +334,14 @@ class App extends Component {
                 if (infoJSON.currentBaseLayer !== undefined) {
                     this.changeBaseLayer(infoJSON.currentBaseLayer);
                 }
+                if (infoJSON.defaultToDiff) {
+                    this.props.dispatch(toggleDiffMode({
+                        diffMode: true,
+                    }));
+                    setTimeout(() => {
+                        map.updateSize();
+                    }, 100);
+                }
             })
             .catch(() => {
                 this.props.history.push('/');
@@ -336,13 +358,26 @@ class App extends Component {
             backgroundColor: '#fd4582',
         };
         let bar;
+        let viewBar;
         let diffToolbar;
+        let mapInfo;
         if (this.props.isCollapsed || this.props.diffMode) {
             bar = (
                 <NavBar />
             );
             if (this.props.diffMode) {
                 diffToolbar = (<DiffToolbar />);
+            }
+        } else if (!this.props.editMode) {
+            if (this.props.shareTileJSONLink || this.props.shareGist || this.props.shareDiff) {
+                viewBar = (
+                    <ViewBar viewGistID={this.props.match.params.id} />
+                );
+                if (this.props.shareTitle !== '') {
+                    mapInfo = (
+                        <MapInfo />
+                    );
+                }
             }
         } else {
             bar = (
@@ -359,14 +394,19 @@ class App extends Component {
                 />
             );
         }
+        let mapWidth = 12;
+        if (this.props.editMode) {
+            mapWidth = this.props.isCollapsed || this.props.diffMode ? 12 : 8;
+        }
         return (
             <MuiThemeProvider muiTheme={appMuiTheme}>
                 <div>
                     <Row>
                         {bar}
                         {diffToolbar}
+                        {viewBar}
                         <Col
-                            xs={this.props.isCollapsed || this.props.diffMode ? 12 : 8}
+                            xs={mapWidth}
                             id="map"
                             className="map"
                         />
@@ -389,6 +429,7 @@ class App extends Component {
                             share={this.share}
                         />
                         <ErrorDialog />
+                        {mapInfo}
                     </Row>
                 </div>
             </MuiThemeProvider>
@@ -425,6 +466,7 @@ App.propTypes = {
         push: func,
     }),
     githubToken: string.isRequired,
+    editMode: bool.isRequired,
 };
 
 function mapStateToProps(state) {

@@ -109,3 +109,10 @@ html, body, #root, #root > div , #root > div > div {
     background-repeat: no-repeat;
     filter: invert(100%);
 }
+
+#mapInfo {
+    position: absolute;
+    top: 76px;
+    right: 48px;
+    width: 320px;
+}

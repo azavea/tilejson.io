@@ -39,6 +39,7 @@ import {
     TOGGLE_ERROR_DIALOG,
     GITHUB_LOGIN,
     GITHUB_LOGOUT,
+    TOGGLE_EDIT_MODE,
 } from './actions';
 
 import {
@@ -52,6 +53,7 @@ import {
 } from './constants';
 
 const initialState = {
+    editMode: true,
     name: '',
     url: '',
     tileJSON: getDefaultTileJSON(),
@@ -256,6 +258,13 @@ function mainReducer(state = initialState, action) {
                 currentBaseLayer: action.payload.currentBaseLayer,
             });
         case TOGGLE_DIFF_MODE: {
+            if (!state.editMode) {
+                return Object.assign({}, state, {
+                    diffMode: action.payload.diffMode,
+                    diffLayerLeftId: state.diffLayerLeftId === -1 ? 0 : state.diffLayerLeftId,
+                    diffLayerRightId: state.diffLayerRightId === -1 ? 1 : state.diffLayerRightId,
+                });
+            }
             if (action.payload.diffMode) {
                 if (state.layers.length < 2) {
                     return state;
@@ -365,6 +374,15 @@ function mainReducer(state = initialState, action) {
                     0 : action.payload.infoJSON.currentBaseLayer,
                 baseLayerVisible: action.payload.infoJSON.shareBase === undefined ?
                     true : action.payload.infoJSON.shareBase,
+                shareTileJSONLink: action.payload.infoJSON.shareTileJSONLink,
+                shareGist: action.payload.infoJSON.shareGist,
+                shareDiff: action.payload.infoJSON.shareDiff,
+                defaultToDiff: action.payload.infoJSON.defaultToDiff,
+                diffLayerLeftId: action.payload.infoJSON.diffLayerLeftId,
+                diffLayerRightId: action.payload.infoJSON.diffLayerRightId,
+                shareTitle: action.payload.infoJSON.title ? action.payload.infoJSON.title : '',
+                shareDescription: action.payload.infoJSON.description ?
+                    action.payload.infoJSON.description : '',
             });
         }
         case TOGGLE_ERROR_DIALOG:
@@ -380,6 +398,10 @@ function mainReducer(state = initialState, action) {
         case GITHUB_LOGOUT:
             return Object.assign({}, state, {
                 githubToken: '',
+            });
+        case TOGGLE_EDIT_MODE:
+            return Object.assign({}, state, {
+                editMode: action.payload.editMode,
             });
         default:
             return state;
