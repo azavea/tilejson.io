@@ -99,4 +99,6 @@ export const authConfig = {
     scope: 'gist,read:user',
 };
 
-export const shareLink = 'http://bl.ocks.org/d/';
+export const shareLink = 'https://tilejson.io/g/:id/view';
+export const editLink = 'https://tilejson.io/g/:id/edit';
+export const gistLink = 'https://gist.github.com/:id';

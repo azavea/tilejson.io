@@ -35,7 +35,7 @@ class ShareDialog extends Component {
                 onClick={this.closeShareDialog}
             />,
             <CopyToClipboard
-                text={shareLink + this.props.gistID}
+                text={shareLink.replace(':id', this.props.gistID)}
             >
                 <FlatButton
                     label="Copy URL"
@@ -54,7 +54,7 @@ class ShareDialog extends Component {
                 >
                     <TextField
                         name="shareUrl"
-                        value={shareLink + this.props.gistID}
+                        value={shareLink.replace(':id', this.props.gistID)}
                         fullWidth
                     />
                 </Dialog>

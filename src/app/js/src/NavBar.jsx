@@ -66,11 +66,17 @@ class NavBar extends Component {
             toolbarGroupIconButton = (
                 <IconButton onClick={this.closeDiffMode}><NavigationCloseIcon color="white" /></IconButton>
             );
-            toolbarGroupRight = (
-                <ToolbarGroup lastChild>
-                    <FlatButton onClick={this.shareDiff} label="Share" style={styleWhiteText} />
-                </ToolbarGroup>
-            );
+            if (this.props.editMode) {
+                toolbarGroupRight = (
+                    <ToolbarGroup lastChild>
+                        <FlatButton
+                            onClick={this.shareDiff}
+                            label="Share"
+                            style={styleWhiteText}
+                        />
+                    </ToolbarGroup>
+                );
+            }
         }
         return (
             <Col xs={12} id={this.props.diffMode ? 'header' : 'floatingheader'}>
@@ -89,6 +95,7 @@ class NavBar extends Component {
 NavBar.propTypes = {
     dispatch: func.isRequired,
     diffMode: bool.isRequired,
+    editMode: bool.isRequired,
 };
 
 function mapStateToProps(state) {
