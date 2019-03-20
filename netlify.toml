@@ -21,7 +21,7 @@
 [[headers]]
   for = "/*"
 [headers.values]
-  Content-Security-Policy = "default-src https: blob: data: 'unsafe-inline' 'unsafe-eval'"
+  Content-Security-Policy = "upgrade-insecure-requests; default-src https: blob: data: 'unsafe-inline' 'unsafe-eval';"
   X-Frame-Options = "DENY"
   X-XSS-Protection = "1; mode=block"
   X-Content-Type-Options = "nosniff"
